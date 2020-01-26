@@ -1,12 +1,26 @@
 # jetblack-serialization
 
-Serialization for JSON and XML in Python using typing
+Serialization for JSON and XML in Python using typing annotations.
 
 ## Status
 
-Work in progress
+This is work in progress.
+
+It has been tested with Python 3.7 used the `typing_extensions`
+package for `TypedDict` and `Annotated`. In Python 3.8 the `TypedDict`
+class is available in the standard `typing` package.
+
+## Installation
+
+The package can be installed with pip.
+
+```bash
+pip install jetblack-serialization
+```
 
 ## Overview
+
+### JSON
 
 Given a typed dictionary:
 
@@ -25,7 +39,10 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 ```
 
-### JSON
+For JSON we set the serialization config to serialize the keys to
+camel-case and deserialize to snake-case.
+
+#### Serializing
 
 This could be serialized to JSON as:
 
@@ -72,6 +89,22 @@ giving:
 Note the fields have been camel cased, and the publication date has been turned
 into an ISO 8601 date.
 
+#### Deserializing
+
+We can deserialize the data as follows:
+
+```python
+from stringcase import camelcase, snakecase
+from jetblack_serialize import SerializerConfig
+from jetblack_serialize.json import deserialize
+
+dct = deserialize(
+    text,
+    Annotated[Book, JSONValue()],
+    SerializerConfig(camelcase, snakecase)
+)
+```
+
 ### XML
 
 The XML version of the typed dictionary might look like this:
@@ -92,6 +125,12 @@ class Book(TypedDict, total=False):
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
+
+Note we have introduced some annotations to control the serialization.
+For XML we have used pascal-case to serialized the keys and snake-case
+for deserialization.
+
+#### Serializing
 
 To serialize we need to provide the containing tag `Book`:
 
@@ -145,6 +184,29 @@ First we needed the outer document wrapper `XMLEntity("Book")`.
 
 Next we annotated the `book_id` to be an `XMLAttribute`.
 
-Finally we annotated the two lists differently. The `keywords` list used a
-nested structure, which we indicated by giving th list a different `XMLEntity`
-tag to the list items. For the phrases we used the default in-line behaviour.
+Finally we annotated the two lists differently. The `keywords` list used
+a nested structure, which we indicated by giving the list a different
+`XMLEntity` tag to the list items. For the phrases we used the default
+in-line behaviour.
+
+#### Deserializing
+
+We can deserialize the XML as follows:
+
+```python
+from stringcase import pascalcase, snakecase
+from jetblack_serialize import SerializerConfig
+from jetblack_serialize.xml import deserialize
+
+dct = deserialize(
+    text,
+    Annotated[Book, XMLEntity("Book")],
+    SerializerConfig(pascalcase, snakecase)
+)
+```
+
+## Attributes
+
+For JSON, attributes are typically not required. However
+`JSONProperty(tag: str)` and `JSONValue()` are provided for
+completeness.
