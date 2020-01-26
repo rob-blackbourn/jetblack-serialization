@@ -17,7 +17,7 @@ from jetblack_serialization.json.annotations import (
 CONFIG = SerializerConfig(camelcase, snakecase)
 
 
-class Book(TypedDict, total=False):
+class AnnotatedBook(TypedDict, total=False):
     book_id: Annotated[int, JSONProperty("bookId")]
     title: Annotated[str, JSONProperty("title")]
     author: Annotated[str, JSONProperty("author")]
@@ -30,10 +30,10 @@ class Book(TypedDict, total=False):
     pages: Annotated[Optional[int], JSONProperty("pages")]
 
 
-def test_serialize():
-    """Test for deserialize"""
+def test_annotated():
+    """Test for deserializing a typed dict with JSON annotations"""
 
-    obj: Book = {
+    obj: AnnotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
@@ -45,5 +45,35 @@ def test_serialize():
         ],
         'age': 24,
     }
-    text = serialize(obj, Book, CONFIG)
+    text = serialize(obj, AnnotatedBook, CONFIG)
+    assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24, "pages": null}'
+
+
+class UnannotatedBook(TypedDict, total=False):
+    book_id: int
+    title: str
+    author: str
+    publication_date: datetime
+    keywords: List[str]
+    phrases: List[str]
+    age: Optional[Union[datetime, int]]
+    pages: Optional[int]
+
+
+def test_unannotated():
+    """Test for deserializing a typed dict without JSON annotations"""
+
+    obj: UnannotatedBook = {
+        'author': 'Chairman Mao',
+        'book_id': 42,
+        'title': 'Little Red Book',
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'keywords': ['Revolution', 'Communism'],
+        'phrases': [
+            'Revolutionary wars are inevitable in class society',
+            'War is the continuation of politics'
+        ],
+        'age': 24,
+    }
+    text = serialize(obj, UnannotatedBook, CONFIG)
     assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24, "pages": null}'
