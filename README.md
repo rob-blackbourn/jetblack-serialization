@@ -25,6 +25,8 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 ```
 
+### JSON
+
 This could be serialized to JSON as:
 
 ```python
@@ -67,6 +69,11 @@ giving:
 }
 ```
 
+Note the fields have been camel cased, and the publication date has been turned
+into an ISO 8601 date.
+
+### XML
+
 The XML version of the typed dictionary might look like this:
 
 ```python
@@ -81,7 +88,7 @@ class Book(TypedDict, total=False):
     author: str
     publication_date: datetime
     keywords: Annotated[List[Annotated[str, XMLEntity("Keyword")]], XMLEntity("Keywords")]
-    phrases: Annotated[List[Annotated[str, XMLEntity("Phrase")]], XMLEntity("Phrase")]
+    phrases: List[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
@@ -130,3 +137,14 @@ Producing:
     <Age>24</Age>
 </Book>'
 ```
+
+The annotations are more elaborate here. However, much of the typed dictionary
+requires no annotation.
+
+First we needed the outer document wrapper `XMLEntity("Book")`.
+
+Next we annotated the `book_id` to be an `XMLAttribute`.
+
+Finally we annotated the two lists differently. The `keywords` list used a
+nested structure, which we indicated by giving th list a different `XMLEntity`
+tag to the list items. For the phrases we used the default in-line behaviour.
