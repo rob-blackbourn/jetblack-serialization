@@ -48,4 +48,7 @@ def _from_obj(obj: Any, config: SerializerConfig) -> Any:
 
 def serialize(obj: Any, config: SerializerConfig) -> str:
     json_obj = _from_obj(obj, config)
-    return json.dumps(json_obj)
+    return json.dumps(
+        json_obj,
+        indent=2 if config.pretty_print else None
+    )

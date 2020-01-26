@@ -217,4 +217,7 @@ def serialize(
         json_annotation,
         config
     )
-    return json.dumps(json_obj)
+    return json.dumps(
+        json_obj,
+        indent=2 if config.pretty_print else None
+    )
