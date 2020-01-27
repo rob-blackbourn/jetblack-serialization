@@ -23,6 +23,28 @@ from .annotations import (
 )
 
 
+def _from_value(
+        obj: Any,
+        type_annotation: Type
+) -> Any:
+    if type_annotation is str:
+        return obj
+    elif type_annotation is int:
+        return obj
+    elif type_annotation is bool:
+        return obj
+    elif type_annotation is float:
+        return obj
+    elif type_annotation is Decimal:
+        return obj
+    elif type_annotation is datetime:
+        return datetime_to_iso_8601(obj)
+    elif type_annotation is timedelta:
+        return timedelta_to_iso_8601(obj)
+    else:
+        raise TypeError(f'Unhandled type {type_annotation}')
+
+
 def _from_optional(
         obj: Any,
         type_annotation: Annotation,
@@ -36,7 +58,7 @@ def _from_optional(
     union_types = typing_inspect.get_args(type_annotation)[:-1]
     if len(union_types) == 1:
         # This was Optional[T]
-        return _from_value(
+        return _from_any(
             obj,
             union_types[0],
             json_annotation,
@@ -59,7 +81,7 @@ def _from_union(
 ) -> Any:
     for element_type in typing_inspect.get_args(type_annotation):
         try:
-            return _from_value(
+            return _from_any(
                 obj,
                 element_type,
                 json_annotation,
@@ -84,7 +106,7 @@ def _from_list(
         item_json_annotation = JSONValue()
 
     return [
-        _from_value(
+        _from_any(
             item,
             item_type_annotation,
             item_json_annotation,
@@ -117,7 +139,7 @@ def _from_typed_dict(
             json_property = JSONProperty(property_name)
             item_type_annotation = key_annotation
 
-        json_obj[json_property.tag] = _from_value(
+        json_obj[json_property.tag] = _from_any(
             dct.get(key),
             item_type_annotation,
             json_property,
@@ -126,36 +148,14 @@ def _from_typed_dict(
     return json_obj
 
 
-def _from_simple(
-        obj: Any,
-        type_annotation: Type
-) -> Any:
-    if type_annotation is str:
-        return obj
-    elif type_annotation is int:
-        return obj
-    elif type_annotation is bool:
-        return obj
-    elif type_annotation is float:
-        return obj
-    elif type_annotation is Decimal:
-        return obj
-    elif type_annotation is datetime:
-        return datetime_to_iso_8601(obj)
-    elif type_annotation is timedelta:
-        return timedelta_to_iso_8601(obj)
-    else:
-        raise TypeError(f'Unhandled type {type_annotation}')
-
-
-def _from_value(
+def _from_any(
         value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
     if is_simple_type(type_annotation):
-        return _from_simple(
+        return _from_value(
             value,
             type_annotation
         )
@@ -211,7 +211,7 @@ def serialize(
     else:
         type_annotation, json_annotation = annotation, JSONValue()
 
-    json_obj = _from_value(
+    json_obj = _from_any(
         obj,
         type_annotation,
         json_annotation,

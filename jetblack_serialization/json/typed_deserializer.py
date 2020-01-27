@@ -6,6 +6,7 @@ import json
 from typing import (
     Any,
     Dict,
+    List,
     Optional,
     Type,
     Union,
@@ -30,7 +31,7 @@ from .annotations import (
 )
 
 
-def _from_json_value_to_builtin(value: Any, type_annotation: Type) -> Any:
+def _to_value(value: Any, type_annotation: Type) -> Any:
     if isinstance(value, type_annotation):
         return value
     elif isinstance(value, str):
@@ -54,7 +55,7 @@ def _from_json_value_to_builtin(value: Any, type_annotation: Type) -> Any:
         raise RuntimeError(f'Unable to coerce value {value}')
 
 
-def _from_json_obj_to_optional(
+def _to_optional(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
@@ -63,7 +64,7 @@ def _from_json_obj_to_optional(
     # An optional is a union where the last element is the None type.
     union_types = typing_inspect.get_args(type_annotation)[:-1]
     if len(union_types) == 1:
-        return None if not obj else _from_json_value(
+        return None if not obj else _to_any(
             obj,
             union_types[0],
             json_annotation,
@@ -71,14 +72,14 @@ def _from_json_obj_to_optional(
         )
     else:
         union = Union[tuple(union_types)]  # type: ignore
-        return _from_json_value(
+        return _to_any(
             obj,
             union,
             json_annotation,
             config
         )
     optional_type = typing_inspect.get_optional_type(type_annotation)
-    return None if not obj else _from_json_value(
+    return None if not obj else _to_any(
         obj,
         optional_type,
         json_annotation,
@@ -86,18 +87,18 @@ def _from_json_obj_to_optional(
     )
 
 
-def _from_json_obj_to_list(
+def _to_list(
         lst: list,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> Any:
+) -> List[Any]:
     item_annotation, *_rest = typing_inspect.get_args(type_annotation)
     item_type_annotation, item_json_annotation = get_json_annotation(
         item_annotation
     )
 
     return [
-        _from_json_value(
+        _to_any(
             item,
             item_type_annotation,
             item_json_annotation,
@@ -107,7 +108,7 @@ def _from_json_obj_to_list(
     ]
 
 
-def _from_json_obj_to_union(
+def _to_union(
         obj: Optional[Dict[str, Any]],
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
@@ -115,7 +116,7 @@ def _from_json_obj_to_union(
 ) -> Any:
     for item_type_annotation in typing_inspect.get_args(type_annotation):
         try:
-            return _from_json_value(
+            return _to_any(
                 obj,
                 item_type_annotation,
                 json_annotation,
@@ -125,7 +126,7 @@ def _from_json_obj_to_union(
             pass
 
 
-def _from_json_obj_to_typed_dict(
+def _to_dict(
         obj: Dict[str, Any],
         type_annotation: Annotation,
         config: SerializerConfig
@@ -149,7 +150,7 @@ def _from_json_obj_to_typed_dict(
             item_type_annotation = key_annotation
 
         if json_property.tag in obj:
-            json_obj[key] = _from_json_value(
+            json_obj[key] = _to_any(
                 obj[json_property.tag],
                 item_type_annotation,
                 json_property,
@@ -165,38 +166,38 @@ def _from_json_obj_to_typed_dict(
     return json_obj
 
 
-def _from_json_value(
+def _to_any(
         json_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
     if is_simple_type(type_annotation):
-        return _from_json_value_to_builtin(
+        return _to_value(
             json_value,
             type_annotation
         )
     elif typing_inspect.is_optional_type(type_annotation):
-        return _from_json_obj_to_optional(
+        return _to_optional(
             json_value,
             type_annotation,
             json_annotation,
             config
         )
     elif typing_inspect.is_list_type(type_annotation):
-        return _from_json_obj_to_list(
+        return _to_list(
             json_value,
             type_annotation,
             config
         )
     elif typing_inspect.is_typed_dict_type(type_annotation):
-        return _from_json_obj_to_typed_dict(
+        return _to_dict(
             json_value,
             type_annotation,
             config
         )
     elif typing_inspect.is_union_type(type_annotation):
-        return _from_json_obj_to_union(
+        return _to_union(
             json_value,
             type_annotation,
             json_annotation,
@@ -220,7 +221,7 @@ def from_json_value(
     else:
         type_annotation, json_annotation = annotation, JSONValue()
 
-    return _from_json_value(
+    return _to_any(
         json_value,
         type_annotation,
         json_annotation,
