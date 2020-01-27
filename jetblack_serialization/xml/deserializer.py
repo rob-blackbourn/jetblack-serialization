@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import (
     Any,
+    Callable,
     Dict,
     Iterable,
     List,
@@ -43,23 +44,22 @@ def _is_element_empty(element: Element, xml_annotation: XMLAnnotation) -> bool:
         )
 
 
-def _to_builtin(text: str, type_annotation: Type) -> Any:
-    if type_annotation is str:
-        return text
-    elif type_annotation is int:
-        return int(text)
-    elif type_annotation is bool:
-        return text.lower() == 'true'
-    elif type_annotation is float:
-        return float(text)
-    elif type_annotation is Decimal:
-        return Decimal(text)
-    elif type_annotation is datetime:
-        return iso_8601_to_datetime(text)
-    elif type_annotation is timedelta:
-        return iso_8601_to_timedelta(text)
-    else:
+VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
+    str: lambda text: text,
+    int: int,
+    bool: lambda text: text.lower() == 'true',
+    float: float,
+    Decimal: Decimal,
+    datetime: iso_8601_to_datetime,
+    timedelta: iso_8601_to_timedelta
+}
+
+
+def _to_value(text: str, type_annotation: Type) -> Any:
+    deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+    if deserializer is None:
         raise TypeError(f'Unhandled type {type_annotation}')
+    return deserializer(text)
 
 
 def _to_union(
@@ -122,7 +122,7 @@ def _to_simple(
         text = element.attrib[xml_annotation.tag]
     if text is None:
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
-    return _to_builtin(text, type_annotation)
+    return _to_value(text, type_annotation)
 
 
 def _to_list(

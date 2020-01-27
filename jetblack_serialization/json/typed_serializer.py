@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 import json
-from typing import Any, Type, Union, cast
+from typing import Any, Callable, Dict, Type, Union, cast
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
@@ -22,27 +22,22 @@ from .annotations import (
     get_json_annotation
 )
 
+VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
+    str: lambda obj: obj,
+    int: lambda obj: obj,
+    bool: lambda obj: obj,
+    float: lambda obj: obj,
+    Decimal: lambda obj: obj,
+    datetime: datetime_to_iso_8601,
+    timedelta: timedelta_to_iso_8601
+}
 
-def _from_value(
-        obj: Any,
-        type_annotation: Type
-) -> Any:
-    if type_annotation is str:
-        return obj
-    elif type_annotation is int:
-        return obj
-    elif type_annotation is bool:
-        return obj
-    elif type_annotation is float:
-        return obj
-    elif type_annotation is Decimal:
-        return obj
-    elif type_annotation is datetime:
-        return datetime_to_iso_8601(obj)
-    elif type_annotation is timedelta:
-        return timedelta_to_iso_8601(obj)
-    else:
+
+def _from_value(obj: Any, type_annotation: Type) -> Any:
+    serializer = VALUE_SERIALIZERS.get(type_annotation)
+    if serializer is None:
         raise TypeError(f'Unhandled type {type_annotation}')
+    return serializer(obj)
 
 
 def _from_optional(

@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 import json
-from typing import Any
+from typing import Any, Callable, Dict, Type
 
 from ..iso_8601 import datetime_to_iso_8601, timedelta_to_iso_8601
 from ..config import SerializerConfig
@@ -14,13 +14,18 @@ def _serialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     ) if config.serialize_key and isinstance(key, str) else key
 
 
-def _from_value(value: Any) -> Any:
-    if isinstance(value, timedelta):
-        return timedelta_to_iso_8601(value)
-    elif isinstance(value, datetime):
-        return datetime_to_iso_8601(value)
-    else:
+VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
+    timedelta: timedelta_to_iso_8601,
+    datetime: datetime_to_iso_8601
+}
+
+
+def _from_value(value: Any, type_annotation: Type) -> Any:
+    serializer = VALUE_SERIALIZERS.get(type_annotation)
+    if serializer is None:
         return value
+    else:
+        return serializer(value)
 
 
 def _from_list(lst: list, config: SerializerConfig) -> list:
@@ -43,7 +48,7 @@ def _from_any(obj: Any, config: SerializerConfig) -> Any:
     elif isinstance(obj, list):
         return _from_list(obj, config)
     else:
-        return _from_value(obj)
+        return _from_value(obj, type(obj))
 
 
 def serialize(obj: Any, config: SerializerConfig) -> str:

@@ -13,7 +13,7 @@ def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     ) if config.deserialize_key and isinstance(key, str) else key
 
 
-def _from_value(value: Any):
+def _from_value(value: Any) -> Any:
     if isinstance(value, str):
         try:
             return iso_8601_to_datetime(value)

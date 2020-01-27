@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Optional, Type, Union
+from typing import Any, Callable, Dict, Optional, Type, Union
 
 from lxml import etree
 from lxml.etree import Element, SubElement  # pylint: disable=no-name-in-module
@@ -28,26 +28,22 @@ def _make_element(parent: Optional[Element], tag: str) -> Element:
     return Element(tag) if parent is None else SubElement(parent, tag)
 
 
-def _simple_type_to_text(
-        obj: Any,
-        type_annotation: Type
-) -> str:
-    if type_annotation is str:
-        return obj
-    elif type_annotation is int:
-        return str(obj)
-    elif type_annotation is bool:
-        return 'true' if obj else 'false'
-    elif type_annotation is float:
-        return str(obj)
-    elif type_annotation is Decimal:
-        return str(obj)
-    elif type_annotation is datetime:
-        return datetime_to_iso_8601(obj)
-    elif type_annotation is timedelta:
-        return timedelta_to_iso_8601(obj)
-    else:
+VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
+    str: lambda obj: obj,
+    int: str,
+    bool: lambda obj: 'true' if obj else 'false',
+    float: str,
+    Decimal: str,
+    datetime: datetime_to_iso_8601,
+    timedelta: timedelta_to_iso_8601
+}
+
+
+def _from_value(obj: Any, type_annotation: Type) -> str:
+    serializer = VALUE_SERIALIZERS.get(type_annotation)
+    if serializer is None:
         raise TypeError(f'Unhandled type {type_annotation}')
+    return serializer(obj)
 
 
 def _from_optional(
@@ -174,7 +170,7 @@ def _from_simple(
         xml_annotation: XMLAnnotation,
         element: Optional[Element]
 ) -> Element:
-    text = _simple_type_to_text(obj, type_annotation)
+    text = _from_value(obj, type_annotation)
     if isinstance(xml_annotation, XMLAttribute):
         if element is None:
             raise ValueError("No element for attribute")

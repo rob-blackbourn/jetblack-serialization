@@ -5,6 +5,7 @@ from decimal import Decimal
 import json
 from typing import (
     Any,
+    Callable,
     Dict,
     List,
     Optional,
@@ -30,27 +31,25 @@ from .annotations import (
     get_json_annotation
 )
 
+VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
+    str: lambda obj: obj,
+    int: int,
+    bool: lambda obj: obj.lower() == 'true',
+    float: float,
+    Decimal: Decimal,
+    datetime: iso_8601_to_datetime,
+    timedelta: iso_8601_to_timedelta
+}
+
 
 def _to_value(value: Any, type_annotation: Type) -> Any:
     if isinstance(value, type_annotation):
         return value
     elif isinstance(value, str):
-        if type_annotation is str:
-            return value
-        elif type_annotation is int:
-            return int(value)
-        elif type_annotation is bool:
-            return value.lower() == 'true'
-        elif type_annotation is float:
-            return float(value)
-        elif type_annotation is Decimal:
-            return Decimal(value)
-        elif type_annotation is datetime:
-            return iso_8601_to_datetime(value)
-        elif type_annotation is timedelta:
-            return iso_8601_to_timedelta(value)
-        else:
+        deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+        if deserializer is None:
             raise TypeError(f'Unhandled type {type_annotation}')
+        return deserializer(value)
     else:
         raise RuntimeError(f'Unable to coerce value {value}')
 
