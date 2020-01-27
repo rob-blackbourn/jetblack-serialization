@@ -14,7 +14,7 @@ def _serialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     ) if config.serialize_key and isinstance(key, str) else key
 
 
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
+VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
     timedelta: timedelta_to_iso_8601,
     datetime: datetime_to_iso_8601
 }
@@ -22,10 +22,9 @@ VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
 
 def _from_value(value: Any, type_annotation: Type) -> Any:
     serializer = VALUE_SERIALIZERS.get(type_annotation)
-    if serializer is None:
-        return value
-    else:
+    if serializer is not None:
         return serializer(value)
+    return value
 
 
 def _from_list(lst: list, config: SerializerConfig) -> list:

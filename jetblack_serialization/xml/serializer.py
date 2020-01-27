@@ -29,21 +29,28 @@ def _make_element(parent: Optional[Element], tag: str) -> Element:
 
 
 VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
-    str: lambda obj: obj,
-    int: str,
-    bool: lambda obj: 'true' if obj else 'false',
-    float: str,
-    Decimal: str,
     datetime: datetime_to_iso_8601,
     timedelta: timedelta_to_iso_8601
 }
 
 
 def _from_value(obj: Any, type_annotation: Type) -> str:
-    serializer = VALUE_SERIALIZERS.get(type_annotation)
-    if serializer is None:
-        raise TypeError(f'Unhandled type {type_annotation}')
-    return serializer(obj)
+    if type_annotation is str:
+        return obj
+    elif type_annotation is int:
+        return str(obj)
+    elif type_annotation is bool:
+        return 'true' if obj else 'false'
+    elif type_annotation is float:
+        return str(obj)
+    elif type_annotation is Decimal:
+        return str(obj)
+    else:
+        serializer = VALUE_SERIALIZERS.get(type_annotation)
+        if serializer is not None:
+            return serializer(obj)
+
+    raise TypeError(f'Unhandled type {type_annotation}')
 
 
 def _from_optional(

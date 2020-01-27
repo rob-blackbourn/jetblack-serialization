@@ -32,11 +32,6 @@ from .annotations import (
 )
 
 VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    str: lambda obj: obj,
-    int: int,
-    bool: lambda obj: obj.lower() == 'true',
-    float: float,
-    Decimal: Decimal,
     datetime: iso_8601_to_datetime,
     timedelta: iso_8601_to_timedelta
 }
@@ -45,13 +40,24 @@ VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
 def _to_value(value: Any, type_annotation: Type) -> Any:
     if isinstance(value, type_annotation):
         return value
-    elif isinstance(value, str):
-        deserializer = VALUE_DESERIALIZERS.get(type_annotation)
-        if deserializer is None:
-            raise TypeError(f'Unhandled type {type_annotation}')
-        return deserializer(value)
-    else:
-        raise RuntimeError(f'Unable to coerce value {value}')
+
+    if isinstance(value, str):
+        if type_annotation is str:
+            return value
+        elif type_annotation is int:
+            return int(value)
+        elif type_annotation is bool:
+            return value.lower() == 'true'
+        elif type_annotation is float:
+            return float(value)
+        elif type_annotation is Decimal:
+            return Decimal(value)
+        else:
+            deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+            if deserializer is not None:
+                return deserializer(value)
+
+    raise TypeError(f'Unhandled type {type_annotation}')
 
 
 def _to_optional(

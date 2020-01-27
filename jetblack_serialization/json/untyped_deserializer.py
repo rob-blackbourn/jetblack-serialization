@@ -1,7 +1,8 @@
 """An untyped deserializer"""
 
+from datetime import datetime, timedelta
 import json
-from typing import Any
+from typing import Any, Callable, Dict, Type
 
 from ..iso_8601 import iso_8601_to_timedelta, iso_8601_to_datetime
 from ..config import SerializerConfig
@@ -11,6 +12,12 @@ def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     return config.deserialize_key(
         key
     ) if config.deserialize_key and isinstance(key, str) else key
+
+
+VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
+    datetime: iso_8601_to_datetime,
+    timedelta: iso_8601_to_timedelta
+}
 
 
 def _from_value(value: Any) -> Any:

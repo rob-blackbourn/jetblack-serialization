@@ -56,10 +56,22 @@ VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
 
 
 def _to_value(text: str, type_annotation: Type) -> Any:
-    deserializer = VALUE_DESERIALIZERS.get(type_annotation)
-    if deserializer is None:
-        raise TypeError(f'Unhandled type {type_annotation}')
-    return deserializer(text)
+    if type_annotation is str:
+        return text
+    elif type_annotation is int:
+        return int(text)
+    elif type_annotation is bool:
+        return text.lower() == 'true'
+    elif type_annotation is float:
+        return float(text)
+    elif type_annotation is Decimal:
+        return Decimal(text)
+    else:
+        deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+        if deserializer is not None:
+            return deserializer(text)
+
+    raise TypeError(f'Unhandled type {type_annotation}')
 
 
 def _to_union(
