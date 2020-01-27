@@ -20,6 +20,10 @@ pip install jetblack-serialization
 
 ## Overview
 
+The package adds support for type annotations when serializing or deserializing
+JSON or XML.
+
+
 ### JSON
 
 Given a typed dictionary:
