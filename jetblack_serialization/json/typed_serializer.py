@@ -1,18 +1,13 @@
 """An XML serializer"""
 
-from datetime import datetime, timedelta
 from decimal import Decimal
 import json
-from typing import Any, Callable, Dict, Type, Union, cast
+from typing import Any, Type, Union, cast
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
 from ..types import Annotation
 from ..utils import is_simple_type
-from ..iso_8601 import (
-    datetime_to_iso_8601,
-    timedelta_to_iso_8601
-)
 
 from .annotations import (
     JSONAnnotation,
@@ -22,30 +17,26 @@ from .annotations import (
     get_json_annotation
 )
 
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
-    datetime: datetime_to_iso_8601,
-    timedelta: timedelta_to_iso_8601
-}
-
 
 def _from_value(
-        obj: Any,
-        type_annotation: Type
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
 ) -> Any:
     if type_annotation is str:
-        return obj
+        return value
     elif type_annotation is int:
-        return obj
+        return value
     elif type_annotation is bool:
-        return obj
+        return value
     elif type_annotation is float:
-        return obj
+        return value
     elif type_annotation is Decimal:
-        return obj
+        return value
     else:
-        serializer = VALUE_SERIALIZERS.get(type_annotation)
+        serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
-            return serializer(obj)
+            return serializer(value)
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
@@ -162,7 +153,8 @@ def _from_any(
     if is_simple_type(type_annotation):
         return _from_value(
             value,
-            type_annotation
+            type_annotation,
+            config
         )
     elif typing_inspect.is_optional_type(type_annotation):
         return _from_optional(

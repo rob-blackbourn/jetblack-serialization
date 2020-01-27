@@ -1,11 +1,9 @@
 """JSON Serialization"""
 
-from datetime import datetime, timedelta
 from decimal import Decimal
 import json
 from typing import (
     Any,
-    Callable,
     Dict,
     List,
     Optional,
@@ -15,10 +13,6 @@ from typing import (
 )
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
-from ..iso_8601 import (
-    iso_8601_to_datetime,
-    iso_8601_to_timedelta
-)
 from ..config import SerializerConfig
 from ..types import Annotation
 
@@ -31,13 +25,12 @@ from .annotations import (
     get_json_annotation
 )
 
-VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    datetime: iso_8601_to_datetime,
-    timedelta: iso_8601_to_timedelta
-}
 
-
-def _to_value(value: Any, type_annotation: Type) -> Any:
+def _to_value(
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> Any:
     if isinstance(value, type_annotation):
         return value
 
@@ -53,7 +46,7 @@ def _to_value(value: Any, type_annotation: Type) -> Any:
         elif type_annotation is Decimal:
             return Decimal(value)
         else:
-            deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+            deserializer = config.value_deserializers.get(type_annotation)
             if deserializer is not None:
                 return deserializer(value)
 
@@ -180,7 +173,8 @@ def _to_any(
     if is_simple_type(type_annotation):
         return _to_value(
             json_value,
-            type_annotation
+            type_annotation,
+            config
         )
     elif typing_inspect.is_optional_type(type_annotation):
         return _to_optional(

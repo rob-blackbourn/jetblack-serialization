@@ -1,10 +1,8 @@
 """An untyped serializer"""
 
-from datetime import datetime, timedelta
 import json
-from typing import Any, Callable, Dict, Type
+from typing import Any, Type
 
-from ..iso_8601 import datetime_to_iso_8601, timedelta_to_iso_8601
 from ..config import SerializerConfig
 
 
@@ -14,14 +12,12 @@ def _serialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     ) if config.serialize_key and isinstance(key, str) else key
 
 
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
-    timedelta: timedelta_to_iso_8601,
-    datetime: datetime_to_iso_8601
-}
-
-
-def _from_value(value: Any, type_annotation: Type) -> Any:
-    serializer = VALUE_SERIALIZERS.get(type_annotation)
+def _from_value(
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> Any:
+    serializer = config.value_serializers.get(type_annotation)
     if serializer is not None:
         return serializer(value)
     return value
@@ -47,7 +43,7 @@ def _from_any(obj: Any, config: SerializerConfig) -> Any:
     elif isinstance(obj, list):
         return _from_list(obj, config)
     else:
-        return _from_value(obj, type(obj))
+        return _from_value(obj, type(obj), config)
 
 
 def serialize(obj: Any, config: SerializerConfig) -> str:

@@ -1,8 +1,7 @@
 """An XML serializer"""
 
-from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Callable, Dict, Optional, Type, Union
+from typing import Any, Optional, Type, Union
 
 from lxml import etree
 from lxml.etree import Element, SubElement  # pylint: disable=no-name-in-module
@@ -11,10 +10,6 @@ import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..types import Annotation
 from ..config import SerializerConfig
 from ..utils import is_simple_type
-from ..iso_8601 import (
-    datetime_to_iso_8601,
-    timedelta_to_iso_8601
-)
 
 from .annotations import (
     XMLAnnotation,
@@ -28,27 +23,25 @@ def _make_element(parent: Optional[Element], tag: str) -> Element:
     return Element(tag) if parent is None else SubElement(parent, tag)
 
 
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
-    datetime: datetime_to_iso_8601,
-    timedelta: timedelta_to_iso_8601
-}
-
-
-def _from_value(obj: Any, type_annotation: Type) -> str:
+def _from_value(
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> str:
     if type_annotation is str:
-        return obj
+        return value
     elif type_annotation is int:
-        return str(obj)
+        return str(value)
     elif type_annotation is bool:
-        return 'true' if obj else 'false'
+        return 'true' if value else 'false'
     elif type_annotation is float:
-        return str(obj)
+        return str(value)
     elif type_annotation is Decimal:
-        return str(obj)
+        return str(value)
     else:
-        serializer = VALUE_SERIALIZERS.get(type_annotation)
+        serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
-            return serializer(obj)
+            return serializer(value)
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
@@ -175,9 +168,10 @@ def _from_simple(
         obj: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[Element]
+        element: Optional[Element],
+        config: SerializerConfig
 ) -> Element:
-    text = _from_value(obj, type_annotation)
+    text = _from_value(obj, type_annotation, config)
     if isinstance(xml_annotation, XMLAttribute):
         if element is None:
             raise ValueError("No element for attribute")
@@ -201,7 +195,8 @@ def _from_obj(
             obj,
             type_annotation,
             xml_annotation,
-            element
+            element,
+            config
         )
     elif typing_inspect.is_optional_type(type_annotation):
         return _from_optional(

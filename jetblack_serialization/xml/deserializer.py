@@ -1,10 +1,8 @@
 """XML Serialization"""
 
-from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import (
     Any,
-    Callable,
     Dict,
     Iterable,
     List,
@@ -17,10 +15,6 @@ from lxml import etree
 from lxml.etree import Element  # pylint: disable=no-name-in-module
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
-from ..iso_8601 import (
-    iso_8601_to_datetime,
-    iso_8601_to_timedelta
-)
 from ..types import Annotation
 from ..config import SerializerConfig
 from ..utils import is_simple_type
@@ -44,13 +38,11 @@ def _is_element_empty(element: Element, xml_annotation: XMLAnnotation) -> bool:
         )
 
 
-VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    datetime: iso_8601_to_datetime,
-    timedelta: iso_8601_to_timedelta
-}
-
-
-def _to_value(text: str, type_annotation: Type) -> Any:
+def _to_value(
+        text: str,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> Any:
     if type_annotation is str:
         return text
     elif type_annotation is int:
@@ -62,7 +54,7 @@ def _to_value(text: str, type_annotation: Type) -> Any:
     elif type_annotation is Decimal:
         return Decimal(text)
     else:
-        deserializer = VALUE_DESERIALIZERS.get(type_annotation)
+        deserializer = config.value_deserializers.get(type_annotation)
         if deserializer is not None:
             return deserializer(text)
 
@@ -119,7 +111,8 @@ def _to_optional(
 def _to_simple(
         element: Optional[Element],
         type_annotation: Annotation,
-        xml_annotation: XMLAnnotation
+        xml_annotation: XMLAnnotation,
+        config: SerializerConfig
 ) -> Any:
     if element is None:
         raise ValueError('Found "None" while deserializing a value')
@@ -129,7 +122,7 @@ def _to_simple(
         text = element.attrib[xml_annotation.tag]
     if text is None:
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
-    return _to_value(text, type_annotation)
+    return _to_value(text, type_annotation, config)
 
 
 def _to_list(
@@ -213,7 +206,12 @@ def _to_obj(
 ) -> Any:
 
     if is_simple_type(type_annotation):
-        return _to_simple(element, type_annotation, xml_annotation)
+        return _to_simple(
+            element,
+            type_annotation,
+            xml_annotation,
+            config
+        )
     if typing_inspect.is_optional_type(type_annotation):
         return _to_optional(
             element,
