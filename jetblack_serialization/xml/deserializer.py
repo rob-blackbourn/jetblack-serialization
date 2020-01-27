@@ -45,11 +45,6 @@ def _is_element_empty(element: Element, xml_annotation: XMLAnnotation) -> bool:
 
 
 VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    str: lambda text: text,
-    int: int,
-    bool: lambda text: text.lower() == 'true',
-    float: float,
-    Decimal: Decimal,
     datetime: iso_8601_to_datetime,
     timedelta: iso_8601_to_timedelta
 }
