@@ -22,14 +22,11 @@ VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
 
 def _from_value(value: Any) -> Any:
     if isinstance(value, str):
-        try:
-            return iso_8601_to_datetime(value)
-        except:  # pylint: disable=bare-except
-            pass
-        try:
-            return iso_8601_to_timedelta(value)
-        except:  # pylint: disable=bare-except
-            pass
+        for deserializer in VALUE_DESERIALIZERS.values():
+            try:
+                return deserializer(value)
+            except:  # pylint: disable=bare-except
+                pass
     return value
 
 
