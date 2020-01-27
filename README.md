@@ -43,9 +43,6 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 ```
 
-For JSON we set the serialization config to serialize the keys to
-camel-case and deserialize to snake-case.
-
 #### Serializing
 
 This could be serialized to JSON as:
