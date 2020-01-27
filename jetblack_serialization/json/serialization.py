@@ -1,21 +1,13 @@
 """Serialization"""
 
-from cgi import parse_multipart
-from functools import partial
-import io
-from typing import Any, Callable
-
-from urllib.parse import parse_qs
+from typing import Any
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 
 from ..types import (
     Annotation,
-    MediaType,
-    MediaTypeParams
 )
 from ..config import SerializerConfig
-from .typed_deserializer import from_json_value
 
 
 from .typed_serializer import serialize as typed_serialize
@@ -38,20 +30,20 @@ def _is_typed(annotation: Annotation) -> bool:
     )
 
 
-def to_json(
-        _media_type: MediaType,
-        _params: MediaTypeParams,
-        config: SerializerConfig,
+def serialize(
         obj: Any,
         annotation: Any,
+        config: SerializerConfig
 ) -> str:
     """Convert the object to JSON
 
     Args:
         obj (Any): The object to convert
+        annotation (Annotation): The type annotation
+        config (SerializerConfig): The serializer configuration
 
     Returns:
-        str: The stringified object
+        str: The serialized object
     """
     if _is_typed(annotation):
         return typed_serialize(obj, annotation, config)
@@ -59,21 +51,17 @@ def to_json(
         return untyped_serialize(obj, config)
 
 
-def from_json(
-        _media_type: MediaType,
-        _params: MediaTypeParams,
-        config: SerializerConfig,
+def deserialize(
         text: str,
-        annotation: Annotation
+        annotation: Annotation,
+        config: SerializerConfig,
 ) -> Any:
     """Convert JSON to an object
 
     Args:
         text (str): The JSON string
-        _media_type (bytes): The media type
-        _params (Dict[bytes, bytes]): The params from content-type header
-        annotation (str): The type annotation
-        rename (Callable[[str], str]): A function to rename object keys.
+        annotation (Annotation): The type annotation
+        config (SerializerConfig): The serializer configuration
 
     Returns:
         Any: The deserialized object.
@@ -82,62 +70,3 @@ def from_json(
         return typed_deserialize(text, annotation, config)
     else:
         return untyped_deserialize(text, config)
-
-
-def from_query_string(
-        _media_type: MediaType,
-        _params: MediaTypeParams,
-        _config: SerializerConfig,
-        text: str,
-        _annotation: Annotation
-) -> Any:
-    """Convert a query string to a dict
-
-    Args:
-        text (str): The query string
-        _media_type (bytes): The media type from the content-type header.
-        _params (Dict[bytes, bytes]): The params from the content-type header
-        _annotation (str): The type annotation
-        rename (Callable[[str], str]): A function to rename object keys.
-
-    Returns:
-        Any: The query string as a dict
-    """
-    return parse_qs(text)
-
-
-def from_form_data(
-        _media_type: MediaType,
-        params: MediaTypeParams,
-        _config: SerializerConfig,
-        text: str,
-        _annotation: Annotation
-) -> Any:
-    """Convert form data to a dict
-
-    Args:
-        text (str): The form data
-        _media_type (bytes): The media type from the content-type header
-        params (Dict[bytes, bytes]): The params from the content-type header.
-        _annotation(str): The type annotation
-        rename (Callable[[str], str]): A function to rename object keys.
-
-    Raises:
-        RuntimeError: If 'boundary' was not in the params
-
-    Returns:
-        Any: The form data as a dict.
-    """
-    if b'boundary' not in params:
-        raise RuntimeError('Required "boundary" parameter missing')
-    pdict = {
-        name.decode(): value
-        for name, value in params.items()
-    }
-    return parse_multipart(io.StringIO(text), pdict)
-
-
-def json_arg_deserializer_factory(
-        config: SerializerConfig,
-) -> Callable[[str, Annotation], Any]:
-    return partial(from_json_value, config)

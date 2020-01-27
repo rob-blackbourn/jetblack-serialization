@@ -1,8 +1,5 @@
 """Types used for serialization"""
 
-from typing import Any, Dict
+from typing import Any
 
 Annotation = Any
-
-MediaType = bytes
-MediaTypeParams = Dict[bytes, bytes]
