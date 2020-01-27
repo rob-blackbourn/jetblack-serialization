@@ -55,15 +55,9 @@ def _to_builtin(text: str, type_annotation: Type) -> Any:
     elif type_annotation is Decimal:
         return Decimal(text)
     elif type_annotation is datetime:
-        timestamp = iso_8601_to_datetime(text)
-        if timestamp is None:
-            raise ValueError(f"Unable co convert '{text}' to datetime")
-        return timestamp
+        return iso_8601_to_datetime(text)
     elif type_annotation is timedelta:
-        duration = iso_8601_to_timedelta(text)
-        if duration is None:
-            raise ValueError(f"Unable co convert '{text}' to timedelta")
-        return duration
+        return iso_8601_to_timedelta(text)
     else:
         raise TypeError(f'Unhandled type {type_annotation}')
 
