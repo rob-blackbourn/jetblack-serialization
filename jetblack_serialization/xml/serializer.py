@@ -1,6 +1,7 @@
 """An XML serializer"""
 
 from decimal import Decimal
+from inspect import Parameter
 from typing import Any, Optional, Type, Union
 
 from lxml import etree
@@ -145,6 +146,7 @@ def _from_typed_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     for key, key_annotation in typed_dict_keys.items():
+        default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
                 key_annotation
@@ -154,13 +156,19 @@ def _from_typed_dict(
             item_type_annotation = key_annotation
             item_xml_annotation = XMLEntity(tag)
 
-        _from_obj(
-            obj.get(key),
-            item_type_annotation,
-            item_xml_annotation,
-            dict_element,
-            config
-        )
+        value = obj.get(key, default)
+        if value is not Parameter.empty:
+            _from_obj(
+                value,
+                item_type_annotation,
+                item_xml_annotation,
+                dict_element,
+                config
+            )
+        else:
+            # TODO: Should we throw?
+            pass
+
     return dict_element
 
 

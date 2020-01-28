@@ -1,6 +1,7 @@
 """An XML serializer"""
 
 from decimal import Decimal
+from inspect import Parameter
 import json
 from typing import Any, Type, Union, cast
 
@@ -121,6 +122,7 @@ def _from_typed_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     for key, key_annotation in typed_dict_keys.items():
+        default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 key_annotation
@@ -135,12 +137,18 @@ def _from_typed_dict(
             json_property = JSONProperty(property_name)
             item_type_annotation = key_annotation
 
-        json_obj[json_property.tag] = _from_any(
-            dct.get(key),
-            item_type_annotation,
-            json_property,
-            config
-        )
+        value = dct.get(key, default)
+        if value != Parameter.empty:
+            json_obj[json_property.tag] = _from_any(
+                value,
+                item_type_annotation,
+                json_property,
+                config
+            )
+        else:
+            # TODO: Should we throw here?
+            pass
+
     return json_obj
 
 

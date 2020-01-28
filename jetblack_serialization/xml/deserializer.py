@@ -1,6 +1,7 @@
 """XML Serialization"""
 
 from decimal import Decimal
+from inspect import Parameter
 from typing import (
     Any,
     Dict,
@@ -39,11 +40,14 @@ def _is_element_empty(element: Element, xml_annotation: XMLAnnotation) -> bool:
 
 
 def _to_value(
-        text: str,
+        text: Optional[str],
+        default: Any,
         type_annotation: Type,
         config: SerializerConfig
 ) -> Any:
-    if type_annotation is str:
+    if text is None:
+        return default
+    elif type_annotation is str:
         return text
     elif type_annotation is int:
         return int(text)
@@ -71,6 +75,7 @@ def _to_union(
         try:
             return _to_obj(
                 element,
+                Parameter.empty,
                 union_type_annotation,
                 xml_annotation,
                 config
@@ -95,6 +100,7 @@ def _to_optional(
         # This was Optional[T]
         return _to_obj(
             element,
+            Parameter.empty,
             union_types[0],
             xml_annotation,
             config
@@ -110,6 +116,7 @@ def _to_optional(
 
 def _to_simple(
         element: Optional[Element],
+        default: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         config: SerializerConfig
@@ -120,9 +127,9 @@ def _to_simple(
         text = element.text
     else:
         text = element.attrib[xml_annotation.tag]
-    if text is None:
+    if text is None and default is Parameter.empty:
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
-    return _to_value(text, type_annotation, config)
+    return _to_value(text, default, type_annotation, config)
 
 
 def _to_list(
@@ -154,6 +161,7 @@ def _to_list(
     return [
         _to_obj(
             child,
+            Parameter.empty,
             item_type_annotation,
             item_xml_annotation,
             config
@@ -174,6 +182,7 @@ def _to_typed_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     for key, key_annotation in typed_dict_keys.items():
+        default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
                 key_annotation
@@ -190,6 +199,7 @@ def _to_typed_dict(
 
         typed_dict[key] = _to_obj(
             item_element,
+            default,
             item_type_annotation,
             item_xml_annotation,
             config
@@ -200,6 +210,7 @@ def _to_typed_dict(
 
 def _to_obj(
         element: Optional[Element],
+        default: Optional[Any],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         config: SerializerConfig
@@ -208,6 +219,7 @@ def _to_obj(
     if is_simple_type(type_annotation):
         return _to_simple(
             element,
+            default,
             type_annotation,
             xml_annotation,
             config
@@ -261,4 +273,4 @@ def deserialize(
             "Expected the root value to have an XMLEntity annotation")
 
     element = etree.fromstring(text)  # pylint: disable=c-extension-no-member
-    return _to_obj(element, type_annotation, xml_annotation, config)
+    return _to_obj(element, Parameter.empty, type_annotation, xml_annotation, config)

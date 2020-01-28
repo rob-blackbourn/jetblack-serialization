@@ -5,7 +5,11 @@ from typing import List, Optional, Union
 
 from stringcase import snakecase, camelcase
 
-from typing_extensions import TypedDict, Annotated  # type: ignore
+# try:
+#     from typing import TypedDict  # type:ignore
+# except:  # pylint: disable=bare-except
+#     from typing_extensions import TypedDict
+from typing_extensions import Annotated, TypedDict  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json.typed_deserializer import deserialize
@@ -17,7 +21,7 @@ from jetblack_serialization.json.annotations import (
 CONFIG = SerializerConfig(camelcase, snakecase)
 
 
-class Book(TypedDict, total=False):
+class Book(TypedDict):
     book_id: Annotated[int, JSONProperty("bookId")]
     title: Annotated[str, JSONProperty("title")]
     author: Annotated[str, JSONProperty("author")]
@@ -26,8 +30,8 @@ class Book(TypedDict, total=False):
                         JSONProperty("keywords")]
     phrases: Annotated[List[Annotated[str, JSONValue()]],
                        JSONProperty("phrases")]
-    age: Annotated[Optional[Union[datetime, int]], JSONProperty("age")]
-    pages: Annotated[Optional[int], JSONProperty("pages")]
+    age: Optional[Union[datetime, int]]
+    pages: Optional[int] = None  # type: ignore
 
 
 def test_deserialize():

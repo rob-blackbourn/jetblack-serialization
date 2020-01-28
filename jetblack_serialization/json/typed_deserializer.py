@@ -1,6 +1,7 @@
 """JSON Serialization"""
 
 from decimal import Decimal
+from inspect import Parameter
 import json
 from typing import (
     Any,
@@ -133,6 +134,7 @@ def _to_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     for key, key_annotation in typed_dict_keys.items():
+        default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 key_annotation
@@ -150,6 +152,13 @@ def _to_dict(
         if json_property.tag in obj:
             json_obj[key] = _to_any(
                 obj[json_property.tag],
+                item_type_annotation,
+                json_property,
+                config
+            )
+        elif default != Parameter.empty:
+            json_obj[key] = _to_any(
+                default,
                 item_type_annotation,
                 json_property,
                 config
