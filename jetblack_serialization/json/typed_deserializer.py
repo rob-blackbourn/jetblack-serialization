@@ -50,6 +50,8 @@ def _to_value(
             deserializer = config.value_deserializers.get(type_annotation)
             if deserializer is not None:
                 return deserializer(value)
+    elif isinstance(value, (int, float)) and type_annotation is Decimal:
+        return Decimal(value)
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
@@ -92,9 +94,14 @@ def _to_list(
         config: SerializerConfig
 ) -> List[Any]:
     item_annotation, *_rest = typing_inspect.get_args(type_annotation)
-    item_type_annotation, item_json_annotation = get_json_annotation(
-        item_annotation
-    )
+    if typing_inspect.is_annotated_type(type_annotation):
+        type_annotation, item_json_annotation = get_json_annotation(
+            item_annotation
+        )
+    else:
+        item_json_annotation = JSONValue()
+
+    item_type_annotation, *_ = typing_inspect.get_args(type_annotation)
 
     return [
         _to_any(

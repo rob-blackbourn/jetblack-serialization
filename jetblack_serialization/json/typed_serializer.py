@@ -33,7 +33,7 @@ def _from_value(
     elif type_annotation is float:
         return value
     elif type_annotation is Decimal:
-        return value
+        return float(value)
     else:
         serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
