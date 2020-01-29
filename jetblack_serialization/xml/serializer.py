@@ -254,5 +254,6 @@ def serialize(
 
     element = _from_obj(obj, type_annotation, xml_annotation, None, config)
     buf: bytes = etree.tostring(
-        element)  # pylint: disable=c-extension-no-member
+        element,
+        pretty_print=config.pretty_print)  # pylint: disable=c-extension-no-member
     return buf.decode()
