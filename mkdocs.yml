@@ -1,0 +1,41 @@
+site_name: jetblack-serialization
+site_description: Serialization for JSON and XML using typing
+site_dir: docs
+
+docs_dir: documentation
+
+repo_name: rob-blackbourn/jetblack-serialization
+repo_url: https://github.com/rob-blackbourn/jetblack-serialization
+edit_uri: ""
+
+theme:
+    name: 'material'
+
+nav:
+  - index.md
+  - User Guide:
+    - user-guide/installation.md
+    - user-guide/usage.md
+  - API:
+    - jetblack_serialization.iso_8601: api/jetblack_serialization.iso_8601.md
+    - jetblack_serialization.json: api/jetblack_serialization.json.md
+    - jetblack_serialization.xml: api/jetblack_serialization.xml.md
+  
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - jetblack_markdown.autodoc:
+      class_from_init: true
+      ignore_dunder: true
+      ignore_private: true
+      ignore_all: false
+      ignore_inherited: false
+      follow_module_tree: false
+      prefer_docstring: true
+      template_folder: templates
+  - toc:
+      permalink: true
+
+extra_css:
+    - css/custom.css
