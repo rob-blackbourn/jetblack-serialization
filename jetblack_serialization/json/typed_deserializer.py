@@ -227,6 +227,19 @@ def from_json_value(
         json_value: Any,
         annotation: Annotation,
 ) -> Any:
+    """Convert from a json value
+
+    Args:
+        config (SerializerConfig): The serialier configuration
+        json_value (Any): The JSON value
+        annotation (Annotation): The type annotation
+
+    Raises:
+        TypeError: If the value cannot be deserialized to the type
+
+    Returns:
+        Any: The deserialized value
+    """
     if is_json_annotation(annotation):
         type_annotation, json_annotation = get_json_annotation(annotation)
         if not isinstance(json_annotation, JSONValue):

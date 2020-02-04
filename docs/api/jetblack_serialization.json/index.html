@@ -400,6 +400,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#summary_2" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parameters_1" class="md-nav__link">
     Parameters
   </a>
@@ -427,7 +434,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_2" class="md-nav__link">
+  <a href="#summary_3" class="md-nav__link">
     Summary
   </a>
   
@@ -461,7 +468,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_3" class="md-nav__link">
+  <a href="#summary_4" class="md-nav__link">
     Summary
   </a>
   
@@ -488,7 +495,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_4" class="md-nav__link">
+  <a href="#summary_5" class="md-nav__link">
     Summary
   </a>
   
@@ -617,6 +624,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#summary_2" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parameters_1" class="md-nav__link">
     Parameters
   </a>
@@ -644,7 +658,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_2" class="md-nav__link">
+  <a href="#summary_3" class="md-nav__link">
     Summary
   </a>
   
@@ -678,7 +692,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_3" class="md-nav__link">
+  <a href="#summary_4" class="md-nav__link">
     Summary
   </a>
   
@@ -705,7 +719,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#summary_4" class="md-nav__link">
+  <a href="#summary_5" class="md-nav__link">
     Summary
   </a>
   
@@ -797,25 +811,26 @@
 <h3 class="autodoc-title" id="function-jetblack_serializationjsonfrom_json_value">
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">from_json_value</span>
 <a class="headerlink" href="#function-jetblack_serializationjsonfrom_json_value" title="Permanent link">&para;</a></h3>
-<br />
+<h4 class="autodoc-title" id="summary_2">Summary<a class="headerlink" href="#summary_2" title="Permanent link">&para;</a></h4>
+<p>Convert from a json value</p>
 <div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">from_json_value</var><span class="autodoc-punctuation">(</span><br />
 <div class="autodoc-argument">
         <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
         <var class="autodoc-varname">json_value</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">,</span></div>
 <div class="autodoc-argument">
-        <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span></div>
+        <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span></div>
 <span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">Any</span></div>
 <div class="autodoc-parameters">
 <h4 class="autodoc-title" id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
-<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span><span class="autodoc-punctuation"> (optional)</span><p></p>
-<var class="autodoc-varname">json_value</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation"> (optional)</span><p></p>
-<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation"> (optional)</span><p></p>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span><span class="autodoc-punctuation"> (optional)</span><p>The serialier configuration</p>
+<var class="autodoc-varname">json_value</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation"> (optional)</span><p>The JSON value</p>
+<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span><span class="autodoc-punctuation"> (optional)</span><p>The type annotation</p>
 </div>
 <div class="autodoc-returns">
 <h4 class="autodoc-title" id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
 <span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">: </span>
-
+<span class="autodoc-summary">The deserialized value</span>
 </div>
 <div class="autodoc-raises">
 
@@ -832,7 +847,7 @@
 <h3 class="autodoc-title" id="function-jetblack_serializationjsonserialize">
   <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">serialize</span>
 <a class="headerlink" href="#function-jetblack_serializationjsonserialize" title="Permanent link">&para;</a></h3>
-<h4 class="autodoc-title" id="summary_2">Summary<a class="headerlink" href="#summary_2" title="Permanent link">&para;</a></h4>
+<h4 class="autodoc-title" id="summary_3">Summary<a class="headerlink" href="#summary_3" title="Permanent link">&para;</a></h4>
 <p>Convert the object to JSON</p>
 <div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">serialize</var><span class="autodoc-punctuation">(</span><br />
 <div class="autodoc-argument">
@@ -868,7 +883,7 @@
 <h3 class="autodoc-title" id="class-jsonpropertyjsonannotation">
   <span class="autodoc-title-type">class </span><span class="autodoc-title-name">JSONProperty</span><span class="autodoc-punctuation">(</span><span class="autodoc-type">JSONAnnotation</span><span class="autodoc-punctuation">)</span>
 <a class="headerlink" href="#class-jsonpropertyjsonannotation" title="Permanent link">&para;</a></h3>
-<h4 class="autodoc-title" id="summary_3">Summary<a class="headerlink" href="#summary_3" title="Permanent link">&para;</a></h4>
+<h4 class="autodoc-title" id="summary_4">Summary<a class="headerlink" href="#summary_4" title="Permanent link">&para;</a></h4>
 <p>Initialize self.  See help(type(self)) for accurate signature.</p>
 <div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">JSONProperty</var><span class="autodoc-punctuation">(</span><span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">None</span></div>
 <div class="autodoc-parameters">
@@ -894,7 +909,7 @@
 <h3 class="autodoc-title" id="class-jsonvaluejsonannotation">
   <span class="autodoc-title-type">class </span><span class="autodoc-title-name">JSONValue</span><span class="autodoc-punctuation">(</span><span class="autodoc-type">JSONAnnotation</span><span class="autodoc-punctuation">)</span>
 <a class="headerlink" href="#class-jsonvaluejsonannotation" title="Permanent link">&para;</a></h3>
-<h4 class="autodoc-title" id="summary_4">Summary<a class="headerlink" href="#summary_4" title="Permanent link">&para;</a></h4>
+<h4 class="autodoc-title" id="summary_5">Summary<a class="headerlink" href="#summary_5" title="Permanent link">&para;</a></h4>
 <p>Initialize self.  See help(type(self)) for accurate signature.</p>
 <div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">JSONValue</var><span class="autodoc-punctuation">(</span><span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">None</span></div>
 <div class="autodoc-parameters">
