@@ -530,13 +530,8 @@ JSON or XML.</p>
 </pre></div>
 
 
-<h3 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h3>
-<p>This could be serialized to JSON as:</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize.json</span> <span class="kn">import</span> <span class="n">serialize</span>
-
-<span class="n">obj</span><span class="p">:</span> <span class="n">Book</span> <span class="o">=</span> <span class="p">{</span>
+<p>Create some data:</p>
+<div class="codehilite"><pre><span></span><span class="n">obj</span><span class="p">:</span> <span class="n">Book</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Chairman Mao&#39;</span><span class="p">,</span>
     <span class="s1">&#39;book_id&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Little Red Book&#39;</span><span class="p">,</span>
@@ -548,6 +543,15 @@ JSON or XML.</p>
     <span class="p">],</span>
     <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
 <span class="p">}</span>
+</pre></div>
+
+
+<h3 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h3>
+<p>This could be serialized to JSON as:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialize.json</span> <span class="kn">import</span> <span class="n">serialize</span>
+
 <span class="n">text</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span>
     <span class="n">obj</span><span class="p">,</span>
     <span class="n">Book</span><span class="p">,</span>

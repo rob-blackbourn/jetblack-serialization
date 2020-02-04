@@ -23,15 +23,9 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 ```
 
-### Serializing
-
-This could be serialized to JSON as:
+Create some data:
 
 ```python
-from stringcase import camelcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.json import serialize
-
 obj: Book = {
     'author': 'Chairman Mao',
     'book_id': 42,
@@ -44,6 +38,18 @@ obj: Book = {
     ],
     'age': 24,
 }
+```
+
+
+### Serializing
+
+This could be serialized to JSON as:
+
+```python
+from stringcase import camelcase, snakecase
+from jetblack_serialize import SerializerConfig
+from jetblack_serialize.json import serialize
+
 text = serialize(
     obj,
     Book,
