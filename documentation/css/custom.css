@@ -22,6 +22,6 @@ h4.autodoc-title {
     text-indent: 4em;
 }
 
-.autodoc-signature {
-    font-family: "Roboto Mono","Courier New",Courier,monospace;
+.autodoc-signature, .autodoc-property {
+    font-family: "Roboto Mono", "Courier New", Courier, minivan;
 }
