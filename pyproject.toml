@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jetblack-serialization"
-version = "0.5.0"
+version = "0.6.0"
 description = "Serialization for JSON and XML using typing"
 repository = "https://github.com/rob-blackbourn/jetblack-serialization"
 authors = ["Rob Blackbourn <rob.blackbourn@gmail.com>"]
