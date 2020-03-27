@@ -48,8 +48,8 @@ This could be serialized to JSON as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.json import serialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.json import serialize
 
 obj: Book = {
     'author': 'Chairman Mao',
@@ -95,8 +95,8 @@ We can deserialize the data as follows:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.json import deserialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.json import deserialize
 
 dct = deserialize(
     text,
@@ -113,7 +113,7 @@ The XML version of the typed dictionary might look like this:
 from datetime import datetime
 from typing import List, Optional, TypedDict, Union
 from typing_extensions import Annotated
-from jetblack_serialization import XMLEntity, XMLAttribute
+from jetblack_serialization.xml import XMLEntity, XMLAttribute
 
 class Book(TypedDict, total=False):
     book_id: Annotated[int, XMLAttribute("bookId")]
@@ -136,8 +136,8 @@ To serialize we need to provide the containing tag `Book`:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.xml import serialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.xml import serialize
 
 book: Book = {
     'author': 'Chairman Mao',
@@ -195,8 +195,8 @@ We can deserialize the XML as follows:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.xml import deserialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.xml import deserialize
 
 dct = deserialize(
     text,
