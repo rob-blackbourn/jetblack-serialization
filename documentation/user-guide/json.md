@@ -41,8 +41,8 @@ This could be serialized to JSON as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.json import serialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.json import serialize
 
 text = serialize(
     obj,
@@ -76,8 +76,8 @@ We can deserialize the data as follows:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialize import SerializerConfig
-from jetblack_serialize.json import deserialize
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.json import deserialize
 
 dct = deserialize(
     text,

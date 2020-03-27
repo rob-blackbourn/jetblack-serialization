@@ -504,8 +504,8 @@
 <h2 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h2>
 <p>This could be serialized to JSON as:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize.json</span> <span class="kn">import</span> <span class="n">serialize</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization.json</span> <span class="kn">import</span> <span class="n">serialize</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span>
     <span class="n">obj</span><span class="p">,</span>
@@ -535,8 +535,8 @@ into an ISO 8601 date.</p>
 <h2 id="deserializing">Deserializing<a class="headerlink" href="#deserializing" title="Permanent link">&para;</a></h2>
 <p>We can deserialize the data as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize.json</span> <span class="kn">import</span> <span class="n">deserialize</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization.json</span> <span class="kn">import</span> <span class="n">deserialize</span>
 
 <span class="n">dct</span> <span class="o">=</span> <span class="n">deserialize</span><span class="p">(</span>
     <span class="n">text</span><span class="p">,</span>

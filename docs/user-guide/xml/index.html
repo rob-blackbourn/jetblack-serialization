@@ -459,7 +459,7 @@
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Annotated</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialization</span> <span class="kn">import</span> <span class="n">XMLEntity</span><span class="p">,</span> <span class="n">XMLAttribute</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization.xml</span> <span class="kn">import</span> <span class="n">XMLEntity</span><span class="p">,</span> <span class="n">XMLAttribute</span>
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">book_id</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">XMLAttribute</span><span class="p">(</span><span class="s2">&quot;bookId&quot;</span><span class="p">)]</span>
@@ -496,8 +496,8 @@ for deserialization.</p>
 <h2 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h2>
 <p>To serialize we need to provide the containing tag <code>Book</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">pascalcase</span><span class="p">,</span> <span class="n">snakecase</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize.xml</span> <span class="kn">import</span> <span class="n">serialize</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization.xml</span> <span class="kn">import</span> <span class="n">serialize</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span>
     <span class="n">book</span><span class="p">,</span>
@@ -535,8 +535,8 @@ in-line behaviour.</p>
 <h2 id="deserializing">Deserializing<a class="headerlink" href="#deserializing" title="Permanent link">&para;</a></h2>
 <p>We can deserialize the XML as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">pascalcase</span><span class="p">,</span> <span class="n">snakecase</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
-<span class="kn">from</span> <span class="nn">jetblack_serialize.xml</span> <span class="kn">import</span> <span class="n">deserialize</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization</span> <span class="kn">import</span> <span class="n">SerializerConfig</span>
+<span class="kn">from</span> <span class="nn">jetblack_serialization.xml</span> <span class="kn">import</span> <span class="n">deserialize</span>
 
 <span class="n">dct</span> <span class="o">=</span> <span class="n">deserialize</span><span class="p">(</span>
     <span class="n">text</span><span class="p">,</span>
