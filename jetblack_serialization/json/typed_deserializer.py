@@ -79,29 +79,20 @@ def _to_optional(
             json_annotation,
             config
         )
-    optional_type = typing_inspect.get_optional_type(type_annotation)
-    return None if not obj else _to_any(
-        obj,
-        optional_type,
-        json_annotation,
-        config
-    )
 
 
 def _to_list(
         lst: list,
-        type_annotation: Annotation,
+        list_annotation: Annotation,
         config: SerializerConfig
 ) -> List[Any]:
-    item_annotation, *_rest = typing_inspect.get_args(type_annotation)
-    if typing_inspect.is_annotated_type(type_annotation):
-        type_annotation, item_json_annotation = get_json_annotation(
-            item_annotation
+    item_type_annotation, *_rest = typing_inspect.get_args(list_annotation)
+    if typing_inspect.is_annotated_type(item_type_annotation):
+        item_type_annotation, item_json_annotation = get_json_annotation(
+            item_type_annotation
         )
     else:
         item_json_annotation = JSONValue()
-
-    item_type_annotation, *_ = typing_inspect.get_args(type_annotation)
 
     return [
         _to_any(
@@ -134,14 +125,14 @@ def _to_union(
 
 def _to_dict(
         obj: Dict[str, Any],
-        type_annotation: Annotation,
+        dict_annotation: Annotation,
         config: SerializerConfig
 ) -> Dict[str, Any]:
     json_obj: Dict[str, Any] = {}
 
-    typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    typed_dict_keys = typing_inspect.typed_dict_keys(dict_annotation)
     for key, key_annotation in typed_dict_keys.items():
-        default = getattr(type_annotation, key, Parameter.empty)
+        default = getattr(dict_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 key_annotation
