@@ -17,6 +17,7 @@ from jetblack_serialization.json.annotations import (
     JSONValue,
     JSONProperty
 )
+from jetblack_serialization.custom_annotations import DefaultAnnotation
 
 CONFIG = SerializerConfig(camelcase, snakecase)
 
@@ -52,6 +53,7 @@ DICT = {
     'pages': None
 }
 
+
 class AnnotatedBook(TypedDict):
     book_id: Annotated[
         int,
@@ -78,7 +80,7 @@ class AnnotatedBook(TypedDict):
         JSONProperty("phrases")
     ]
     age: Optional[Union[datetime, int]]
-    pages: Optional[int] = None  # type: ignore
+    pages: Annotated[Optional[int], DefaultAnnotation(None)]
 
 
 def test_deserialize_annotated():
@@ -91,6 +93,7 @@ def test_deserialize_annotated():
     )
     assert dct == DICT
 
+
 class Book(TypedDict):
     book_id: int
     title: str
@@ -99,7 +102,8 @@ class Book(TypedDict):
     keywords: List[str]
     phrases: List[str]
     age: Optional[Union[datetime, int]]
-    pages: Optional[int] = None  # type: ignore
+    pages: Annotated[Optional[int], DefaultAnnotation(None)]
+
 
 def test_deserialize():
     """Test for deserialize"""
