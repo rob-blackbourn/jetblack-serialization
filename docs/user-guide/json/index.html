@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-4.6.3">
     
     
       
@@ -345,6 +345,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../defaults/" title="Defaults" class="md-nav__link">
+      Defaults
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -484,7 +496,6 @@
     <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
-
 <p>Create some data:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">obj</span><span class="p">:</span> <span class="n">Book</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Chairman Mao&#39;</span><span class="p">,</span>
@@ -500,7 +511,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h2 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h2>
 <p>This could be serialized to JSON as:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
@@ -515,7 +525,6 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>giving:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;bookId&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
@@ -528,7 +537,6 @@
     <span class="nt">&quot;pages&quot;</span><span class="p">:</span> <span class="kc">null</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Note the fields have been camel cased, and the publication date has been turned
 into an ISO 8601 date.</p>
@@ -544,7 +552,6 @@ into an ISO 8601 date.</p>
     <span class="n">SerializerConfig</span><span class="p">(</span><span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
-
 
 <h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
 <p>For JSON, attributes are typically not required. However
@@ -622,7 +629,7 @@ completeness.</p>
     
       <script src="../../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.1",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.2.2",url:{base:"../.."}})</script>
       
     
   </body>
