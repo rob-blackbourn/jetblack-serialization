@@ -3,11 +3,11 @@
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, Optional, Type
 
-from .iso_8601 import (
-    iso_8601_to_datetime,
-    iso_8601_to_timedelta,
-    datetime_to_iso_8601,
-    timedelta_to_iso_8601,
+from jetblack_iso8601 import (
+    iso8601_to_datetime,
+    iso8601_to_timedelta,
+    datetime_to_iso8601,
+    timedelta_to_iso8601,
 )
 
 
@@ -15,13 +15,27 @@ def _same_name(name: str) -> str:
     return name
 
 
+def to_datetime(text: str) -> datetime:
+    value = iso8601_to_datetime(text)
+    if value is None:
+        raise ValueError('Unable to parse iso8601 timestamp')
+    return value
+
+
+def to_timedelta(text: str) -> timedelta:
+    value = iso8601_to_timedelta(text)
+    if value is None:
+        raise ValueError('Unable to parse iso8601 timestamp')
+    return value
+
+
 VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    datetime: iso_8601_to_datetime,
-    timedelta: iso_8601_to_timedelta
+    datetime: to_datetime,
+    timedelta: to_timedelta
 }
 VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
-    datetime: datetime_to_iso_8601,
-    timedelta: timedelta_to_iso_8601
+    datetime: datetime_to_iso8601,
+    timedelta: timedelta_to_iso8601
 }
 
 
