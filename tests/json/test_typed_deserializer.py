@@ -5,11 +5,11 @@ from typing import List, Optional, Union
 
 from stringcase import snakecase, camelcase
 
-# try:
-#     from typing import TypedDict  # type:ignore
-# except:  # pylint: disable=bare-except
-#     from typing_extensions import TypedDict
-from typing_extensions import Annotated, TypedDict  # type: ignore
+try:
+    from typing import TypedDict  # type:ignore
+except:  # pylint: disable=bare-except
+    from typing_extensions import TypedDict
+from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json.typed_deserializer import deserialize
@@ -53,14 +53,30 @@ DICT = {
 }
 
 class AnnotatedBook(TypedDict):
-    book_id: Annotated[int, JSONProperty("bookId")]
-    title: Annotated[str, JSONProperty("title")]
-    author: Annotated[str, JSONProperty("author")]
-    publication_date: Annotated[datetime, JSONProperty("publicationDate")]
-    keywords: Annotated[List[Annotated[str, JSONValue()]],
-                        JSONProperty("keywords")]
-    phrases: Annotated[List[Annotated[str, JSONValue()]],
-                       JSONProperty("phrases")]
+    book_id: Annotated[
+        int,
+        JSONProperty("bookId")
+    ]
+    title: Annotated[
+        str,
+        JSONProperty("title")
+    ]
+    author: Annotated[
+        str,
+        JSONProperty("author")
+    ]
+    publication_date: Annotated[
+        datetime,
+        JSONProperty("publicationDate")
+    ]
+    keywords: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("keywords")
+    ]
+    phrases: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("phrases")
+    ]
     age: Optional[Union[datetime, int]]
     pages: Optional[int] = None  # type: ignore
 

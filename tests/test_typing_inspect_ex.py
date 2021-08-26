@@ -42,8 +42,8 @@ class MockDict(TypedDict):
     arg_num1: str
     arg_num2: List[int]
     arg_num3: datetime
-    arg_num4: Optional[Decimal] = Decimal('1')
-    arg_num5: Optional[float] = None
+    arg_num4: Optional[Decimal] = Decimal('1') # type: ignore
+    arg_num5: Optional[float] = None # type: ignore
 
 
 def func(
@@ -332,7 +332,7 @@ def test_generic_type():
 
 
 def test_generic_bases():
-    class MyClass(List[int], Mapping[str, List[int]]):
+    class MyClass(List[int], Mapping[str, List[int]]): # type: ignore
         pass
     assert typing_inspect.get_generic_bases(
         MyClass

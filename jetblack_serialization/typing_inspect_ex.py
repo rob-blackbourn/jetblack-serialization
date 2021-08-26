@@ -28,28 +28,21 @@ from typing_inspect import (
 )
 
 
-def is_typed_dict_type(annotation):
-    """Test for a typed dictionary
-
-    Args:
-        annotation ([type]): The type annotation
-
-    Returns:
-        bool: True if the type annotation was for a typed dict
-    """
-    return isinstance(annotation, _TypedDictMeta)
+def is_typed_dict_type(tp):
+    """Return True if tp is a typed dict"""
+    return isinstance(tp, _TypedDictMeta)
 
 
-def is_list_type(annotation):
-    """Return True if the annotation if for a List"""
+def is_list_type(tp):
+    """Return True if tp is a list"""
     return (
-        get_origin(annotation) is list
-        and getattr(annotation, '_name', None) == 'List'
+        get_origin(tp) is list
+        and getattr(tp, '_name', None) == 'List'
     )
 
 
-def is_annotated_type(annotation):
-    return isinstance(annotation, _AnnotatedAlias)
+def is_annotated_type(tp):
+    return isinstance(tp, _AnnotatedAlias)
 
 
 def get_metadata(annotation):
@@ -64,11 +57,11 @@ def get_optional_type(annotation):
     return contained_type
 
 
-def is_dict_type(annotation):
-    """Return True if the annotation if for a Dict"""
+def is_dict_type(tp):
+    """Return True if tp is a Dict"""
     return (
-        get_origin(annotation) is dict
-        and getattr(annotation, '_name', None) == 'Dict'
+        get_origin(tp) is dict
+        and getattr(tp, '_name', None) == 'Dict'
     )
 
 

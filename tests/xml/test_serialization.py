@@ -4,7 +4,13 @@ from datetime import datetime
 from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
-from typing_extensions import TypedDict, Annotated  # type: ignore
+
+try:
+    from typing import TypedDict  # type:ignore
+except:  # pylint: disable=bare-except
+    from typing_extensions import TypedDict
+
+from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml.serializer import serialize
@@ -18,10 +24,22 @@ CONFIG = SerializerConfig(pascalcase, snakecase)
 
 
 class AnnotatedBook(TypedDict, total=False):
-    book_id: Annotated[int, XMLAttribute("bookId")]
-    title: Annotated[str, XMLEntity("Title")]
-    author: Annotated[str, XMLEntity("Author")]
-    publication_date: Annotated[datetime, XMLEntity("PublicationDate")]
+    book_id: Annotated[
+        int,
+        XMLAttribute("bookId")
+    ]
+    title: Annotated[
+        str,
+        XMLEntity("Title")
+    ]
+    author: Annotated[
+        str,
+        XMLEntity("Author")
+    ]
+    publication_date: Annotated[
+        datetime,
+        XMLEntity("PublicationDate")
+    ]
     keywords: Annotated[
         List[Annotated[str, XMLEntity("Keyword")]],
         XMLEntity("Keywords")
@@ -30,8 +48,14 @@ class AnnotatedBook(TypedDict, total=False):
         List[Annotated[str, XMLEntity("Phrase")]],
         XMLEntity("Phrase")
     ]
-    age: Annotated[Optional[Union[datetime, int]], XMLEntity("Age")]
-    pages: Annotated[Optional[int], XMLAttribute("pages")]
+    age: Annotated[
+        Optional[Union[datetime, int]],
+        XMLEntity("Age")
+    ]
+    pages: Annotated[
+        Optional[int],
+        XMLAttribute("pages")
+    ]
 
 
 def test_typed():
