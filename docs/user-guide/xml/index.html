@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-4.6.3">
     
     
       
@@ -338,6 +338,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../defaults/" title="Defaults" class="md-nav__link">
+      Defaults
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -472,7 +484,6 @@
     <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
-
 <p>Note we have introduced some annotations to control the serialization.
 For XML we have used pascal-case to serialized the keys and snake-case
 for deserialization.</p>
@@ -492,7 +503,6 @@ for deserialization.</p>
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h2 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h2>
 <p>To serialize we need to provide the containing tag <code>Book</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">stringcase</span> <span class="kn">import</span> <span class="n">pascalcase</span><span class="p">,</span> <span class="n">snakecase</span>
@@ -506,7 +516,6 @@ for deserialization.</p>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Producing:</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">&lt;Book</span> <span class="na">bookId=</span><span class="s">&quot;42&quot;</span><span class="nt">&gt;</span>
@@ -522,7 +531,6 @@ for deserialization.</p>
     <span class="nt">&lt;Age&gt;</span>24<span class="nt">&lt;/Age&gt;</span>
 <span class="nt">&lt;/Book&gt;</span>&#39;
 </code></pre></div>
-
 
 <p>The annotations are more elaborate here. However, much of the typed dictionary
 requires no annotation.</p>
@@ -580,13 +588,13 @@ in-line behaviour.</p>
           </a>
         
         
-          <a href="../../api/jetblack_serialization.iso_8601/" title="jetblack_serialization.iso_8601" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../defaults/" title="Defaults" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                jetblack_serialization.iso_8601
+                Defaults
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -616,7 +624,7 @@ in-line behaviour.</p>
     
       <script src="../../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.1",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.2.2",url:{base:"../.."}})</script>
       
     
   </body>

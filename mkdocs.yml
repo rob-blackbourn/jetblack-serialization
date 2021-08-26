@@ -18,6 +18,7 @@ nav:
     - user-guide/usage.md
     - user-guide/json.md
     - user-guide/xml.md
+    - user-guide/defaults.md
   - API:
     - jetblack_serialization.iso_8601: api/jetblack_serialization.iso_8601.md
     - jetblack_serialization.json: api/jetblack_serialization.json.md

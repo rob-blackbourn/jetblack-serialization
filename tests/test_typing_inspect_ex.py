@@ -24,7 +24,10 @@ try:
     from typing import TypedDict  # type:ignore
 except:  # pylint: disable=bare-except
     from typing_extensions import TypedDict
-from typing_extensions import Literal
+try:
+    from typing import Literal  # type:ignore
+except:  # pylint: disable=bare-except
+    from typing_extensions import Literal # type: ignore
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 

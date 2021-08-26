@@ -15,9 +15,10 @@ from typing import (
 from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
-from ..types import Annotation
+from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
+from ..custom_annotations import get_typed_dict_key_default
+from ..types import Annotation
 from ..utils import is_simple_type
 
 from .annotations import (
@@ -184,15 +185,17 @@ def _to_typed_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     for key, key_annotation in typed_dict_keys.items():
-        default = getattr(type_annotation, key, Parameter.empty)
+        default = get_typed_dict_key_default(key_annotation)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
                 key_annotation
             )
         else:
             tag = config.serialize_key(key) if isinstance(key, str) else key
-            item_type_annotation = key_annotation
             item_xml_annotation = XMLEntity(tag)
+            item_type_annotation = typing_inspect.get_unannotated_type(
+                key_annotation
+            )
 
         if not isinstance(item_xml_annotation, XMLAttribute):
             item_element = element.find('./' + item_xml_annotation.tag)

@@ -3,10 +3,11 @@
 try:
     # Python3.8
     from typing import _TypedDictMeta  # type: ignore
-except:
+except:  # pylint: disable=bare-except
     # Python3.7
     from typing_extensions import _TypedDictMeta  # type: ignore
-from typing_extensions import _AnnotatedAlias  # type: ignore# pylint: disable=unused-import
+# type: ignore# pylint: disable=unused-import
+from typing_extensions import _AnnotatedAlias
 from typing_inspect import (
     get_args,
     get_bound,
@@ -21,7 +22,7 @@ from typing_inspect import (
     is_classvar,
     is_generic_type,
     is_literal_type,
-    is_optional_type,
+    # is_optional_type,
     is_tuple_type,
     is_typevar,
     is_union_type
@@ -83,3 +84,32 @@ def typed_dict_keys(td):
     if isinstance(td, _TypedDictMeta):
         return td.__annotations__.copy()
     return None
+
+
+def get_unannotated_type(tp):
+    while is_annotated_type(tp):
+        tp = get_origin(tp)
+    return tp
+
+
+def is_optional_type(tp):
+    """Test if the type is type(None), or is a direct union with it, such as Optional[T].
+
+    NOTE: this method inspects nested `Union` arguments but not `TypeVar` definition
+    bounds and constraints. So it will return `False` if
+     - `tp` is a `TypeVar` bound, or constrained to, an optional type
+     - `tp` is a `Union` to a `TypeVar` bound or constrained to an optional type,
+     - `tp` refers to a *nested* `Union` containing an optional type or one of the above.
+
+    Users wishing to check for optionality in types relying on type variables might wish
+    to use this method in combination with `get_constraints` and `get_bound`
+    """
+
+    if tp is type(None):  # noqa
+        return True
+    elif is_union_type(tp):
+        return any(is_optional_type(tt) for tt in get_args(tp, evaluate=True))
+    elif is_annotated_type(tp):
+        return is_optional_type(get_unannotated_type(tp))
+    else:
+        return False

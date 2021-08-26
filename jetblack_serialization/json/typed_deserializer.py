@@ -13,11 +13,12 @@ from typing import (
     cast
 )
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
+from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
+from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
-
 from ..utils import is_simple_type
+
 from .annotations import (
     JSONAnnotation,
     JSONValue,
@@ -132,8 +133,8 @@ def _to_dict(
 
     typed_dict_keys = typing_inspect.typed_dict_keys(dict_annotation)
     for key, key_annotation in typed_dict_keys.items():
-        default = getattr(dict_annotation, key, Parameter.empty)
-        if typing_inspect.is_annotated_type(key_annotation):
+        default = get_typed_dict_key_default(key_annotation)
+        if is_json_annotation(key_annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 key_annotation
             )
@@ -145,7 +146,9 @@ def _to_dict(
                 key
             ) if isinstance(key, str) else key
             json_property = JSONProperty(tag)
-            item_type_annotation = key_annotation
+            item_type_annotation = typing_inspect.get_unannotated_type(
+                key_annotation
+            )
 
         if json_property.tag in obj:
             json_obj[key] = _to_any(
