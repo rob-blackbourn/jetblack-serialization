@@ -4,7 +4,13 @@ from datetime import datetime
 from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
-from typing_extensions import TypedDict, Annotated  # type: ignore
+
+try:
+    from typing import TypedDict  # type:ignore
+except:  # pylint: disable=bare-except
+    from typing_extensions import TypedDict
+
+from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml.deserializer import deserialize

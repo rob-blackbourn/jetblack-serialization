@@ -13,7 +13,7 @@ from typing import (
 )
 
 from lxml import etree
-from lxml.etree import Element  # pylint: disable=no-name-in-module
+from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..types import Annotation
@@ -28,7 +28,7 @@ from .annotations import (
 )
 
 
-def _is_element_empty(element: Element, xml_annotation: XMLAnnotation) -> bool:
+def _is_element_empty(element: _Element, xml_annotation: XMLAnnotation) -> bool:
     if isinstance(xml_annotation, XMLAttribute):
         return xml_annotation.tag not in element.attrib
     else:
@@ -66,7 +66,7 @@ def _to_value(
 
 
 def _to_union(
-        element: Optional[Element],
+        element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         config: SerializerConfig
@@ -86,7 +86,7 @@ def _to_union(
 
 
 def _to_optional(
-        element: Optional[Element],
+        element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         config: SerializerConfig
@@ -115,7 +115,7 @@ def _to_optional(
 
 
 def _to_simple(
-        element: Optional[Element],
+        element: Optional[_Element],
         default: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
@@ -129,11 +129,13 @@ def _to_simple(
         text = element.attrib[xml_annotation.tag]
     if text is None and default is Parameter.empty:
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
+    if isinstance(text, bytes):
+        text = text.decode()
     return _to_value(text, default, type_annotation, config)
 
 
 def _to_list(
-        element: Optional[Element],
+        element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         config: SerializerConfig
@@ -152,7 +154,7 @@ def _to_list(
 
     if xml_annotation.tag == item_xml_annotation.tag:
         # siblings
-        elements: Iterable[Element] = element.iterfind(
+        elements: Iterable[_Element] = element.iterfind(
             '../' + item_xml_annotation.tag)
     else:
         # nested
@@ -171,7 +173,7 @@ def _to_list(
 
 
 def _to_typed_dict(
-        element: Optional[Element],
+        element: Optional[_Element],
         type_annotation: Annotation,
         config: SerializerConfig
 ) -> Optional[Dict[str, Any]]:
@@ -209,7 +211,7 @@ def _to_typed_dict(
 
 
 def _to_obj(
-        element: Optional[Element],
+        element: Optional[_Element],
         default: Optional[Any],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,

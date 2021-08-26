@@ -5,11 +5,11 @@ from typing import List, Optional, Union
 
 from stringcase import snakecase, camelcase
 
-# try:
-#     from typing import TypedDict  # type:ignore
-# except:  # pylint: disable=bare-except
-#     from typing_extensions import TypedDict
-from typing_extensions import Annotated, TypedDict  # type: ignore
+try:
+    from typing import TypedDict  # type:ignore
+except:  # pylint: disable=bare-except
+    from typing_extensions import TypedDict
+from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json.typed_deserializer import deserialize
