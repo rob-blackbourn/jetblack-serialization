@@ -1,15 +1,19 @@
-"""Serialization annotations"""
+"""Custom annotations"""
 
 from abc import ABCMeta
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
-from .types import Annotation
 import jetblack_serialization.typing_inspect_ex as typing_inspect
+from .types import Annotation
 
 
 class SerializationAnnotation(metaclass=ABCMeta):
     """The base serialization annotation class"""
 
+class DefaultAnnotation:
+
+    def __init__(self, value: Any) -> None:
+        self.value = value
 
 def is_any_serialization_annotation(annotation: Annotation) -> bool:
     """Determine if the annotation is of type Annotation[T, SerializationAnnotation]

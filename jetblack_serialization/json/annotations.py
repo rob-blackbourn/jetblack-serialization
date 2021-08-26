@@ -3,7 +3,7 @@
 from typing import Tuple, cast
 
 from ..types import Annotation
-from ..annotations import (
+from ..custom_annotations import (
     SerializationAnnotation,
     is_any_serialization_annotation,
     get_all_serialization_annotations
