@@ -23,16 +23,38 @@ CONFIG = SerializerConfig(camelcase, snakecase)
 
 
 class AnnotatedBook(TypedDict, total=False):
-    book_id: Annotated[int, JSONProperty("bookId")]
-    title: Annotated[str, JSONProperty("title")]
-    author: Annotated[str, JSONProperty("author")]
-    publication_date: Annotated[datetime, JSONProperty("publicationDate")]
-    keywords: Annotated[List[Annotated[str, JSONValue()]],
-                        JSONProperty("keywords")]
-    phrases: Annotated[List[Annotated[str, JSONValue()]],
-                       JSONProperty("phrases")]
-    age: Annotated[Optional[Union[datetime, int]], JSONProperty("age")]
-    pages: Annotated[Optional[int], JSONProperty("pages")]
+    book_id: Annotated[
+        int,
+        JSONProperty("bookId")
+    ]
+    title: Annotated[
+        str,
+        JSONProperty("title")
+    ]
+    author: Annotated[
+        str,
+        JSONProperty("author")
+    ]
+    publication_date: Annotated[
+        datetime,
+        JSONProperty("publicationDate")
+    ]
+    keywords: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("keywords")
+    ]
+    phrases: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("phrases")
+    ]
+    age: Annotated[
+        Optional[Union[datetime, int]],
+        JSONProperty("age")
+    ]
+    pages: Annotated[
+        Optional[int],
+        JSONProperty("pages")
+    ]
 
 
 def test_annotated():

@@ -23,7 +23,10 @@ CONFIG = SerializerConfig(pascalcase, snakecase)
 
 
 class Book(TypedDict, total=False):
-    book_id: Annotated[int, XMLAttribute("bookId")]
+    book_id: Annotated[
+        int,
+        XMLAttribute("bookId")
+    ]
     title: str
     author: str
     publication_date: datetime

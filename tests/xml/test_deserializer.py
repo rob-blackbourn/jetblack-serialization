@@ -23,10 +23,22 @@ CONFIG = SerializerConfig(pascalcase, snakecase)
 
 
 class Book(TypedDict, total=False):
-    book_id: Annotated[int, XMLAttribute("bookId")]
-    title: Annotated[str, XMLEntity("Title")]
-    author: Annotated[str, XMLEntity("Author")]
-    publication_date: Annotated[datetime, XMLEntity("PublicationDate")]
+    book_id: Annotated[
+        int,
+        XMLAttribute("bookId")
+    ]
+    title: Annotated[
+        str,
+        XMLEntity("Title")
+    ]
+    author: Annotated[
+        str,
+        XMLEntity("Author")
+    ]
+    publication_date: Annotated[
+        datetime,
+        XMLEntity("PublicationDate")
+    ]
     keywords: Annotated[
         List[Annotated[str, XMLEntity("Keyword")]],
         XMLEntity("Keywords")
@@ -35,8 +47,14 @@ class Book(TypedDict, total=False):
         List[Annotated[str, XMLEntity("Phrase")]],
         XMLEntity("Phrase")
     ]
-    age: Annotated[Optional[Union[datetime, int]], XMLEntity("Age")]
-    pages: Annotated[Optional[int], XMLAttribute("pages")]
+    age: Annotated[
+        Optional[Union[datetime, int]],
+        XMLEntity("Age")
+    ]
+    pages: Annotated[
+        Optional[int],
+        XMLAttribute("pages")
+    ]
 
 
 def test_from_xml_element():
@@ -54,6 +72,7 @@ def test_from_xml_element():
     <Phrase>Revolutionary wars are inevitable in class society</Phrase>
     <Phrase>War is the continuation of politics</Phrase>
     <Age>24</Age>
+    <Pages/>
 </Book>
 """
     dct = deserialize(

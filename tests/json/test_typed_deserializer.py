@@ -53,14 +53,30 @@ DICT = {
 }
 
 class AnnotatedBook(TypedDict):
-    book_id: Annotated[int, JSONProperty("bookId")]
-    title: Annotated[str, JSONProperty("title")]
-    author: Annotated[str, JSONProperty("author")]
-    publication_date: Annotated[datetime, JSONProperty("publicationDate")]
-    keywords: Annotated[List[Annotated[str, JSONValue()]],
-                        JSONProperty("keywords")]
-    phrases: Annotated[List[Annotated[str, JSONValue()]],
-                       JSONProperty("phrases")]
+    book_id: Annotated[
+        int,
+        JSONProperty("bookId")
+    ]
+    title: Annotated[
+        str,
+        JSONProperty("title")
+    ]
+    author: Annotated[
+        str,
+        JSONProperty("author")
+    ]
+    publication_date: Annotated[
+        datetime,
+        JSONProperty("publicationDate")
+    ]
+    keywords: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("keywords")
+    ]
+    phrases: Annotated[
+        List[Annotated[str, JSONValue()]],
+        JSONProperty("phrases")
+    ]
     age: Optional[Union[datetime, int]]
     pages: Optional[int] = None  # type: ignore
 
