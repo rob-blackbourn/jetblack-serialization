@@ -68,7 +68,9 @@ def is_any_default_annotation(annotation: Annotation) -> bool:
     return is_any_annotation_of_type(annotation, DefaultAnnotation)
 
 
-def get_all_default_annotations(
+def get_default_annotation(
         annotation: Annotation
-) -> Tuple[Annotation, List[DefaultAnnotation]]:
-    return get_all_annotations_of_type(annotation, DefaultAnnotation)
+) -> Tuple[Annotation, DefaultAnnotation]:
+    typ, annotations = get_all_annotations_of_type(annotation, DefaultAnnotation)
+    assert len(annotations) == 1, "There can be only one"
+    return typ, annotations[0]

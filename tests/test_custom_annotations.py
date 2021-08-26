@@ -10,7 +10,10 @@ except: # pylint: disable=bare-except
 from jetblack_serialization.custom_annotations import (
     SerializationAnnotation,
     is_any_serialization_annotation,
-    get_all_serialization_annotations
+    get_all_serialization_annotations,
+    DefaultAnnotation,
+    is_any_default_annotation,
+    get_default_annotation
 )
 
 class FooAnnotation(SerializationAnnotation):
@@ -19,7 +22,7 @@ class FooAnnotation(SerializationAnnotation):
 class BarAnnotation(SerializationAnnotation):
     """A serialization annotion for Bar"""
 
-def test_is_any_serialization_annotations() -> None:
+def test_serialization_annotations() -> None:
     def func(
             arg1,
             arg2: int,
@@ -50,4 +53,25 @@ def test_is_any_serialization_annotations() -> None:
     assert is_any_serialization_annotation(arg5_dict_arg_param.annotation)
     _, annotations = get_all_serialization_annotations(arg5_dict_arg_param.annotation)
     assert len(annotations) == 2
-    
+
+def test_default_annotations() -> None:
+    def func(
+            arg1,
+            arg2: int,
+            arg3: Annotated[int, DefaultAnnotation(42)]
+    ) -> None:
+        pass
+
+    signature = inspect.signature(func)
+
+    arg1_dict_arg_param = signature.parameters["arg1"]
+    assert not is_any_default_annotation(arg1_dict_arg_param.annotation)
+
+    arg2_dict_arg_param = signature.parameters["arg2"]
+    assert not is_any_default_annotation(arg2_dict_arg_param.annotation)
+
+    arg3_dict_arg_param = signature.parameters["arg3"]
+    assert is_any_default_annotation(arg3_dict_arg_param.annotation)
+    _, annotation = get_default_annotation(arg3_dict_arg_param.annotation)
+    assert annotation.value == 42
+
