@@ -14,7 +14,7 @@ class SerializationAnnotation(metaclass=ABCMeta):
     """The base serialization annotation class"""
 
 
-class DefaultAnnotation:
+class DefaultValue:
 
     def __init__(self, value: Any) -> None:
         self.value = value
@@ -71,14 +71,14 @@ def get_all_serialization_annotations(
 
 
 def is_any_default_annotation(annotation: Annotation) -> bool:
-    return is_any_annotation_of_type(annotation, DefaultAnnotation)
+    return is_any_annotation_of_type(annotation, DefaultValue)
 
 
 def get_default_annotation(
         annotation: Annotation
-) -> Tuple[Annotation, DefaultAnnotation]:
+) -> Tuple[Annotation, DefaultValue]:
     typ, annotations = get_all_annotations_of_type(
-        annotation, DefaultAnnotation)
+        annotation, DefaultValue)
     assert len(annotations) == 1, "There can be only one"
     return typ, annotations[0]
 
