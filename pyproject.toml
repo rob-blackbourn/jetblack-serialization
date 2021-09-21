@@ -26,9 +26,10 @@ pytest = "^5.3"
 pytest-runner = "^5.2"
 rope = "^0.16.0"
 stringcase = "^1.2.0"
-mkdocs = "^1.0.4"
-mkdocs-material = "^4.6.0"
+mkdocs = "^1.2"
+mkdocs-material = "^7.2"
 jetblack-markdown = "^0.6"
+mike = "^1.1.1"
 lxml-stubs = "^0.2.0"
 
 [build-system]

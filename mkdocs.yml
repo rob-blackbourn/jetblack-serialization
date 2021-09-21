@@ -40,3 +40,15 @@ markdown_extensions:
 
 extra_css:
     - css/custom.css
+
+extra:
+  version:
+    provider: mike
+    default: stable
+
+plugins:
+  - mike:
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+      canonical_version: null
