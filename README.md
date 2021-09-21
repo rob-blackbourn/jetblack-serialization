@@ -9,6 +9,10 @@ It has been tested with Python 3.7 used the `typing_extensions`
 package for `TypedDict` and `Annotated`. In Python 3.8 the `TypedDict`
 class is available in the standard `typing` package.
 
+## Branch
+
+This is the v1 maintenance branch.
+
 ## Installation
 
 The package can be installed with pip.

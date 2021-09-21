@@ -1,8 +1,5 @@
 site_name: jetblack-serialization
 site_description: Serialization for JSON and XML using typing
-site_dir: docs
-
-docs_dir: documentation
 
 repo_name: rob-blackbourn/jetblack-serialization
 repo_url: https://github.com/rob-blackbourn/jetblack-serialization
@@ -40,3 +37,15 @@ markdown_extensions:
 
 extra_css:
     - css/custom.css
+
+extra:
+  version:
+    provider: mike
+    default: stable
+
+plugins:
+  - mike:
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+      canonical_version: null
