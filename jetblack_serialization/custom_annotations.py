@@ -36,7 +36,7 @@ def get_all_annotations_of_type(
     type_annotation = typing_inspect.get_origin(annotation)
     serialization_annotations = [
         serialization_annotation
-        for serialization_annotation in typing_inspect.get_metadata(annotation)
+        for serialization_annotation in typing_inspect.get_metadata(annotation) or []
         if issubclass(type(serialization_annotation), tp)
     ]
     return type_annotation, serialization_annotations
