@@ -1,7 +1,7 @@
 """Round trip tests for XML serialization"""
 
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from stringcase import pascalcase, snakecase
 
@@ -106,6 +106,27 @@ def test_untyped():
         'pages': None
     }
     annotation = Annotated[UnannotatedBook, XMLEntity('Book')]
+    config = SerializerConfig(pascalcase, snakecase)
+
+    text = serialize(dct, annotation, config)
+    roundtrip = deserialize(text, annotation, config)
+    assert dct == roundtrip
+
+def test_untyped_unannotated():
+    dct: UnannotatedBook = {
+        'author': 'Chairman Mao',
+        'book_id': 42,
+        'title': 'Little Red Book',
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'keywords': ['Revolution', 'Communism'],
+        'phrases': [
+            'Revolutionary wars are inevitable in class society',
+            'War is the continuation of politics'
+        ],
+        'age': 24,
+        'pages': None
+    }
+    annotation = Annotated[UnannotatedBook, Any]
     config = SerializerConfig(pascalcase, snakecase)
 
     text = serialize(dct, annotation, config)
