@@ -5,8 +5,7 @@ from .annotations import (
     XMLEntity
 )
 
-from .deserializer import deserialize
-from .serializer import serialize
+from .serialization import serialize, deserialize
 
 __all__ = [
     'XMLAttribute',

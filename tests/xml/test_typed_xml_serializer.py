@@ -13,7 +13,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.serializer import serialize
+from jetblack_serialization.xml.typed_xml_serializer import serialize_typed_xml
 from jetblack_serialization.xml.annotations import (
     XMLEntity,
     XMLAttribute
@@ -71,6 +71,6 @@ def test_serialize():
         'age': 24,
         'pages': None
     }
-    text = serialize(book, Annotated[Book, XMLEntity("Book")], CONFIG)
+    text = serialize_typed_xml(book, Annotated[Book, XMLEntity("Book")], CONFIG)
     assert text == '<Book bookId="42"><Title>Little Red Book</Title><Author>Chairman Mao</Author><PublicationDate>1973-01-01T21:52:13.00Z</PublicationDate><Keywords><Keyword>Revolution</Keyword><Keyword>Communism</Keyword></Keywords><Phrase>Revolutionary wars are inevitable in class society</Phrase><Phrase>War is the continuation of politics</Phrase><Age>24</Age><pages/></Book>'
 

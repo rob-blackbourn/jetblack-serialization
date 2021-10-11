@@ -30,10 +30,6 @@ class XMLAttribute(XMLAnnotation):
     def __repr__(self) -> str:
         return f'XMLAttribute(tag="{self.tag}")'
 
-DEFAULT_DOCUMENT_ANNOTATION = XMLEntity('document')
-DEFAULT_KEY_ANNOTATION = XMLEntity('key')
-DEFAULT_VALUE_ANNOTATION = XMLEntity('value')
-
 
 def is_xml_annotation(annotation: Annotation) -> bool:
     """Determine if the annotation is of type Annotation[T, XMLAnnotation]
@@ -59,14 +55,12 @@ def is_xml_annotation(annotation: Annotation) -> bool:
 
 
 def get_xml_annotation(
-        annotation: Annotation,
-        default: XMLAnnotation
+        annotation: Annotation
 ) -> Tuple[Annotation, XMLAnnotation]:
     """Gets the type T of Annotation[T, XMLAnnotation]
 
     Args:
         annotation (Any): The annotation
-        default (XMLAnnotation): The default annotation.
 
     Returns:
         Tuple[Annotation, XMLAnnotation]: The type and the XML annotation
@@ -79,5 +73,4 @@ def get_xml_annotation(
         for serialization_annotation in serialization_annotations
         if issubclass(type(serialization_annotation), XMLAnnotation)
     ]
-    xml_annotation = xml_annotations[0] if xml_annotations else default
-    return type_annotation, cast(XMLAnnotation, xml_annotation)
+    return type_annotation, cast(XMLAnnotation, xml_annotations[0])
