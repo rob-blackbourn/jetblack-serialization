@@ -1,6 +1,7 @@
 """Serializer Config"""
 
 from datetime import datetime, timedelta
+from decimal import Decimal
 from typing import Any, Callable, Dict, Optional, Type
 
 from jetblack_iso8601 import (
@@ -31,11 +32,13 @@ def to_timedelta(text: str) -> timedelta:
 
 VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
     datetime: to_datetime,
-    timedelta: to_timedelta
+    timedelta: to_timedelta,
+    Decimal: Decimal
 }
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], str]] = {
+VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
     datetime: datetime_to_iso8601,
-    timedelta: timedelta_to_iso8601
+    timedelta: timedelta_to_iso8601,
+    Decimal: float
 }
 
 
