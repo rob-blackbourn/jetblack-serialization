@@ -10,10 +10,10 @@ from ..types import (
 from ..config import SerializerConfig
 
 
-from .typed_serializer import serialize as typed_serialize
-from .typed_deserializer import deserialize as typed_deserialize
-from .untyped_serializer import serialize as untyped_serialize
-from .untyped_deserializer import deserialize as untyped_deserialize
+from .typed_serializer import serialize_typed
+from .typed_deserializer import deserialize_typed
+from .untyped_serializer import serialize_untyped
+from .untyped_deserializer import deserialize_untyped
 
 
 def _is_typed(annotation: Annotation) -> bool:
@@ -46,9 +46,9 @@ def serialize(
         str: The serialized object
     """
     if _is_typed(annotation):
-        return typed_serialize(obj, annotation, config)
+        return serialize_typed(obj, annotation, config)
     else:
-        return untyped_serialize(obj, config)
+        return serialize_untyped(obj, config)
 
 
 def deserialize(
@@ -67,6 +67,6 @@ def deserialize(
         Any: The deserialized object.
     """
     if _is_typed(annotation):
-        return typed_deserialize(text, annotation, config)
+        return deserialize_typed(text, annotation, config)
     else:
-        return untyped_deserialize(text, config)
+        return deserialize_untyped(text, config)

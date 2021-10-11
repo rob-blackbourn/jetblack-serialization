@@ -112,7 +112,7 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped_xml(text: str, config: SerializerConfig) -> Any:
+def deserialize_untyped(text: str, config: SerializerConfig) -> Any:
     """Deserialize XML without type information
 
     Args:

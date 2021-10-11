@@ -58,7 +58,7 @@ class AnnotatedBook(TypedDict, total=False):
     ]
 
 
-def test_xml_typed_roundtrip():
+def test_xml_typed_annotated_roundtrip():
     dct: AnnotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
@@ -113,7 +113,7 @@ def test_xml_unannotated_roundtrip():
     assert dct == roundtrip
 
 
-def test_untyped_xml_roundtrip():
+def test_xml_untyped_roundtrip():
     config = SerializerConfig(pascalcase, snakecase)
 
     obj = {

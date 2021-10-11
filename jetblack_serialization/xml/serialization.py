@@ -10,10 +10,10 @@ from ..types import (
 from ..config import SerializerConfig
 
 
-from .typed_xml_serializer import serialize_typed_xml
-from .typed_xml_deserializer import deserialize_typed_xml
-from .untyped_xml_serializer import serialize_untyped_xml
-from .untyped_xml_deserializer import deserialize_untyped_xml
+from .typed_serializer import serialize_typed
+from .typed_deserializer import deserialize_typed
+from .untyped_serializer import serialize_untyped
+from .untyped_deserializer import deserialize_untyped
 
 
 def _is_typed(annotation: Annotation) -> bool:
@@ -46,9 +46,9 @@ def serialize(
         str: The serialized object
     """
     if _is_typed(annotation):
-        return serialize_typed_xml(obj, annotation, config)
+        return serialize_typed(obj, annotation, config)
     else:
-        return serialize_untyped_xml(obj, config)
+        return serialize_untyped(obj, config)
 
 
 def deserialize(
@@ -67,6 +67,6 @@ def deserialize(
         Any: The deserialized object.
     """
     if _is_typed(annotation):
-        return deserialize_typed_xml(text, annotation, config)
+        return deserialize_typed(text, annotation, config)
     else:
-        return deserialize_untyped_xml(text, config)
+        return deserialize_untyped(text, config)

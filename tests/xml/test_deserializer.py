@@ -57,7 +57,7 @@ class Book(TypedDict, total=False):
     ]
 
 
-def test_from_xml_element():
+def test_xml_deserialize_annotated():
     """Test for from_xml_element"""
 
     text = """

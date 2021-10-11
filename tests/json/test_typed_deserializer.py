@@ -12,7 +12,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.json.typed_deserializer import deserialize
+from jetblack_serialization.json.typed_deserializer import deserialize_typed
 from jetblack_serialization.json.annotations import (
     JSONValue,
     JSONProperty
@@ -83,10 +83,10 @@ class AnnotatedBook(TypedDict):
     pages: Annotated[Optional[int], DefaultValue(None)]
 
 
-def test_deserialize_annotated():
+def test_deserialize_json_annotated():
     """Test for deserialize"""
 
-    dct = deserialize(
+    dct = deserialize_typed(
         TEXT,
         Annotated[AnnotatedBook, JSONValue()],
         CONFIG
@@ -105,10 +105,10 @@ class Book(TypedDict):
     pages: Annotated[Optional[int], DefaultValue(None)]
 
 
-def test_deserialize():
+def test_deserialize_json_unannotated():
     """Test for deserialize"""
 
-    dct = deserialize(
+    dct = deserialize_typed(
         TEXT,
         Book,
         CONFIG

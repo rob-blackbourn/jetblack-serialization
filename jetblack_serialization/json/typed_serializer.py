@@ -194,7 +194,7 @@ def _from_any(
         raise TypeError('Unhandled type')
 
 
-def serialize(
+def serialize_typed(
         obj: Any,
         annotation: Annotation,
         config: SerializerConfig

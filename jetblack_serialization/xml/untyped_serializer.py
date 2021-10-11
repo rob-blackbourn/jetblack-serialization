@@ -97,7 +97,7 @@ def _from_obj(
     else:
         return _from_simple(obj, element, config)
 
-def serialize_untyped_xml(
+def serialize_untyped(
         obj: Any,
         config: SerializerConfig
 ) -> str:

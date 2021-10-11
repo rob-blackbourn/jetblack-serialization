@@ -244,7 +244,7 @@ def _from_obj(
         raise TypeError
 
 
-def serialize_typed_xml(
+def serialize_typed(
         obj: Any,
         annotation: Annotation,
         config: SerializerConfig

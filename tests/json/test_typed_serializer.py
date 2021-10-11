@@ -13,7 +13,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.json.typed_serializer import serialize
+from jetblack_serialization.json.typed_serializer import serialize_typed
 from jetblack_serialization.json.annotations import (
     JSONValue,
     JSONProperty
@@ -57,7 +57,7 @@ class AnnotatedBook(TypedDict, total=False):
     ]
 
 
-def test_annotated():
+def test_json_serializer_annotated():
     """Test for deserializing a typed dict with JSON annotations"""
 
     obj: AnnotatedBook = {
@@ -72,7 +72,7 @@ def test_annotated():
         ],
         'age': 24,
     }
-    text = serialize(obj, AnnotatedBook, CONFIG)
+    text = serialize_typed(obj, AnnotatedBook, CONFIG)
     assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24}'
 
 
@@ -87,7 +87,7 @@ class UnannotatedBook(TypedDict, total=False):
     pages: Optional[int]
 
 
-def test_unannotated():
+def test_jason_serializer_unannotated():
     """Test for deserializing a typed dict without JSON annotations"""
 
     obj: UnannotatedBook = {
@@ -102,7 +102,7 @@ def test_unannotated():
         ],
         'age': 24,
     }
-    text = serialize(
+    text = serialize_typed(
         obj,
         UnannotatedBook,
         SerializerConfig(camelcase, snakecase, pretty_print=False)

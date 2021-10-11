@@ -251,7 +251,7 @@ def from_json_value(
     )
 
 
-def deserialize(
+def deserialize_typed(
         text: str,
         annotation: Annotation,
         config: SerializerConfig

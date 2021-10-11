@@ -257,7 +257,7 @@ def _to_obj(
     raise TypeError
 
 
-def deserialize_typed_xml(
+def deserialize_typed(
         text: str,
         annotation: Annotation,
         config: SerializerConfig
