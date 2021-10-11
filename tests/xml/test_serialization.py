@@ -1,8 +1,7 @@
 """Round trip tests for XML serialization"""
 
-from datetime import datetime, timedelta
-from decimal import Decimal
-from typing import Any, List, Optional, Union
+from datetime import datetime
+from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
 
