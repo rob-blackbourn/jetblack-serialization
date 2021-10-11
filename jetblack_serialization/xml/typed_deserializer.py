@@ -1,7 +1,8 @@
 """XML Serialization"""
 
 from decimal import Decimal
-from inspect import Parameter
+from enum import Enum
+from inspect import Parameter, isclass
 from typing import (
     Any,
     Dict,
@@ -27,6 +28,7 @@ from .annotations import (
     XMLEntity,
     get_xml_annotation
 )
+
 
 def _is_element_empty(element: _Element, xml_annotation: XMLAnnotation) -> bool:
     if isinstance(xml_annotation, XMLAttribute):
@@ -57,6 +59,8 @@ def _to_value(
         return float(text)
     elif type_annotation is Decimal:
         return Decimal(text)
+    elif isclass(type_annotation) and issubclass(type_annotation, Enum):
+        return type_annotation[text]
     else:
         deserializer = config.value_deserializers.get(type_annotation)
         if deserializer is not None:

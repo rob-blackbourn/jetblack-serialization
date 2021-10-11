@@ -1,7 +1,8 @@
 """JSON Serialization"""
 
 from decimal import Decimal
-from inspect import Parameter
+from enum import Enum
+from inspect import Parameter, isclass
 import json
 from typing import (
     Any,
@@ -47,6 +48,8 @@ def _to_value(
             return float(value)
         elif type_annotation is Decimal:
             return Decimal(value)
+        elif isclass(type_annotation) and issubclass(type_annotation, Enum):
+            return type_annotation[value]
         else:
             deserializer = config.value_deserializers.get(type_annotation)
             if deserializer is not None:

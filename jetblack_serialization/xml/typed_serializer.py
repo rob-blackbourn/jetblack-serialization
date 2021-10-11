@@ -1,6 +1,7 @@
 """An XML serializer"""
 
 from decimal import Decimal
+from enum import Enum
 from inspect import Parameter
 from typing import Any, Optional, Type, Union
 
@@ -39,6 +40,8 @@ def _from_value(
         return str(value)
     elif type_annotation is Decimal:
         return str(value)
+    elif isinstance(value, Enum):
+        return value.name
     else:
         serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:

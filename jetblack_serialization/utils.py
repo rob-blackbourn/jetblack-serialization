@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta
 from decimal import Decimal
+from enum import Enum
+from inspect import isclass
 from typing import Any
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
@@ -25,7 +27,7 @@ def is_simple_type(annotation: Annotation) -> bool:
         Decimal,
         datetime,
         timedelta
-    )
+    ) or (isclass(annotation) and issubclass(annotation, Enum))
 
 
 def is_container_type(annotation: Any) -> bool:

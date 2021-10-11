@@ -1,6 +1,7 @@
 """Tests for serialization"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
@@ -20,6 +21,12 @@ from jetblack_serialization.xml.annotations import (
 )
 
 CONFIG = SerializerConfig(pascalcase, snakecase)
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 
 class Book(TypedDict, total=False):
@@ -55,6 +62,10 @@ class Book(TypedDict, total=False):
         Optional[int],
         XMLAttribute("pages")
     ]
+    genre: Annotated[
+        Genre,
+        XMLEntity("Genre")
+    ]
 
 
 def test_xml_deserialize_annotated():
@@ -73,6 +84,7 @@ def test_xml_deserialize_annotated():
     <Phrase>War is the continuation of politics</Phrase>
     <Age>24</Age>
     <Pages/>
+    <Genre>POLITICAL</Genre>
 </Book>
 """
     dct = deserialize(
@@ -91,7 +103,8 @@ def test_xml_deserialize_annotated():
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
 
 

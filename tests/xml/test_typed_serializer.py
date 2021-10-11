@@ -1,6 +1,7 @@
 """Test for the XML serializer"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
@@ -20,6 +21,12 @@ from jetblack_serialization.xml.annotations import (
 )
 
 CONFIG = SerializerConfig(pascalcase, snakecase)
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 
 class Book(TypedDict, total=False):
@@ -55,6 +62,10 @@ class Book(TypedDict, total=False):
         Optional[int],
         XMLAttribute("pages")
     ]
+    genre: Annotated[
+        Genre,
+        XMLEntity("Genre")
+    ]
 
 
 def test_xml_serialize_typed():
@@ -69,8 +80,8 @@ def test_xml_serialize_typed():
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
     text = serialize_typed(book, Annotated[Book, XMLEntity("Book")], CONFIG)
-    assert text == '<Book bookId="42"><Title>Little Red Book</Title><Author>Chairman Mao</Author><PublicationDate>1973-01-01T21:52:13.00Z</PublicationDate><Keywords><Keyword>Revolution</Keyword><Keyword>Communism</Keyword></Keywords><Phrase>Revolutionary wars are inevitable in class society</Phrase><Phrase>War is the continuation of politics</Phrase><Age>24</Age><pages/></Book>'
-
+    assert text == '<Book bookId="42"><Title>Little Red Book</Title><Author>Chairman Mao</Author><PublicationDate>1973-01-01T21:52:13.00Z</PublicationDate><Keywords><Keyword>Revolution</Keyword><Keyword>Communism</Keyword></Keywords><Phrase>Revolutionary wars are inevitable in class society</Phrase><Phrase>War is the continuation of politics</Phrase><Age>24</Age><pages/><Genre>POLITICAL</Genre></Book>'
