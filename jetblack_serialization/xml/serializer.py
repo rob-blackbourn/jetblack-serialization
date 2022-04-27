@@ -74,7 +74,7 @@ def _from_optional(
     else:
         return _from_union(
             obj,
-            Union[tuple(union_types)],
+            Union[tuple(union_types)], # type: ignore
             xml_annotation,
             element,
             config
