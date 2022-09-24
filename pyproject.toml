@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jetblack-serialization"
-version = "3.0.0-alpha.2"
+version = "3.0.0-alpha.3"
 description = "Serialization for JSON and XML using typing"
 repository = "https://github.com/rob-blackbourn/jetblack-serialization"
 authors = ["Rob Blackbourn <rob.blackbourn@gmail.com>"]
@@ -14,22 +14,22 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.7"
 jetblack-iso8601 = "^1.0"
-lxml = "^4.6"
-typing-extensions = "^3.10"
-typing_inspect = "^0.7"
+lxml = "^4.9"
+typing-extensions = "^4"
+typing_inspect = "^0.8"
 
 [tool.poetry.dev-dependencies]
-autopep8 = "^1.5"
-mypy = "^0.910"
-pylint = "^2.11"
-pytest = "^6.2"
-rope = "^0.20"
-stringcase = "^1.2"
-mkdocs = "^1.2"
-mkdocs-material = "^7.2"
-jetblack-markdown = "^0.6"
-mike = "^1.1.1"
-lxml-stubs = "^0.2"
+autopep8 = "^1"
+mypy = "^0.971"
+pylint = "^2"
+pytest = "^7"
+pytest-runner = "^6"
+stringcase = "^1.2.0"
+lxml-stubs = "^0.2.0"
+jetblack-markdown = "^1.0.1"
+mkdocs = "^1.3"
+mkdocs-material = "^8.5"
+mike = "^1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

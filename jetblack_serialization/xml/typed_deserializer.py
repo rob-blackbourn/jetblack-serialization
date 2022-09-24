@@ -112,7 +112,7 @@ def _to_optional(
     else:
         return _to_union(
             element,
-            Union[tuple(union_types)],
+            Union[tuple(union_types)],  # type: ignore
             xml_annotation,
             config
         )
@@ -200,10 +200,13 @@ def _to_typed_dict(
                 key_annotation
             )
 
-        if not isinstance(item_xml_annotation, XMLAttribute):
-            item_element = element.find('./' + item_xml_annotation.tag)
+        if (
+                isinstance(item_xml_annotation, XMLAttribute) or
+                item_xml_annotation.tag == ''
+        ):
+            item_element: Optional[_Element] = element
         else:
-            item_element = element
+            item_element = element.find('./' + item_xml_annotation.tag)
 
         typed_dict[key] = _to_obj(
             item_element,
