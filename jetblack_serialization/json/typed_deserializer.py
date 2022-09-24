@@ -227,7 +227,7 @@ def from_json_value(
     """Convert from a json value
 
     Args:
-        config (SerializerConfig): The serialier configuration
+        config (SerializerConfig): The serializer configuration
         json_value (Any): The JSON value
         annotation (Annotation): The type annotation
 
