@@ -46,7 +46,7 @@ def _from_any(obj: Any, config: SerializerConfig) -> Any:
         return _from_value(obj, type(obj), config)
 
 
-def serialize(obj: Any, config: SerializerConfig) -> str:
+def serialize_untyped(obj: Any, config: SerializerConfig) -> str:
     json_obj = _from_any(obj, config)
     return json.dumps(
         json_obj,

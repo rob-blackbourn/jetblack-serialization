@@ -48,7 +48,7 @@ def _from_obj(obj: Any, config: SerializerConfig) -> Any:
         return _from_value(obj, config)
 
 
-def deserialize(text: str, config: SerializerConfig) -> Any:
+def deserialize_untyped(text: str, config: SerializerConfig) -> Any:
     """Deserialize JSON without type information
 
     Args:

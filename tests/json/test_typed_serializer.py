@@ -1,6 +1,7 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, Union
 
 from stringcase import snakecase, camelcase
@@ -13,7 +14,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.json.typed_serializer import serialize
+from jetblack_serialization.json.typed_serializer import serialize_typed
 from jetblack_serialization.json.annotations import (
     JSONValue,
     JSONProperty
@@ -21,6 +22,10 @@ from jetblack_serialization.json.annotations import (
 
 CONFIG = SerializerConfig(camelcase, snakecase)
 
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 class AnnotatedBook(TypedDict, total=False):
     book_id: Annotated[
@@ -55,9 +60,13 @@ class AnnotatedBook(TypedDict, total=False):
         Optional[int],
         JSONProperty("pages")
     ]
+    genre: Annotated[
+        Genre,
+        JSONProperty('genre')
+    ]
 
 
-def test_annotated():
+def test_json_serializer_annotated():
     """Test for deserializing a typed dict with JSON annotations"""
 
     obj: AnnotatedBook = {
@@ -71,9 +80,10 @@ def test_annotated():
             'War is the continuation of politics'
         ],
         'age': 24,
+        'genre': Genre.POLITICAL
     }
-    text = serialize(obj, AnnotatedBook, CONFIG)
-    assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24}'
+    text = serialize_typed(obj, AnnotatedBook, CONFIG)
+    assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24, "genre": "POLITICAL"}'
 
 
 class UnannotatedBook(TypedDict, total=False):
@@ -85,9 +95,10 @@ class UnannotatedBook(TypedDict, total=False):
     phrases: List[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
+    genre: Genre
 
 
-def test_unannotated():
+def test_jason_serializer_unannotated():
     """Test for deserializing a typed dict without JSON annotations"""
 
     obj: UnannotatedBook = {
@@ -101,10 +112,11 @@ def test_unannotated():
             'War is the continuation of politics'
         ],
         'age': 24,
+        'genre': Genre.POLITICAL
     }
-    text = serialize(
+    text = serialize_typed(
         obj,
         UnannotatedBook,
         SerializerConfig(camelcase, snakecase, pretty_print=False)
     )
-    assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24}'
+    assert text == '{"bookId": 42, "title": "Little Red Book", "author": "Chairman Mao", "publicationDate": "1973-01-01T21:52:13.00Z", "keywords": ["Revolution", "Communism"], "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"], "age": 24, "genre": "POLITICAL"}'

@@ -1,6 +1,7 @@
 """An XML serializer"""
 
 from decimal import Decimal
+from enum import Enum
 from inspect import Parameter
 import json
 from typing import Any, Type, Union, cast
@@ -34,6 +35,8 @@ def _from_value(
         return value
     elif type_annotation is Decimal:
         return float(value)
+    elif isinstance(value, Enum):
+        return value.name
     else:
         serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
@@ -64,7 +67,7 @@ def _from_optional(
     else:
         return _from_union(
             obj,
-            Union[tuple(union_types)],
+            Union[tuple(union_types)],  # type: ignore
             json_annotation,
             config
         )
@@ -194,7 +197,7 @@ def _from_any(
         raise TypeError('Unhandled type')
 
 
-def serialize(
+def serialize_typed(
         obj: Any,
         annotation: Annotation,
         config: SerializerConfig

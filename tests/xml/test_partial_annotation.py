@@ -13,7 +13,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.serializer import serialize
+from jetblack_serialization.xml.serialization import serialize
 from jetblack_serialization.xml.annotations import (
     XMLEntity,
     XMLAttribute

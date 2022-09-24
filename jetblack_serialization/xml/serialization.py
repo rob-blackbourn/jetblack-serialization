@@ -56,10 +56,10 @@ def deserialize(
         annotation: Annotation,
         config: SerializerConfig,
 ) -> Any:
-    """Convert JSON to an object
+    """Convert XML to an object
 
     Args:
-        text (str): The JSON string
+        text (str): The XML string
         annotation (Annotation): The type annotation
         config (SerializerConfig): The serializer configuration
 

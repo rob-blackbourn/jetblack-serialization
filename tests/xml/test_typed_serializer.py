@@ -1,6 +1,7 @@
-"""Tests for serialization"""
+"""Test for the XML serializer"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
@@ -13,13 +14,19 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.deserializer import deserialize
+from jetblack_serialization.xml.typed_serializer import serialize_typed
 from jetblack_serialization.xml.annotations import (
     XMLEntity,
     XMLAttribute
 )
 
 CONFIG = SerializerConfig(pascalcase, snakecase)
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 
 class Book(TypedDict, total=False):
@@ -55,32 +62,14 @@ class Book(TypedDict, total=False):
         Optional[int],
         XMLAttribute("pages")
     ]
+    genre: Annotated[
+        Genre,
+        XMLEntity("Genre")
+    ]
 
 
-def test_from_xml_element():
-    """Test for from_xml_element"""
-
-    text = """
-<Book  bookId="42">
-    <Title>Little Red Book</Title>
-    <Author>Chairman Mao</Author>
-    <PublicationDate>1973-01-01T21:52:13Z</PublicationDate>
-    <Keywords>
-      <Keyword>Revolution</Keyword>
-      <Keyword>Communism</Keyword>
-    </Keywords>
-    <Phrase>Revolutionary wars are inevitable in class society</Phrase>
-    <Phrase>War is the continuation of politics</Phrase>
-    <Age>24</Age>
-    <Pages/>
-</Book>
-"""
-    dct = deserialize(
-        text,
-        Annotated[Book, XMLEntity("Book")],
-        CONFIG
-    )
-    assert dct == {
+def test_xml_serialize_typed():
+    book: Book = {
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
@@ -91,16 +80,8 @@ def test_from_xml_element():
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
-
-
-class UnannotatedBook(TypedDict, total=False):
-    book_id: int
-    title: str
-    author: str
-    publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
-    age: Optional[Union[datetime, int]]
-    pages: Optional[int]
+    text = serialize_typed(book, Annotated[Book, XMLEntity("Book")], CONFIG)
+    assert text == '<Book bookId="42"><Title>Little Red Book</Title><Author>Chairman Mao</Author><PublicationDate>1973-01-01T21:52:13.00Z</PublicationDate><Keywords><Keyword>Revolution</Keyword><Keyword>Communism</Keyword></Keywords><Phrase>Revolutionary wars are inevitable in class society</Phrase><Phrase>War is the continuation of politics</Phrase><Age>24</Age><pages/><Genre>POLITICAL</Genre></Book>'

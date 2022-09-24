@@ -1,7 +1,8 @@
 """XML Serialization"""
 
 from decimal import Decimal
-from inspect import Parameter
+from enum import Enum
+from inspect import Parameter, isclass
 from typing import (
     Any,
     Dict,
@@ -25,11 +26,9 @@ from .annotations import (
     XMLAnnotation,
     XMLAttribute,
     XMLEntity,
-    get_xml_annotation,
-    DEFAULT_DOCUMENT_ANNOTATION,
-    DEFAULT_KEY_ANNOTATION,
-    DEFAULT_VALUE_ANNOTATION,
+    get_xml_annotation
 )
+
 
 def _is_element_empty(element: _Element, xml_annotation: XMLAnnotation) -> bool:
     if isinstance(xml_annotation, XMLAttribute):
@@ -60,6 +59,8 @@ def _to_value(
         return float(text)
     elif type_annotation is Decimal:
         return Decimal(text)
+    elif isclass(type_annotation) and issubclass(type_annotation, Enum):
+        return type_annotation[text]
     else:
         deserializer = config.value_deserializers.get(type_annotation)
         if deserializer is not None:
@@ -111,7 +112,7 @@ def _to_optional(
     else:
         return _to_union(
             element,
-            Union[tuple(union_types)], # type: ignore
+            Union[tuple(union_types)],  # type: ignore
             xml_annotation,
             config
         )
@@ -149,8 +150,7 @@ def _to_list(
     item_annotation, *_rest = typing_inspect.get_args(type_annotation)
     if typing_inspect.is_annotated_type(item_annotation):
         item_type_annotation, item_xml_annotation = get_xml_annotation(
-            item_annotation,
-            DEFAULT_VALUE_ANNOTATION
+            item_annotation
         )
     else:
         item_type_annotation = item_annotation
@@ -191,8 +191,7 @@ def _to_typed_dict(
         default = get_typed_dict_key_default(key_annotation)
         if typing_inspect.is_annotated_type(key_annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
-                key_annotation,
-                DEFAULT_KEY_ANNOTATION
+                key_annotation
             )
         else:
             tag = config.serialize_key(key) if isinstance(key, str) else key
@@ -201,8 +200,11 @@ def _to_typed_dict(
                 key_annotation
             )
 
-        if isinstance(item_xml_annotation, XMLAttribute) or item_xml_annotation.tag == '':
-            item_element = element
+        if (
+                isinstance(item_xml_annotation, XMLAttribute) or
+                item_xml_annotation.tag == ''
+        ):
+            item_element: Optional[_Element] = element
         else:
             item_element = element.find('./' + item_xml_annotation.tag)
 
@@ -262,7 +264,7 @@ def _to_obj(
     raise TypeError
 
 
-def deserialize(
+def deserialize_typed(
         text: str,
         annotation: Annotation,
         config: SerializerConfig
@@ -276,10 +278,7 @@ def deserialize(
     Returns:
         Any: The deserialized object.
     """
-    type_annotation, xml_annotation = get_xml_annotation(
-        annotation,
-        DEFAULT_DOCUMENT_ANNOTATION
-        )
+    type_annotation, xml_annotation = get_xml_annotation(annotation)
     if not isinstance(xml_annotation, XMLEntity):
         raise TypeError(
             "Expected the root value to have an XMLEntity annotation")

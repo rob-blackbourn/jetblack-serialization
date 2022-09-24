@@ -1,7 +1,7 @@
 """Round trip tests for XML serialization"""
 
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 
 from stringcase import pascalcase, snakecase
 
@@ -13,8 +13,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.serializer import serialize
-from jetblack_serialization.xml.deserializer import deserialize
+from jetblack_serialization.xml import serialize, deserialize
 from jetblack_serialization.xml.annotations import (
     XMLEntity,
     XMLAttribute
@@ -58,7 +57,7 @@ class AnnotatedBook(TypedDict, total=False):
     ]
 
 
-def test_typed():
+def test_xml_typed_annotated_roundtrip():
     dct: AnnotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
@@ -91,7 +90,7 @@ class UnannotatedBook(TypedDict, total=False):
     pages: Optional[int]
 
 
-def test_untyped():
+def test_xml_unannotated_roundtrip():
     dct: UnannotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
@@ -112,23 +111,19 @@ def test_untyped():
     roundtrip = deserialize(text, annotation, config)
     assert dct == roundtrip
 
-def test_untyped_unannotated():
-    dct: UnannotatedBook = {
-        'author': 'Chairman Mao',
-        'book_id': 42,
-        'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
-        'keywords': ['Revolution', 'Communism'],
-        'phrases': [
-            'Revolutionary wars are inevitable in class society',
-            'War is the continuation of politics'
-        ],
-        'age': 24,
-        'pages': None
-    }
-    annotation = Annotated[UnannotatedBook, Any]
+
+def test_xml_untyped_roundtrip():
     config = SerializerConfig(pascalcase, snakecase)
 
-    text = serialize(dct, annotation, config)
-    roundtrip = deserialize(text, annotation, config)
-    assert dct == roundtrip
+    obj = {
+        'int': 42,
+        'str': 'a string',
+        'list': [1, 2, 3],
+        'dict': {
+            'one': 1,
+            'two': 2
+        }
+    }
+    text = serialize(obj, None, config)
+    roundtrip = deserialize(text, None, config)
+    assert obj == roundtrip    

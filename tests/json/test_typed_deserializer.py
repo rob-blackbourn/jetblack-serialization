@@ -1,6 +1,7 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, Union
 
 from stringcase import snakecase, camelcase
@@ -12,7 +13,7 @@ except:  # pylint: disable=bare-except
 from typing_extensions import Annotated  # type: ignore
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.json.typed_deserializer import deserialize
+from jetblack_serialization.json.typed_deserializer import deserialize_typed
 from jetblack_serialization.json.annotations import (
     JSONValue,
     JSONProperty
@@ -20,6 +21,13 @@ from jetblack_serialization.json.annotations import (
 from jetblack_serialization.custom_annotations import DefaultValue
 
 CONFIG = SerializerConfig(camelcase, snakecase)
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
+
 
 TEXT = """
 {
@@ -35,7 +43,8 @@ TEXT = """
         "Revolutionary wars are inevitable in class society",
         "War is the continuation of politics"
     ],
-    "age": 24
+    "age": 24,
+    "genre": "POLITICAL"
 }
 """
 
@@ -50,9 +59,9 @@ DICT = {
         'War is the continuation of politics'
     ],
     'age': 24,
-    'pages': None
+    'pages': None,
+    "genre": Genre.POLITICAL
 }
-
 
 class AnnotatedBook(TypedDict):
     book_id: Annotated[
@@ -81,12 +90,13 @@ class AnnotatedBook(TypedDict):
     ]
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
+    genre: Annotated[Genre, JSONProperty('genre')]
 
 
-def test_deserialize_annotated():
+def test_deserialize_json_annotated():
     """Test for deserialize"""
 
-    dct = deserialize(
+    dct = deserialize_typed(
         TEXT,
         Annotated[AnnotatedBook, JSONValue()],
         CONFIG
@@ -103,12 +113,13 @@ class Book(TypedDict):
     phrases: List[str]
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
+    genre: Genre
 
 
-def test_deserialize():
+def test_deserialize_json_unannotated():
     """Test for deserialize"""
 
-    dct = deserialize(
+    dct = deserialize_typed(
         TEXT,
         Book,
         CONFIG
