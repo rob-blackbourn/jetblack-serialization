@@ -6,8 +6,11 @@ try:
 except:  # pylint: disable=bare-except
     # Python3.7
     from typing_extensions import _TypedDictMeta  # type: ignore
-# type: ignore# pylint: disable=unused-import
+
+# type: ignore
 from typing_extensions import _AnnotatedAlias
+
+# pylint: disable=unused-import
 from typing_inspect import (
     get_args,
     get_bound,
@@ -113,3 +116,10 @@ def is_optional_type(tp):
         return is_optional_type(get_unannotated_type(tp))
     else:
         return False
+
+
+def is_optional_list_type(tp):
+    return (
+        is_optional_type(tp)
+        and is_list_type(get_optional_type(tp))
+    )
