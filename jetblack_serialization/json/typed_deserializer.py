@@ -177,6 +177,14 @@ def _to_dict(
     return json_obj
 
 
+def _to_custom_type(
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> Any:
+    return config.value_deserializers[type_annotation](value)
+
+
 def _to_any(
         json_value: Any,
         type_annotation: Annotation,
@@ -215,8 +223,14 @@ def _to_any(
             json_annotation,
             config
         )
+    elif type_annotation in config.value_deserializers:
+        return _to_custom_type(
+            json_value,
+            type_annotation,
+            config
+        )
     else:
-        raise TypeError
+        raise TypeError(f'Cannot deserialize value {json_value!r} to type {type_annotation}')
 
 
 def from_json_value(

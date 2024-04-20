@@ -12,7 +12,7 @@ except:  # pylint: disable=bare-except
     from typing_extensions import TypedDict
 from typing_extensions import Annotated  # type: ignore
 
-from jetblack_serialization.config import SerializerConfig
+from jetblack_serialization.config import SerializerConfig, VALUE_DESERIALIZERS
 from jetblack_serialization.json.typed_deserializer import deserialize_typed
 from jetblack_serialization.json.annotations import (
     JSONValue,
@@ -20,14 +20,30 @@ from jetblack_serialization.json.annotations import (
 )
 from jetblack_serialization.custom_annotations import DefaultValue
 
-CONFIG = SerializerConfig(camelcase, snakecase)
-
 
 class Genre(Enum):
     POLITICAL = auto()
     HORROR = auto()
     ROMANTIC = auto()
 
+
+class Image:
+    def __init__(self, value: str) -> None:
+        self.value = value
+
+    def __eq__(self, other) -> bool:
+        return self.value == other.value
+
+def to_image(value: str) -> Image:
+    return Image(value)
+
+
+DESERIALIZERS = {
+    Image: to_image
+}
+
+DESERIALIZERS.update(VALUE_DESERIALIZERS)
+CONFIG = SerializerConfig(camelcase, snakecase, value_deserializers=DESERIALIZERS)
 
 TEXT = """
 {
@@ -44,7 +60,8 @@ TEXT = """
         "War is the continuation of politics"
     ],
     "age": 24,
-    "genre": "POLITICAL"
+    "genre": "POLITICAL",
+    "cover": "image.png"
 }
 """
 
@@ -60,7 +77,8 @@ DICT = {
     ],
     'age': 24,
     'pages': None,
-    "genre": Genre.POLITICAL
+    "genre": Genre.POLITICAL,
+    "cover": Image("image.png")
 }
 
 class AnnotatedBook(TypedDict):
@@ -91,6 +109,7 @@ class AnnotatedBook(TypedDict):
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
     genre: Annotated[Genre, JSONProperty('genre')]
+    cover: Annotated[Image, JSONProperty('cover')]
 
 
 def test_deserialize_json_annotated():
@@ -114,6 +133,7 @@ class Book(TypedDict):
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
     genre: Genre
+    cover: Image
 
 
 def test_deserialize_json_unannotated():

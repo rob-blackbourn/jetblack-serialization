@@ -131,7 +131,7 @@ def _from_typed_dict(
                 key_annotation
             )
             if not issubclass(type(item_json_annotation), JSONProperty):
-                raise TypeError("<ust be a property")
+                raise TypeError("Must be a property")
             json_property = cast(JSONProperty, item_json_annotation)
         else:
             property_name = config.serialize_key(
@@ -141,7 +141,7 @@ def _from_typed_dict(
             item_type_annotation = key_annotation
 
         value = dct.get(key, default)
-        if value != Parameter.empty:
+        if value is not Parameter.empty:
             json_obj[json_property.tag] = _from_any(
                 value,
                 item_type_annotation,
@@ -153,6 +153,14 @@ def _from_typed_dict(
             pass
 
     return json_obj
+
+
+def _from_custom_type(
+        value: Any,
+        type_annotation: Type,
+        config: SerializerConfig
+) -> Any:
+    return config.value_serializers[type_annotation](value)
 
 
 def _from_any(
@@ -193,8 +201,14 @@ def _from_any(
             json_annotation,
             config
         )
+    elif type_annotation in config.value_serializers:
+        return _from_custom_type(
+            value,
+            type_annotation,
+            config
+        )
     else:
-        raise TypeError('Unhandled type')
+        raise TypeError(f'Cannot serialize value {value!r} from type {type_annotation}')
 
 
 def serialize_typed(
