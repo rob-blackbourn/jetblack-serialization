@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Callable, Dict, Optional, Type
+from typing import Any, Callable, Mapping, Optional, Type
 
 from jetblack_iso8601 import (
     iso8601_to_datetime,
@@ -30,15 +30,20 @@ def to_timedelta(text: str) -> timedelta:
     return value
 
 
-VALUE_DESERIALIZERS: Dict[Type, Callable[[str], Any]] = {
-    datetime: to_datetime,
-    timedelta: to_timedelta,
-    Decimal: Decimal
-}
-VALUE_SERIALIZERS: Dict[Type, Callable[[Any], Any]] = {
+ValueSerializer = Callable[[Any], Any]
+ValueDeserializer = Callable[[str], Any]
+ValueSerializers = Mapping[Type, ValueSerializer]
+ValueDeserializers = Mapping[Type, ValueDeserializer]
+
+VALUE_SERIALIZERS: ValueSerializers = {
     datetime: datetime_to_iso8601,
     timedelta: timedelta_to_iso8601,
     Decimal: float
+}
+VALUE_DESERIALIZERS: ValueDeserializers = {
+    datetime: to_datetime,
+    timedelta: to_timedelta,
+    Decimal: Decimal
 }
 
 
@@ -51,8 +56,8 @@ class SerializerConfig:
         deserialize_key: Optional[Callable[[str], str]],
         *,
         pretty_print: bool = False,
-        value_serializers=VALUE_SERIALIZERS,
-        value_deserializers=VALUE_DESERIALIZERS
+        value_serializers: ValueSerializers = VALUE_SERIALIZERS,
+        value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS
     ) -> None:
         self.serialize_key = serialize_key or _same_name
         self.deserialize_key = deserialize_key or _same_name

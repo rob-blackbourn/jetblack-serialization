@@ -11,7 +11,7 @@ from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..types import Annotation
 from ..config import SerializerConfig
-from ..utils import is_simple_type
+from ..utils import is_value_type
 
 from .annotations import (
     XMLAnnotation,
@@ -74,7 +74,7 @@ def _from_optional(
     else:
         return _from_union(
             obj,
-            Union[tuple(union_types)], # type: ignore
+            Union[tuple(union_types)],  # type: ignore
             xml_annotation,
             element,
             config
@@ -150,6 +150,7 @@ def _from_typed_dict(
     dict_element = _make_element(element, xml_annotation.tag)
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
@@ -203,7 +204,7 @@ def _from_obj(
         element: Optional[_Element],
         config: SerializerConfig
 ) -> _Element:
-    if is_simple_type(type_annotation):
+    if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_simple(
             obj,
             type_annotation,
