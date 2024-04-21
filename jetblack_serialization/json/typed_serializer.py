@@ -9,7 +9,7 @@ from typing import Any, Type, Union, cast
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
 from ..types import Annotation
-from ..utils import is_simple_type
+from ..utils import is_value_type
 
 from .annotations import (
     JSONAnnotation,
@@ -124,6 +124,7 @@ def _from_typed_dict(
     json_obj = dict()
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
         if typing_inspect.is_annotated_type(key_annotation):
@@ -141,7 +142,7 @@ def _from_typed_dict(
             item_type_annotation = key_annotation
 
         value = dct.get(key, default)
-        if value != Parameter.empty:
+        if value is not Parameter.empty:
             json_obj[json_property.tag] = _from_any(
                 value,
                 item_type_annotation,
@@ -161,7 +162,7 @@ def _from_any(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    if is_simple_type(type_annotation):
+    if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_value(
             value,
             type_annotation,

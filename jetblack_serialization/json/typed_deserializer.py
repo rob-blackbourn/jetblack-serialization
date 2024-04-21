@@ -18,7 +18,7 @@ from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
 from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
-from ..utils import is_simple_type
+from ..utils import is_value_type
 
 from .annotations import (
     JSONAnnotation,
@@ -135,6 +135,7 @@ def _to_dict(
     json_obj: Dict[str, Any] = {}
 
     typed_dict_keys = typing_inspect.typed_dict_keys(dict_annotation)
+    assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = get_typed_dict_key_default(key_annotation)
         if is_json_annotation(key_annotation):
@@ -160,7 +161,7 @@ def _to_dict(
                 json_property,
                 config
             )
-        elif default != Parameter.empty:
+        elif default is not Parameter.empty:
             json_obj[key] = _to_any(
                 default,
                 item_type_annotation,
@@ -183,7 +184,7 @@ def _to_any(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    if is_simple_type(type_annotation):
+    if is_value_type(type_annotation, config.value_deserializers.keys()):
         return _to_value(
             json_value,
             type_annotation,

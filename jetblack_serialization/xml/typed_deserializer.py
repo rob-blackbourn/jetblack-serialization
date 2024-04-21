@@ -20,7 +20,7 @@ from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
 from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
-from ..utils import is_simple_type
+from ..utils import is_value_type
 
 from .annotations import (
     XMLAnnotation,
@@ -135,6 +135,7 @@ def _to_simple(
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
     if isinstance(text, bytes):
         text = text.decode()
+    assert isinstance(text, str)
     return _to_value(text, default, type_annotation, config)
 
 
@@ -187,6 +188,7 @@ def _to_typed_dict(
     typed_dict: Dict[str, Any] = {}
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = get_typed_dict_key_default(key_annotation)
         if typing_inspect.is_annotated_type(key_annotation):
@@ -227,7 +229,7 @@ def _to_obj(
         config: SerializerConfig
 ) -> Any:
 
-    if is_simple_type(type_annotation):
+    if is_value_type(type_annotation, config.value_deserializers.keys()):
         return _to_simple(
             element,
             default,

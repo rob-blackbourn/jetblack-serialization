@@ -4,30 +4,37 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import Enum
 from inspect import isclass
-from typing import Any
+from typing import Any, Iterable, Sequence, Type, Union
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 from .types import Annotation
 
+BUILTIN_TYPES: Sequence[Type] = (
+    str,
+    bool,
+    int,
+    float
+)
 
-def is_simple_type(annotation: Annotation) -> bool:
-    """Return True if the annotation is a simple type like an int or a str.
+
+def is_value_type(
+        annotation: Union[Annotation, Type],
+        custom_types: Iterable[Type]
+) -> bool:
+    """Return True if the annotation is a value type like an int or a str.
 
     Args:
-        annotation (Any): The annotation
+        annotation (Union[Any, Type]): The annotation
+        custom_types (Iterable[Type]): Any custom types.
 
     Returns:
         bool: True if the annotation is a JSON literal, otherwise False
     """
-    return annotation in (
-        str,
-        bool,
-        int,
-        float,
-        Decimal,
-        datetime,
-        timedelta
-    ) or (isclass(annotation) and issubclass(annotation, Enum))
+    return (
+        annotation in BUILTIN_TYPES or
+        annotation in custom_types or
+        (isclass(annotation) and issubclass(annotation, Enum))
+    )
 
 
 def is_container_type(annotation: Any) -> bool:
