@@ -256,14 +256,14 @@ def from_json_value(
 
 
 def deserialize_typed(
-        text: str,
+        text: Union[str, bytes, bytearray],
         annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
     """Convert JSON to an object
 
     Args:
-        text (str): The JSON string
+        text (Union[str, bytes, bytearray]): The JSON string
         annotation (str): The type annotation
 
     Returns:

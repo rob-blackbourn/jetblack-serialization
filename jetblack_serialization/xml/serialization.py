@@ -1,6 +1,6 @@
 """Serialization"""
 
-from typing import Any
+from typing import Any, AnyStr
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 
@@ -52,7 +52,7 @@ def serialize(
 
 
 def deserialize(
-        text: str,
+        text: AnyStr,
         annotation: Annotation,
         config: SerializerConfig,
 ) -> Any:
