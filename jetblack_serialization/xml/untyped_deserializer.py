@@ -1,7 +1,7 @@
 """XML Serialization"""
 
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any, AnyStr, Dict, List, Optional, cast
 
 from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
@@ -50,7 +50,9 @@ def _to_simple(
         raise ValueError('Found "None" while deserializing a value')
 
     text = element.text
-    if isinstance(text, bytes):
+    if isinstance(text, memoryview):
+        text = text.tobytes().decode()
+    elif isinstance(text, (bytes, bytearray)):
         text = text.decode()
 
     type_name = element.get('type')
@@ -112,11 +114,11 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped(text: str, config: SerializerConfig) -> Any:
+def deserialize_untyped(text: AnyStr, config: SerializerConfig) -> Any:
     """Deserialize XML without type information
 
     Args:
-        text (str): The XML string
+        text (AnyStr): The XML string
 
     Returns:
         Any: The deserialized object.

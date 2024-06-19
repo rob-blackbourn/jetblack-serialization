@@ -1,6 +1,6 @@
 """Serialization"""
 
-from typing import Any
+from typing import Any, Union
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 
@@ -52,14 +52,14 @@ def serialize(
 
 
 def deserialize(
-        text: str,
+        text: Union[str, bytes, bytearray],
         annotation: Annotation,
         config: SerializerConfig,
 ) -> Any:
     """Convert JSON to an object
 
     Args:
-        text (str): The JSON string
+        text (Union[str, bytes, bytearray]): The JSON string
         annotation (Annotation): The type annotation
         config (SerializerConfig): The serializer configuration
 

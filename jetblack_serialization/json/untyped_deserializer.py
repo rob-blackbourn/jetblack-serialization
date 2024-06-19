@@ -1,7 +1,7 @@
 """An untyped deserializer"""
 
 import json
-from typing import Any
+from typing import Any, Union
 
 from ..config import SerializerConfig
 
@@ -9,7 +9,7 @@ from ..config import SerializerConfig
 def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     return config.deserialize_key(
         key
-    ) if config.deserialize_key and isinstance(key, str) else key
+    ) if config.deserialize_key is not None and isinstance(key, str) else key
 
 
 def _from_value(
@@ -48,11 +48,14 @@ def _from_obj(obj: Any, config: SerializerConfig) -> Any:
         return _from_value(obj, config)
 
 
-def deserialize_untyped(text: str, config: SerializerConfig) -> Any:
+def deserialize_untyped(
+        text: Union[str, bytes, bytearray],
+        config: SerializerConfig
+) -> Any:
     """Deserialize JSON without type information
 
     Args:
-        text (str): The JSON string
+        text (Union[str, bytes, bytearray]): The JSON string
 
     Returns:
         Any: The deserialized JSON object

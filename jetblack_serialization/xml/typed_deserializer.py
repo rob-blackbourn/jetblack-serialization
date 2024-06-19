@@ -5,6 +5,7 @@ from enum import Enum
 from inspect import Parameter, isclass
 from typing import (
     Any,
+    AnyStr,
     Dict,
     Iterable,
     List,
@@ -267,14 +268,14 @@ def _to_obj(
 
 
 def deserialize_typed(
-        text: str,
+        text: AnyStr,
         annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
     """Convert XML to an object
 
     Args:
-        text (str): The XML string
+        text (AnyStr): The XML string
         annotation (str): The type annotation
 
     Returns:
