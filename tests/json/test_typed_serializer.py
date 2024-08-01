@@ -3,12 +3,12 @@
 from datetime import datetime
 from typing import List, Optional, TypedDict, Union
 
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
-from jetblack_serialization.json.typed_serializer import serialize_typed
-from jetblack_serialization.json.annotations import (
+from jetblack_serialization.json import (
     JSONValue,
-    JSONProperty
+    JSONProperty,
+    serialize_typed
 )
 
 from .config import Genre, Image, CONFIG

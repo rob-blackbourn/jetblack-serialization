@@ -5,10 +5,10 @@ from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated
 
-from jetblack_serialization.json.typed_deserializer import deserialize_typed
-from jetblack_serialization.json.annotations import (
+from jetblack_serialization.json import (
     JSONValue,
-    JSONProperty
+    JSONProperty,
+    deserialize_typed
 )
 from jetblack_serialization.custom_annotations import DefaultValue
 

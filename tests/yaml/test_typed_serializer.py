@@ -5,10 +5,10 @@ from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated
 
-from jetblack_serialization.yaml.typed_serializer import serialize_typed
-from jetblack_serialization.json.annotations import (
-    JSONValue,
-    JSONProperty
+from jetblack_serialization.yaml import (
+    YAMLValue,
+    YAMLProperty,
+    serialize_typed
 )
 
 from .config import Genre, Image, CONFIG
@@ -17,43 +17,43 @@ from .config import Genre, Image, CONFIG
 class AnnotatedBook(TypedDict, total=False):
     book_id: Annotated[
         int,
-        JSONProperty("bookId")
+        YAMLProperty("bookId")
     ]
     title: Annotated[
         str,
-        JSONProperty("title")
+        YAMLProperty("title")
     ]
     author: Annotated[
         str,
-        JSONProperty("author")
+        YAMLProperty("author")
     ]
     publication_date: Annotated[
         datetime,
-        JSONProperty("publicationDate")
+        YAMLProperty("publicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, JSONValue()]],
-        JSONProperty("keywords")
+        List[Annotated[str, YAMLValue()]],
+        YAMLProperty("keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, JSONValue()]],
-        JSONProperty("phrases")
+        List[Annotated[str, YAMLValue()]],
+        YAMLProperty("phrases")
     ]
     age: Annotated[
         Optional[Union[datetime, int]],
-        JSONProperty("age")
+        YAMLProperty("age")
     ]
     pages: Annotated[
         Optional[int],
-        JSONProperty("pages")
+        YAMLProperty("pages")
     ]
     genre: Annotated[
         Genre,
-        JSONProperty('genre')
+        YAMLProperty('genre')
     ]
     cover: Annotated[
         Image,
-        JSONProperty('cover')
+        YAMLProperty('cover')
     ]
 
 

@@ -5,7 +5,7 @@ from datetime import timedelta, datetime
 from stringcase import snakecase, camelcase
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.json.untyped_deserializer import deserialize_untyped
+from jetblack_serialization.json import deserialize_untyped
 
 CONFIG = SerializerConfig(camelcase, snakecase)
 

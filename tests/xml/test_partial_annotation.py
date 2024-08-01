@@ -7,10 +7,10 @@ from stringcase import pascalcase, snakecase
 from typing_extensions import Annotated
 
 from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.serialization import serialize
-from jetblack_serialization.xml.annotations import (
+from jetblack_serialization.xml import (
     XMLEntity,
-    XMLAttribute
+    XMLAttribute,
+    serialize
 )
 
 CONFIG = SerializerConfig(pascalcase, snakecase)

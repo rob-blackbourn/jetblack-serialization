@@ -18,11 +18,11 @@ from jetblack_serialization.custom_annotations import (
 
 
 class FooAnnotation(SerializationAnnotation):
-    """A serialization annotion for Foo"""
+    """A serialization annotation for Foo"""
 
 
 class BarAnnotation(SerializationAnnotation):
-    """A serialization annotion for Bar"""
+    """A serialization annotation for Bar"""
 
 
 def test_serialization_annotations() -> None:
