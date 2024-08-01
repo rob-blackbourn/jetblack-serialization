@@ -1,4 +1,4 @@
-"""XML typed deserialization"""
+"""Typed XML deserialization"""
 
 from decimal import Decimal
 from enum import Enum
