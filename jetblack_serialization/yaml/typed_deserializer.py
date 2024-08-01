@@ -8,13 +8,7 @@ from ..config import SerializerConfig
 from ..json import from_json_value
 from ..types import Annotation
 
-_Loader = Union[
-    yaml.Loader,
-    yaml.BaseLoader,
-    yaml.FullLoader,
-    yaml.SafeLoader,
-    yaml.UnsafeLoader
-]
+from .types import _Loader
 
 
 def deserialize_typed(

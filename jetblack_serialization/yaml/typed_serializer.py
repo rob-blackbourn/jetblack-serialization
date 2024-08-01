@@ -10,7 +10,7 @@ from ..types import Annotation
 from ..json.annotations import is_json_annotation, get_json_annotation, JSONValue
 from ..json.typed_serializer import from_json_value
 
-_Dumper = Union[yaml.BaseDumper, yaml.Dumper, yaml.SafeDumper]
+from .types import _Dumper
 
 
 def serialize_typed(

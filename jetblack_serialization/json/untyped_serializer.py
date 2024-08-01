@@ -25,19 +25,19 @@ def _from_value(
 
 def _from_list(lst: list, config: SerializerConfig) -> list:
     return [
-        _from_any(item, config)
+        from_untyped_object(item, config)
         for item in lst
     ]
 
 
 def _from_dict(dct: dict, config: SerializerConfig) -> dict:
     return {
-        _serialize_key_if_str(key, config): _from_any(value, config)
+        _serialize_key_if_str(key, config): from_untyped_object(value, config)
         for key, value in dct.items()
     }
 
 
-def _from_any(obj: Any, config: SerializerConfig) -> Any:
+def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
     if isinstance(obj, dict):
         return _from_dict(obj, config)
     elif isinstance(obj, list):
@@ -47,7 +47,7 @@ def _from_any(obj: Any, config: SerializerConfig) -> Any:
 
 
 def serialize_untyped(obj: Any, config: SerializerConfig) -> str:
-    json_obj = _from_any(obj, config)
+    json_obj = from_untyped_object(obj, config)
     return json.dumps(
         json_obj,
         indent=2 if config.pretty_print else None
