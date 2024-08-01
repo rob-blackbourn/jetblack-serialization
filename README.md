@@ -17,11 +17,17 @@ The package can be installed with pip.
 pip install jetblack-serialization
 ```
 
+By default the dependencies for XML serialization (`lxml`) are not installed.
+To add the optional packages for XML use the following.
+
+```bash
+pip install jetblack-serialization[xml]
+```
+
 ## Overview
 
 The package adds support for type annotations when serializing or deserializing
 JSON or XML.
-
 
 ### JSON
 
