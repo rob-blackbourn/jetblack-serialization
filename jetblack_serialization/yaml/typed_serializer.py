@@ -1,6 +1,6 @@
 """Typed YAML serialization"""
 
-from typing import Any, Type, Union
+from typing import Any, Type
 
 import yaml
 
