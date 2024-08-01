@@ -1,4 +1,4 @@
-"""An XML serializer"""
+"""A JSON serializer"""
 
 from decimal import Decimal
 from enum import Enum
@@ -6,7 +6,7 @@ from inspect import Parameter
 import json
 from typing import Any, Type, Union, cast
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
+from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
 from ..types import Annotation
 from ..utils import is_value_type
@@ -58,7 +58,7 @@ def _from_optional(
     union_types = typing_inspect.get_args(type_annotation)[:-1]
     if len(union_types) == 1:
         # This was Optional[T]
-        return _from_any(
+        return from_json_value(
             obj,
             union_types[0],
             json_annotation,
@@ -81,7 +81,7 @@ def _from_union(
 ) -> Any:
     for element_type in typing_inspect.get_args(type_annotation):
         try:
-            return _from_any(
+            return from_json_value(
                 obj,
                 element_type,
                 json_annotation,
@@ -106,7 +106,7 @@ def _from_list(
         item_json_annotation = JSONValue()
 
     return [
-        _from_any(
+        from_json_value(
             item,
             item_type_annotation,
             item_json_annotation,
@@ -143,7 +143,7 @@ def _from_typed_dict(
 
         value = dct.get(key, default)
         if value is not Parameter.empty:
-            json_obj[json_property.tag] = _from_any(
+            json_obj[json_property.tag] = from_json_value(
                 value,
                 item_type_annotation,
                 json_property,
@@ -156,7 +156,7 @@ def _from_typed_dict(
     return json_obj
 
 
-def _from_any(
+def from_json_value(
         value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
@@ -220,7 +220,7 @@ def serialize_typed(
     else:
         type_annotation, json_annotation = annotation, JSONValue()
 
-    json_obj = _from_any(
+    json_obj = from_json_value(
         obj,
         type_annotation,
         json_annotation,

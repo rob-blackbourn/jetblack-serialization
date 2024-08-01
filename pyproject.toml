@@ -15,6 +15,7 @@ packages = [
 python = ">=3.8.1,<4.0"
 jetblack-iso8601 = "^1.0.2"
 lxml = { version = "^5.2.2", optional = true }
+pyyaml = { version = "^6.0.1", optional = true }
 typing-extensions = "^4"
 typing-inspect = "^0.9"
 
@@ -28,9 +29,12 @@ jetblack-markdown = "^1.2.0"
 mkdocs = "^1.6"
 mkdocs-material = "^9.5.30"
 mike = "^2.1.2"
+types-pyyaml = "^6.0.12.20240724"
 
 [tool.poetry.extras]
 xml = [ "lxml" ]
+yaml = [ "pyyaml" ]
+all = [ "lxml", "pyyaml" ]
 
 [build-system]
 requires = ["poetry>=1.6"]
