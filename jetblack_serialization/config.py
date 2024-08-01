@@ -16,14 +16,14 @@ def _same_name(name: str) -> str:
     return name
 
 
-def to_datetime(text: str) -> datetime:
+def _to_datetime(text: str) -> datetime:
     value = iso8601_to_datetime(text)
     if value is None:
         raise ValueError('Unable to parse iso8601 timestamp')
     return value
 
 
-def to_timedelta(text: str) -> timedelta:
+def _to_timedelta(text: str) -> timedelta:
     value = iso8601_to_timedelta(text)
     if value is None:
         raise ValueError('Unable to parse iso8601 timestamp')
@@ -41,8 +41,8 @@ VALUE_SERIALIZERS: ValueSerializers = (
     (Decimal, float)
 )
 VALUE_DESERIALIZERS: ValueDeserializers = (
-    (datetime, to_datetime),
-    (timedelta, to_timedelta),
+    (datetime, _to_datetime),
+    (timedelta, _to_timedelta),
     (Decimal, Decimal)
 )
 
