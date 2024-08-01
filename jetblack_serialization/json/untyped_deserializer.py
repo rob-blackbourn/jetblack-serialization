@@ -1,4 +1,4 @@
-"""An untyped JSON deserializer"""
+"""Untyped JSON deserialization"""
 
 import json
 from typing import Any, Union

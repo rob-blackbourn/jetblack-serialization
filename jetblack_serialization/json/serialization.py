@@ -1,4 +1,4 @@
-"""Serialization"""
+"""JSON serialization"""
 
 from typing import Any, Union
 

@@ -1,4 +1,4 @@
-"""An untyped serializer"""
+"""Untyped JSON serialization"""
 
 import json
 from typing import Any, Type

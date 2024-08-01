@@ -1,4 +1,4 @@
-"""A JSON serializer"""
+"""Typed JSON serialization"""
 
 from decimal import Decimal
 from enum import Enum

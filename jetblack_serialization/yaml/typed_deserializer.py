@@ -1,4 +1,4 @@
-"""Serialized typed yaml"""
+"""Typed YAML deserialization"""
 
 from typing import Any, Type, Union
 

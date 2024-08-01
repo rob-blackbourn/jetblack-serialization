@@ -1,4 +1,4 @@
-"""Serialization"""
+"""XML serialization"""
 
 from typing import Any, AnyStr
 

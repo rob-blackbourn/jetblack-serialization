@@ -1,4 +1,4 @@
-"""An untyped XML serializer"""
+"""Untyped XML serialization"""
 
 from decimal import Decimal
 from typing import Any, Optional
@@ -10,9 +10,11 @@ from ..config import SerializerConfig
 
 
 def _make_object(parent: Optional[_Element], type_name: str) -> _Element:
-    element = Element('object') if parent is None else SubElement(parent, 'object')
+    element = Element('object') if parent is None else SubElement(
+        parent, 'object')
     element.set('type', type_name)
     return element
+
 
 def _from_value(
         value: Any,
@@ -75,6 +77,7 @@ def _from_dict(
 
     return element
 
+
 def _from_simple(
         obj: Any,
         parent: Optional[_Element],
@@ -84,6 +87,7 @@ def _from_simple(
     child = _make_object(parent, obj.__class__.__name__)
     child.text = text
     return child
+
 
 def _from_obj(
         obj: Any,
@@ -96,6 +100,7 @@ def _from_obj(
         return _from_list(obj, element, config)
     else:
         return _from_simple(obj, element, config)
+
 
 def serialize_untyped(
         obj: Any,

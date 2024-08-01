@@ -1,4 +1,4 @@
-"""XML annotations"""
+"""JSON annotations"""
 
 from typing import Tuple, cast
 

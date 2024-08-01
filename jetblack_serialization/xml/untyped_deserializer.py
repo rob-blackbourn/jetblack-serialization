@@ -1,7 +1,7 @@
-"""XML Serialization"""
+"""Untyped XML deserialization"""
 
 from decimal import Decimal
-from typing import Any, AnyStr, Dict, List, Optional, cast
+from typing import Any, AnyStr, Dict, List, Optional
 
 from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
