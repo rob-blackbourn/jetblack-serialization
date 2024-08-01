@@ -121,7 +121,7 @@ def _from_typed_dict(
         type_annotation: Annotation,
         config: SerializerConfig
 ) -> dict:
-    json_obj = dict()
+    json_obj = {}
 
     typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
     assert typed_dict_keys is not None

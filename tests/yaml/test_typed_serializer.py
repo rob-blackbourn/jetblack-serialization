@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated
-import yaml
 
 from jetblack_serialization.yaml.typed_serializer import serialize_typed
 from jetblack_serialization.json.annotations import (
