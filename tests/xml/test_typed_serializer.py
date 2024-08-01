@@ -2,16 +2,10 @@
 
 from datetime import datetime
 from enum import Enum, auto
-from typing import List, Optional, Union
+from typing import List, Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
-
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml.typed_serializer import serialize_typed
@@ -68,7 +62,7 @@ class Book(TypedDict, total=False):
     ]
 
 
-def test_xml_serialize_typed():
+def test_xml_serialize_typed() -> None:
     book: Book = {
         'author': 'Chairman Mao',
         'book_id': 42,

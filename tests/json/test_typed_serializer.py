@@ -1,12 +1,7 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
-from typing import List, Optional, Union
-
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
+from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated  # type: ignore
 

@@ -1,13 +1,9 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, TypedDict, Union
 
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
 from jetblack_serialization.json.typed_deserializer import deserialize_typed
 from jetblack_serialization.json.annotations import (

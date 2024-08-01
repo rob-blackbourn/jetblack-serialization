@@ -1,16 +1,10 @@
 """Test for the XML serializer"""
 
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
-
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml.serialization import serialize
@@ -42,7 +36,7 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 
 
-def test_serialize():
+def test_serialize() -> None:
     book: Book = {
         'author': 'Chairman Mao',
         'book_id': 42,

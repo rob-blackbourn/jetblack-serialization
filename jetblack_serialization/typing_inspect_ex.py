@@ -1,11 +1,6 @@
 """Extensions for typing_inspect"""
 
-try:
-    # Python3.8
-    from typing import _TypedDictMeta  # type: ignore
-except:  # pylint: disable=bare-except
-    # Python3.7
-    from typing_extensions import _TypedDictMeta  # type: ignore
+from typing import _TypedDictMeta  # type: ignore
 
 # type: ignore
 from typing_extensions import _AnnotatedAlias

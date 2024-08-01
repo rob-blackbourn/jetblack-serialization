@@ -13,7 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-jetblack-iso8601 = "^1.0"
+jetblack-iso8601 = "^1.0.2"
 lxml = { version = "^5.2.2", optional = true }
 typing-extensions = "^4"
 typing-inspect = "^0.9"

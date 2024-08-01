@@ -131,7 +131,8 @@ def _to_simple(
     if not isinstance(xml_annotation, XMLAttribute):
         text = element.text
     else:
-        text = element.attrib[xml_annotation.tag]
+        attrib = element.attrib[xml_annotation.tag]
+        text = attrib.decode('utf8') if isinstance(attrib, bytes) else attrib
     if text is None and default is Parameter.empty:
         raise ValueError(f'Expected "{xml_annotation.tag}" to be non-null')
     if isinstance(text, bytes):

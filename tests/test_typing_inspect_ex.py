@@ -11,23 +11,17 @@ from typing import (
     Generic,
     Iterable,
     List,
+    Literal,
     Mapping,
     MutableMapping,
     NamedTuple,
     Optional,
     Sequence,
     Tuple,
+    TypedDict,
     TypeVar,
     Union
 )
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-try:
-    from typing import Literal  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import Literal # type: ignore
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 
@@ -45,8 +39,8 @@ class MockDict(TypedDict):
     arg_num1: str
     arg_num2: List[int]
     arg_num3: datetime
-    arg_num4: Optional[Decimal] = Decimal('1') # type: ignore
-    arg_num5: Optional[float] = None # type: ignore
+    arg_num4: Optional[Decimal] = Decimal('1')  # type: ignore
+    arg_num5: Optional[float] = None  # type: ignore
 
 
 def func(
@@ -335,7 +329,7 @@ def test_generic_type():
 
 
 def test_generic_bases():
-    class MyClass(List[int], Mapping[str, List[int]]): # type: ignore
+    class MyClass(List[int], Mapping[str, List[int]]):  # type: ignore
         pass
     assert typing_inspect.get_generic_bases(
         MyClass

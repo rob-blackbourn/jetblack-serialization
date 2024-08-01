@@ -9,7 +9,7 @@ from ..config import SerializerConfig
 def _serialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     return config.serialize_key(
         key
-    ) if config.serialize_key and isinstance(key, str) else key
+    ) if config.serialize_key is not None and isinstance(key, str) else key
 
 
 def _from_value(

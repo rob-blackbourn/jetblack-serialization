@@ -1,16 +1,10 @@
 """Round trip tests for XML serialization"""
 
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
-
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml import serialize, deserialize
@@ -57,7 +51,7 @@ class AnnotatedBook(TypedDict, total=False):
     ]
 
 
-def test_xml_typed_annotated_roundtrip():
+def test_xml_typed_annotated_roundtrip() -> None:
     dct: AnnotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
@@ -90,7 +84,7 @@ class UnannotatedBook(TypedDict, total=False):
     pages: Optional[int]
 
 
-def test_xml_unannotated_roundtrip():
+def test_xml_unannotated_roundtrip() -> None:
     dct: UnannotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
@@ -126,4 +120,4 @@ def test_xml_untyped_roundtrip():
     }
     text = serialize(obj, None, config)
     roundtrip = deserialize(text, None, config)
-    assert obj == roundtrip    
+    assert obj == roundtrip
