@@ -1,6 +1,8 @@
-"""JSON serialization"""
+"""YAML serialization"""
 
-from typing import Any, Union
+from typing import Any, Type, Union
+
+import yaml
 
 from .. import typing_inspect_ex as typing_inspect
 from ..types import (
@@ -9,10 +11,8 @@ from ..types import (
 from ..config import SerializerConfig
 
 
-from .typed_serializer import serialize_typed
-from .typed_deserializer import deserialize_typed
-from .untyped_serializer import serialize_untyped
-from .untyped_deserializer import deserialize_untyped
+from .typed_serializer import serialize_typed, _Dumper
+from .typed_deserializer import deserialize_typed, _Loader
 
 
 def _is_typed(annotation: Annotation) -> bool:
@@ -32,7 +32,9 @@ def _is_typed(annotation: Annotation) -> bool:
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig
+        config: SerializerConfig,
+        *,
+        dumper: Type[_Dumper] = yaml.SafeDumper
 ) -> str:
     """Convert the object to JSON
 
@@ -45,15 +47,17 @@ def serialize(
         str: The serialized object
     """
     if _is_typed(annotation):
-        return serialize_typed(obj, annotation, config)
+        return serialize_typed(obj, annotation, config, dumper=dumper)
     else:
-        return serialize_untyped(obj, config)
+        return yaml.dump(obj, Dumper=dumper)
 
 
 def deserialize(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
         config: SerializerConfig,
+        *,
+        loader: Type[_Loader] = yaml.SafeLoader
 ) -> Any:
     """Convert JSON to an object
 
@@ -68,4 +72,4 @@ def deserialize(
     if _is_typed(annotation):
         return deserialize_typed(text, annotation, config)
     else:
-        return deserialize_untyped(text, config)
+        return yaml.load(text, Loader=loader)
