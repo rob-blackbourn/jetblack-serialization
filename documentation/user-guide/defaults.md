@@ -1,7 +1,7 @@
 # Defaults
 
 There is a `DefaultValue` annotation. This can
-be used in conjunction with the othe annotations.
+be used in conjunction with the other annotations.
 
 For example:
 
