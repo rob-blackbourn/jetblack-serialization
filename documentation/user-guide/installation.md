@@ -8,11 +8,24 @@ The package can be installed with pip.
 pip install jetblack-serialization
 ```
 
-By default the dependencies for XML serialization (`lxml`) are not installed.
-To add the optional packages for XML use the following.
+By default, the dependencies for YAML and XML are not installed.
+
+To install the dependencies for XML (`lxml`).
 
 ```bash
 pip install jetblack-serialization[xml]
+```
+
+To install the dependencies for XML (`PyYAML`).
+
+```bash
+pip install jetblack-serialization[yaml]
+```
+
+To install the dependencies for both.
+
+```bash
+pip install jetblack-serialization[all]
 ```
 
 It has dependencies on the following packages:

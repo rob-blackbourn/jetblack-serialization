@@ -16,11 +16,24 @@ The package can be installed with pip.
 pip install jetblack-serialization
 ```
 
-By default the dependencies for XML serialization (`lxml`) are not installed.
-To add the optional packages for XML use the following.
+By default, the dependencies for YAML and XML are not installed.
+
+To install the dependencies for XML (`lxml`).
 
 ```bash
 pip install jetblack-serialization[xml]
+```
+
+To install the dependencies for XML (`PyYAML`).
+
+```bash
+pip install jetblack-serialization[yaml]
+```
+
+To install the dependencies for both.
+
+```bash
+pip install jetblack-serialization[all]
 ```
 
 ## Overview
@@ -47,7 +60,7 @@ class Book(TypedDict, total=False):
     pages: Optional[int]
 ```
 
-#### Serializing
+#### Serializing JSON
 
 This could be serialized to JSON as:
 
@@ -93,7 +106,7 @@ giving:
 Note the fields have been camel cased, and the publication date has been turned
 into an ISO 8601 date.
 
-#### Deserializing
+#### Deserializing JSON
 
 We can deserialize the data as follows:
 
@@ -133,7 +146,7 @@ Note we have introduced some annotations to control the serialization.
 For XML we have used pascal-case to serialized the keys and snake-case
 for deserialization.
 
-#### Serializing
+#### Serializing XML
 
 To serialize we need to provide the containing tag `Book`:
 
@@ -191,7 +204,7 @@ a nested structure, which we indicated by giving the list a different
 `XMLEntity` tag to the list items. For the phrases we used the default
 in-line behaviour.
 
-#### Deserializing
+#### Deserializing XML
 
 We can deserialize the XML as follows:
 
