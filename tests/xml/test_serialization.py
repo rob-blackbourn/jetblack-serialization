@@ -1,6 +1,7 @@
 """Round trip tests for XML serialization"""
 
 from datetime import datetime
+from enum import Enum, auto
 from typing import List, Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
@@ -18,6 +19,12 @@ CONFIG = SerializerConfig(
     key_serializer=pascalcase,
     key_deserializer=snakecase
 )
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 
 class AnnotatedBook(TypedDict, total=False):
@@ -53,6 +60,10 @@ class AnnotatedBook(TypedDict, total=False):
         Optional[int],
         XMLAttribute("pages")
     ]
+    genre: Annotated[
+        Genre,
+        XMLEntity("Genre")
+    ]
 
 
 def test_xml_typed_annotated_roundtrip() -> None:
@@ -67,7 +78,8 @@ def test_xml_typed_annotated_roundtrip() -> None:
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
     annotation = Annotated[AnnotatedBook, XMLEntity('Book')]
 
@@ -85,6 +97,7 @@ class UnannotatedBook(TypedDict, total=False):
     phrases: List[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
+    genre: Genre
 
 
 def test_xml_unannotated_roundtrip() -> None:
@@ -99,7 +112,8 @@ def test_xml_unannotated_roundtrip() -> None:
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
     annotation = Annotated[UnannotatedBook, XMLEntity('Book')]
 

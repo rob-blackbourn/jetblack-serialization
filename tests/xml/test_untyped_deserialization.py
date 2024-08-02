@@ -3,15 +3,9 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from stringcase import pascalcase, snakecase
+from jetblack_serialization.xml import deserialize_untyped
 
-
-from jetblack_serialization.xml import deserialize_untyped, SerializerConfig
-
-CONFIG = SerializerConfig(
-    key_serializer=pascalcase,
-    key_deserializer=snakecase
-)
+from .config import CONFIG
 
 
 def test_untyped_xml_serialization_simple() -> None:
