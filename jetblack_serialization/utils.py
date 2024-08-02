@@ -54,3 +54,17 @@ def is_container_type(annotation: Any) -> bool:
             typing_inspect.is_dict_type(annotation) or
             typing_inspect.is_typed_dict_type(annotation)
         )
+
+
+def is_typed(annotation: Annotation) -> bool:
+    return (
+        typing_inspect.is_typed_dict_type(annotation) or
+        (
+            typing_inspect.is_list_type(annotation) and
+            is_typed(typing_inspect.get_args(annotation)[0])
+        ) or
+        (
+            typing_inspect.is_annotated_type(annotation) and
+            is_typed(typing_inspect.get_origin(annotation))
+        )
+    )
