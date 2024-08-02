@@ -6,12 +6,12 @@ import yaml
 
 from ..json.untyped_serializer import from_untyped_object
 
-from .config import YAMLSerializerConfig
+from .config import SerializerConfig
 
 
 def serialize_untyped(
         obj: Any,
-        config: YAMLSerializerConfig,
+        config: SerializerConfig,
 ) -> str:
     json_obj = from_untyped_object(obj, config)
     return yaml.dump(

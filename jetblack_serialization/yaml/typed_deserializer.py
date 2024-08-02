@@ -7,13 +7,13 @@ import yaml
 from ..json import from_json_value
 from ..types import Annotation
 
-from .config import YAMLSerializerConfig
+from .config import SerializerConfig
 
 
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: YAMLSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 

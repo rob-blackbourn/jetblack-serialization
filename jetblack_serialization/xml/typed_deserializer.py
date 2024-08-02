@@ -18,7 +18,7 @@ from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
 from .. import typing_inspect_ex as typing_inspect
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
 from ..utils import is_value_type
@@ -29,7 +29,7 @@ from .annotations import (
     XMLEntity,
     get_xml_annotation
 )
-from .config import XMLSerializerConfig
+from .config import SerializerConfig
 
 
 def _is_element_empty(element: _Element, xml_annotation: XMLAnnotation) -> bool:
@@ -47,7 +47,7 @@ def _to_value(
         text: Optional[str],
         default: Any,
         type_annotation: Type,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if text is None:
         return default
@@ -75,7 +75,7 @@ def _to_union(
         element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     for union_type_annotation in typing_inspect.get_args(type_annotation):
         try:
@@ -95,7 +95,7 @@ def _to_optional(
         element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if element is None or _is_element_empty(element, xml_annotation):
         return None
@@ -125,7 +125,7 @@ def _to_simple(
         default: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if element is None:
         raise ValueError('Found "None" while deserializing a value')
@@ -146,7 +146,7 @@ def _to_list(
         element: Optional[_Element],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> List[Any]:
     if element is None:
         raise ValueError('Received "None" while deserializing a list')
@@ -183,7 +183,7 @@ def _to_list(
 def _to_typed_dict(
         element: Optional[_Element],
         type_annotation: Annotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Optional[Dict[str, Any]]:
     if element is None:
         raise ValueError('Received "None" while deserializing a TypeDict')
@@ -229,7 +229,7 @@ def _to_obj(
         default: Optional[Any],
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
 
     if is_value_type(type_annotation, config.value_deserializers.keys()):
@@ -272,7 +272,7 @@ def _to_obj(
 def deserialize_typed(
         text: AnyStr,
         annotation: Annotation,
-        config: XMLSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     """Convert XML to an object
 

@@ -15,7 +15,7 @@ from typing import (
 )
 
 from .. import typing_inspect_ex as typing_inspect
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
 from ..utils import is_value_type
@@ -27,13 +27,13 @@ from .annotations import (
     is_json_annotation,
     get_json_annotation
 )
-from .config import JSONSerializerConfig
+from .config import SerializerConfig
 
 
 def _to_value(
         value: Any,
         type_annotation: Type,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if isinstance(value, type_annotation):
         return value
@@ -65,7 +65,7 @@ def _to_optional(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     # An optional is a union where the last element is the None type.
     union_types = typing_inspect.get_args(type_annotation)[:-1]
@@ -89,7 +89,7 @@ def _to_optional(
 def _to_list(
         lst: list,
         list_annotation: Annotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> List[Any]:
     item_type_annotation, *_rest = typing_inspect.get_args(list_annotation)
     if typing_inspect.is_annotated_type(item_type_annotation):
@@ -114,7 +114,7 @@ def _to_union(
         obj: Optional[Dict[str, Any]],
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     for item_type_annotation in typing_inspect.get_args(type_annotation):
         try:
@@ -131,7 +131,7 @@ def _to_union(
 def _to_dict(
         obj: Dict[str, Any],
         dict_annotation: Annotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Dict[str, Any]:
     json_obj: Dict[str, Any] = {}
 
@@ -183,7 +183,7 @@ def _to_any(
         json_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if is_value_type(type_annotation, config.value_deserializers.keys()):
         return _to_value(
@@ -222,7 +222,7 @@ def _to_any(
 
 
 def from_json_value(
-        config: SerializerConfig,
+        config: BaseSerializerConfig,
         json_value: Any,
         annotation: Annotation,
 ) -> Any:
@@ -259,7 +259,7 @@ def from_json_value(
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: JSONSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     """Convert JSON to an object
 

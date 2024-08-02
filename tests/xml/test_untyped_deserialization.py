@@ -6,9 +6,9 @@ from decimal import Decimal
 from stringcase import pascalcase, snakecase
 
 
-from jetblack_serialization.xml import deserialize_untyped, XMLSerializerConfig
+from jetblack_serialization.xml import deserialize_untyped, SerializerConfig
 
-CONFIG = XMLSerializerConfig(
+CONFIG = SerializerConfig(
     key_serializer=pascalcase,
     key_deserializer=snakecase
 )

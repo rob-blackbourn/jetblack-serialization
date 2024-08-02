@@ -6,9 +6,9 @@ from typing import Any, Optional
 from lxml import etree
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 
-from .config import XMLSerializerConfig
+from .config import SerializerConfig
 
 
 def _make_object(parent: Optional[_Element], type_name: str) -> _Element:
@@ -20,7 +20,7 @@ def _make_object(parent: Optional[_Element], type_name: str) -> _Element:
 
 def _from_value(
         value: Any,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> str:
     if isinstance(value, str):
         return value
@@ -43,7 +43,7 @@ def _from_value(
 def _from_list(
         obj: list,
         parent: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     element = _make_object(parent, 'list')
 
@@ -60,7 +60,7 @@ def _from_list(
 def _from_dict(
         obj: dict,
         parent: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     element = _make_object(parent, 'dict')
 
@@ -83,7 +83,7 @@ def _from_dict(
 def _from_simple(
         obj: Any,
         parent: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     text = _from_value(obj, config)
     child = _make_object(parent, obj.__class__.__name__)
@@ -94,7 +94,7 @@ def _from_simple(
 def _from_obj(
         obj: Any,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     if isinstance(obj, dict):
         return _from_dict(obj, element, config)
@@ -106,7 +106,7 @@ def _from_obj(
 
 def serialize_untyped(
         obj: Any,
-        config: XMLSerializerConfig
+        config: SerializerConfig
 ) -> str:
     element = _from_obj(obj, None, config)
     buf: bytes = etree.tostring(

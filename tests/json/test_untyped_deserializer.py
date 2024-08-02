@@ -6,10 +6,10 @@ from stringcase import snakecase, camelcase
 
 from jetblack_serialization.json import (
     deserialize_untyped,
-    JSONSerializerConfig
+    SerializerConfig
 )
 
-CONFIG = JSONSerializerConfig(
+CONFIG = SerializerConfig(
     key_serializer=camelcase,
     key_deserializer=snakecase
 )

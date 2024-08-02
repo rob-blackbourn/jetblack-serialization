@@ -9,13 +9,13 @@ from ..types import Annotation
 from ..json.annotations import is_json_annotation, get_json_annotation, JSONValue
 from ..json.typed_serializer import from_json_value
 
-from .config import YAMLSerializerConfig
+from .config import SerializerConfig
 
 
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: YAMLSerializerConfig
+        config: SerializerConfig
 ) -> str:
     """Serialize an object to YAML.
 

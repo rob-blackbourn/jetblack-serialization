@@ -13,7 +13,7 @@ from jetblack_serialization.config import (
     VALUE_SERIALIZERS,
     VALUE_DESERIALIZERS,
 )
-from jetblack_serialization.yaml import YAMLSerializerConfig
+from jetblack_serialization.yaml import SerializerConfig
 
 
 class Genre(Enum):
@@ -48,7 +48,7 @@ value_deserializers: List[Tuple[Type, ValueDeserializer]] = [
 value_deserializers += VALUE_DESERIALIZERS
 
 
-CONFIG = YAMLSerializerConfig(
+CONFIG = SerializerConfig(
     key_serializer=camelcase,
     key_deserializer=snakecase,
     value_serializers=value_serializers,

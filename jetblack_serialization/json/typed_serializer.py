@@ -7,7 +7,7 @@ import json
 from typing import Any, Type, Union, cast
 
 from .. import typing_inspect_ex as typing_inspect
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 from ..types import Annotation
 from ..utils import is_value_type
 
@@ -18,13 +18,13 @@ from .annotations import (
     is_json_annotation,
     get_json_annotation
 )
-from .config import JSONSerializerConfig
+from .config import SerializerConfig
 
 
 def _from_value(
         value: Any,
         type_annotation: Type,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if type_annotation is str:
         return value
@@ -50,7 +50,7 @@ def _from_optional(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if obj is None:
         return None
@@ -78,7 +78,7 @@ def _from_union(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     for element_type in typing_inspect.get_args(type_annotation):
         try:
@@ -95,7 +95,7 @@ def _from_union(
 def _from_list(
         lst: list,
         type_annotation: Annotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     item_annotation, *_rest = typing_inspect.get_args(type_annotation)
     if typing_inspect.is_annotated_type(item_annotation):
@@ -120,7 +120,7 @@ def _from_list(
 def _from_typed_dict(
         dct: dict,
         type_annotation: Annotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> dict:
     json_obj = {}
 
@@ -161,7 +161,7 @@ def from_json_value(
         value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_value(
@@ -202,7 +202,7 @@ def from_json_value(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: JSONSerializerConfig
+        config: SerializerConfig
 ) -> str:
     """Serialize an object to JSON
 

@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
 from .. import typing_inspect_ex as typing_inspect
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 from ..types import Annotation
 from ..utils import is_value_type
 
@@ -19,7 +19,7 @@ from .annotations import (
     XMLEntity,
     get_xml_annotation
 )
-from .config import XMLSerializerConfig
+from .config import SerializerConfig
 
 
 def _make_element(parent: Optional[_Element], tag: str) -> _Element:
@@ -29,7 +29,7 @@ def _make_element(parent: Optional[_Element], tag: str) -> _Element:
 def _from_value(
         value: Any,
         type_annotation: Type,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> str:
     if type_annotation is str:
         return value
@@ -56,7 +56,7 @@ def _from_optional(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     if obj is None:
         return _make_element(element, xml_annotation.tag)
@@ -87,7 +87,7 @@ def _from_union(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     for union_type_annotation in typing_inspect.get_args(type_annotation):
         try:
@@ -109,7 +109,7 @@ def _from_list(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     item_annotation, *_rest = typing_inspect.get_args(type_annotation)
     if typing_inspect.is_annotated_type(item_annotation):
@@ -146,7 +146,7 @@ def _from_typed_dict(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     dict_element = _make_element(element, xml_annotation.tag)
 
@@ -184,7 +184,7 @@ def _from_simple(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     text = _from_value(obj, type_annotation, config)
     if isinstance(xml_annotation, XMLAttribute):
@@ -203,7 +203,7 @@ def _from_obj(
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> _Element:
     if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_simple(
@@ -252,7 +252,7 @@ def _from_obj(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: XMLSerializerConfig
+        config: SerializerConfig
 ) -> str:
     type_annotation, xml_annotation = get_xml_annotation(annotation)
     if not isinstance(xml_annotation, XMLEntity):

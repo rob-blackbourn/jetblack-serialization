@@ -6,9 +6,9 @@ from typing import Any, AnyStr, Dict, List, Optional
 from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 
-from .config import XMLSerializerConfig
+from .config import SerializerConfig
 
 
 def _is_element_empty(element: _Element) -> bool:
@@ -22,7 +22,7 @@ def _is_element_empty(element: _Element) -> bool:
 def _to_value(
         text: Optional[str],
         type_name: str,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if text is None:
         return None
@@ -46,7 +46,7 @@ def _to_value(
 
 def _to_simple(
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if element is None:
         raise ValueError('Found "None" while deserializing a value')
@@ -68,7 +68,7 @@ def _to_simple(
 
 def _to_list(
         parent: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> List[Any]:
     if parent is None:
         raise ValueError('Received "None" while deserializing a list')
@@ -84,7 +84,7 @@ def _to_list(
 
 def _to_dict(
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Optional[Dict[str, Any]]:
     if element is None:
         raise ValueError('Received "None" while deserializing a TypeDict')
@@ -103,7 +103,7 @@ def _to_dict(
 
 def _to_obj(
         element: Optional[_Element],
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
 
     if element is None:
@@ -116,7 +116,7 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped(text: AnyStr, config: XMLSerializerConfig) -> Any:
+def deserialize_untyped(text: AnyStr, config: SerializerConfig) -> Any:
     """Deserialize XML without type information
 
     Args:

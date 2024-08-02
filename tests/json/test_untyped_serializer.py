@@ -4,9 +4,9 @@ from datetime import timedelta, datetime
 
 from stringcase import snakecase, camelcase
 
-from jetblack_serialization.json import serialize_untyped, JSONSerializerConfig
+from jetblack_serialization.json import serialize_untyped, SerializerConfig
 
-CONFIG = JSONSerializerConfig(
+CONFIG = SerializerConfig(
     key_serializer=camelcase,
     key_deserializer=snakecase
 )

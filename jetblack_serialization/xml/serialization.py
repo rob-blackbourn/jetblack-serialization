@@ -5,7 +5,7 @@ from typing import Any, AnyStr
 from ..types import Annotation
 from ..utils import is_typed
 
-from .config import XMLSerializerConfig
+from .config import SerializerConfig
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
@@ -15,7 +15,7 @@ from .untyped_deserializer import deserialize_untyped
 def serialize(
         obj: Any,
         annotation: Any,
-        config: XMLSerializerConfig
+        config: SerializerConfig
 ) -> str:
     """Convert the object to JSON
 
@@ -36,7 +36,7 @@ def serialize(
 def deserialize(
         text: AnyStr,
         annotation: Annotation,
-        config: XMLSerializerConfig,
+        config: SerializerConfig,
 ) -> Any:
     """Convert XML to an object
 

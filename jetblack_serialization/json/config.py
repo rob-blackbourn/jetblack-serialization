@@ -3,7 +3,7 @@
 from typing import Callable, Optional
 
 from ..config import (
-    SerializerConfig,
+    BaseSerializerConfig,
     VALUE_DESERIALIZERS,
     VALUE_SERIALIZERS,
     ValueDeserializers,
@@ -11,7 +11,7 @@ from ..config import (
 )
 
 
-class JSONSerializerConfig(SerializerConfig):
+class SerializerConfig(BaseSerializerConfig):
 
     def __init__(
         self,

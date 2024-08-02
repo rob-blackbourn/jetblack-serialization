@@ -7,7 +7,7 @@ from ..types import (
 )
 from ..utils import is_typed
 
-from .config import JSONSerializerConfig
+from .config import SerializerConfig
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
@@ -17,7 +17,7 @@ from .untyped_deserializer import deserialize_untyped
 def serialize(
         obj: Any,
         annotation: Any,
-        config: JSONSerializerConfig
+        config: SerializerConfig
 ) -> str:
     """Convert the object to JSON
 
@@ -38,7 +38,7 @@ def serialize(
 def deserialize(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: JSONSerializerConfig,
+        config: SerializerConfig,
 ) -> Any:
     """Convert JSON to an object
 

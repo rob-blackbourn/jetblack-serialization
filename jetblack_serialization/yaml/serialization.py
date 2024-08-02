@@ -7,7 +7,7 @@ from ..types import (
 )
 from ..utils import is_typed
 
-from .config import YAMLSerializerConfig
+from .config import SerializerConfig
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
@@ -17,7 +17,7 @@ from .untyped_deserializer import deserialize_untyped
 def serialize(
         obj: Any,
         annotation: Any,
-        config: YAMLSerializerConfig
+        config: SerializerConfig
 ) -> str:
     """Convert the object to YAML.
 
@@ -38,7 +38,7 @@ def serialize(
 def deserialize(
         text: AnyStr,
         annotation: Annotation,
-        config: YAMLSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 

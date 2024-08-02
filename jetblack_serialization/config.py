@@ -47,7 +47,7 @@ VALUE_DESERIALIZERS: ValueDeserializers = (
 )
 
 
-class SerializerConfig:
+class BaseSerializerConfig:
     """Configuration for serialization"""
 
     def __init__(

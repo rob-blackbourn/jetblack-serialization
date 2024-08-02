@@ -9,12 +9,12 @@ from typing_extensions import Annotated
 from jetblack_serialization.xml import (
     XMLEntity,
     XMLAttribute,
-    XMLSerializerConfig,
+    SerializerConfig,
     serialize,
     deserialize
 )
 
-CONFIG = XMLSerializerConfig(
+CONFIG = SerializerConfig(
     key_serializer=pascalcase,
     key_deserializer=snakecase
 )

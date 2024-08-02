@@ -5,7 +5,7 @@ from typing import Callable, Optional, Type, Union
 import yaml
 
 from ..config import (
-    SerializerConfig,
+    BaseSerializerConfig,
     VALUE_DESERIALIZERS,
     VALUE_SERIALIZERS,
     ValueDeserializers,
@@ -27,7 +27,7 @@ _Loader = Union[
 ]
 
 
-class YAMLSerializerConfig(SerializerConfig):
+class SerializerConfig(BaseSerializerConfig):
 
     def __init__(
         self,

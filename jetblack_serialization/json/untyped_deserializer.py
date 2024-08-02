@@ -3,12 +3,12 @@
 import json
 from typing import Any, Union
 
-from ..config import SerializerConfig
+from ..config import BaseSerializerConfig
 
-from .config import JSONSerializerConfig
+from .config import SerializerConfig
 
 
-def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
+def _deserialize_key_if_str(key: Any, config: BaseSerializerConfig) -> Any:
     return config.deserialize_key(
         key
     ) if config.deserialize_key is not None and isinstance(key, str) else key
@@ -16,7 +16,7 @@ def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
 
 def _from_value(
         value: Any,
-        config: SerializerConfig
+        config: BaseSerializerConfig
 ) -> Any:
     if isinstance(value, str):
         for deserializer in config.value_deserializers.values():
@@ -27,21 +27,21 @@ def _from_value(
     return value
 
 
-def _from_list(lst: list, config: SerializerConfig) -> list:
+def _from_list(lst: list, config: BaseSerializerConfig) -> list:
     return [
         from_untyped_object(item, config)
         for item in lst
     ]
 
 
-def _from_dict(dct: dict, config: SerializerConfig) -> dict:
+def _from_dict(dct: dict, config: BaseSerializerConfig) -> dict:
     return {
         _deserialize_key_if_str(key, config): from_untyped_object(value, config)
         for key, value in dct.items()
     }
 
 
-def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
+def from_untyped_object(obj: Any, config: BaseSerializerConfig) -> Any:
     if isinstance(obj, dict):
         return _from_dict(obj, config)
     elif isinstance(obj, list):
@@ -52,7 +52,7 @@ def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
 
 def deserialize_untyped(
         text: Union[str, bytes, bytearray],
-        config: JSONSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     """Deserialize JSON without type information
 
