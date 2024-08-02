@@ -9,7 +9,8 @@ from stringcase import pascalcase, snakecase
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml import serialize_untyped
 
-CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
+CONFIG = SerializerConfig(key_serializer=pascalcase,
+                          key_deserializer=snakecase)
 
 
 def test_xml_untyped_serialization_simple() -> None:

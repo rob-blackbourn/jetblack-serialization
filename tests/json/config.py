@@ -49,8 +49,8 @@ value_deserializers += VALUE_DESERIALIZERS
 
 
 CONFIG = SerializerConfig(
-    serialize_key=camelcase,
-    deserialize_key=snakecase,
+    key_serializer=camelcase,
+    key_deserializer=snakecase,
     value_serializers=value_serializers,
     value_deserializers=value_deserializers
 )

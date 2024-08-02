@@ -7,7 +7,7 @@ from stringcase import snakecase, camelcase
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json import deserialize_untyped
 
-CONFIG = SerializerConfig(serialize_key=camelcase, deserialize_key=snakecase)
+CONFIG = SerializerConfig(key_serializer=camelcase, key_deserializer=snakecase)
 
 
 def test_json_untyped_deserialize() -> None:

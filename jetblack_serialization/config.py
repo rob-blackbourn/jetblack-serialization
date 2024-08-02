@@ -53,14 +53,14 @@ class SerializerConfig:
     def __init__(
         self,
         *,
-        serialize_key: Optional[Callable[[str], str]] = None,
-        deserialize_key: Optional[Callable[[str], str]] = None,
+        key_serializer: Optional[Callable[[str], str]] = None,
+        key_deserializer: Optional[Callable[[str], str]] = None,
         pretty_print: bool = False,
         value_serializers: ValueSerializers = VALUE_SERIALIZERS,
         value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS
     ) -> None:
-        self.serialize_key = serialize_key or _same_name
-        self.deserialize_key = deserialize_key or _same_name
+        self.serialize_key = key_serializer or _same_name
+        self.deserialize_key = key_deserializer or _same_name
         self.pretty_print = pretty_print
         self.value_serializers = dict(value_serializers)
         self.value_deserializers = dict(value_deserializers)

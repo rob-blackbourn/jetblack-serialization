@@ -13,7 +13,8 @@ from jetblack_serialization.xml import (
     serialize
 )
 
-CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
+CONFIG = SerializerConfig(key_serializer=pascalcase,
+                          key_deserializer=snakecase)
 
 
 class Book(TypedDict, total=False):
