@@ -5,6 +5,8 @@ from typing import Any, Type
 
 from ..config import SerializerConfig
 
+from .config import JSONSerializerConfig
+
 
 def _serialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     return config.serialize_key(
@@ -46,7 +48,7 @@ def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
         return _from_value(obj, type(obj), config)
 
 
-def serialize_untyped(obj: Any, config: SerializerConfig) -> str:
+def serialize_untyped(obj: Any, config: JSONSerializerConfig) -> str:
     json_obj = from_untyped_object(obj, config)
     return json.dumps(
         json_obj,

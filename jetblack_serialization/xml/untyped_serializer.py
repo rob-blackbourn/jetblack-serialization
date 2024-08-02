@@ -8,6 +8,8 @@ from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-
 
 from ..config import SerializerConfig
 
+from .config import XMLSerializerConfig
+
 
 def _make_object(parent: Optional[_Element], type_name: str) -> _Element:
     element = Element('object') if parent is None else SubElement(
@@ -104,7 +106,7 @@ def _from_obj(
 
 def serialize_untyped(
         obj: Any,
-        config: SerializerConfig
+        config: XMLSerializerConfig
 ) -> str:
     element = _from_obj(obj, None, config)
     buf: bytes = etree.tostring(

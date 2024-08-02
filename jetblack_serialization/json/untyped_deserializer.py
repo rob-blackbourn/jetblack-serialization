@@ -5,6 +5,8 @@ from typing import Any, Union
 
 from ..config import SerializerConfig
 
+from .config import JSONSerializerConfig
+
 
 def _deserialize_key_if_str(key: Any, config: SerializerConfig) -> Any:
     return config.deserialize_key(
@@ -50,7 +52,7 @@ def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
 
 def deserialize_untyped(
         text: Union[str, bytes, bytearray],
-        config: SerializerConfig
+        config: JSONSerializerConfig
 ) -> Any:
     """Deserialize JSON without type information
 

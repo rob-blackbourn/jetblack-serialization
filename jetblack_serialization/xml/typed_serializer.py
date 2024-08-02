@@ -8,9 +8,9 @@ from typing import Any, Optional, Type, Union
 from lxml import etree
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
-from ..types import Annotation
+from .. import typing_inspect_ex as typing_inspect
 from ..config import SerializerConfig
+from ..types import Annotation
 from ..utils import is_value_type
 
 from .annotations import (
@@ -19,6 +19,7 @@ from .annotations import (
     XMLEntity,
     get_xml_annotation
 )
+from .config import XMLSerializerConfig
 
 
 def _make_element(parent: Optional[_Element], tag: str) -> _Element:
@@ -251,7 +252,7 @@ def _from_obj(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig
+        config: XMLSerializerConfig
 ) -> str:
     type_annotation, xml_annotation = get_xml_annotation(annotation)
     if not isinstance(xml_annotation, XMLEntity):

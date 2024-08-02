@@ -6,11 +6,12 @@ from decimal import Decimal
 from stringcase import pascalcase, snakecase
 
 
-from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml import serialize_untyped
+from jetblack_serialization.xml import serialize_untyped, XMLSerializerConfig
 
-CONFIG = SerializerConfig(key_serializer=pascalcase,
-                          key_deserializer=snakecase)
+CONFIG = XMLSerializerConfig(
+    key_serializer=pascalcase,
+    key_deserializer=snakecase
+)
 
 
 def test_xml_untyped_serialization_simple() -> None:

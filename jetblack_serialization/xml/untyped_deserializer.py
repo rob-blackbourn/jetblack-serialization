@@ -8,6 +8,8 @@ from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
 from ..config import SerializerConfig
 
+from .config import XMLSerializerConfig
+
 
 def _is_element_empty(element: _Element) -> bool:
     return (
@@ -114,7 +116,7 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped(text: AnyStr, config: SerializerConfig) -> Any:
+def deserialize_untyped(text: AnyStr, config: XMLSerializerConfig) -> Any:
     """Deserialize XML without type information
 
     Args:

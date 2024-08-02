@@ -6,7 +6,7 @@ from .. import typing_inspect_ex as typing_inspect
 from ..types import (
     Annotation,
 )
-from ..config import SerializerConfig
+from .config import JSONSerializerConfig
 
 
 from .typed_serializer import serialize_typed
@@ -32,14 +32,14 @@ def _is_typed(annotation: Annotation) -> bool:
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig
+        config: JSONSerializerConfig
 ) -> str:
     """Convert the object to JSON
 
     Args:
         obj (Any): The object to convert
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (JSONSerializerConfig): The serializer configuration
 
     Returns:
         str: The serialized object
@@ -53,14 +53,14 @@ def serialize(
 def deserialize(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: SerializerConfig,
+        config: JSONSerializerConfig,
 ) -> Any:
     """Convert JSON to an object
 
     Args:
         text (Union[str, bytes, bytearray]): The JSON string
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (JSONSerializerConfig): The serializer configuration
 
     Returns:
         Any: The deserialized object.

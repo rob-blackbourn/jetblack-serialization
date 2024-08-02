@@ -41,13 +41,12 @@ This could be serialized to JSON as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import serialize
+from jetblack_serialization.json import serialize, JSONSerializerConfig
 
 text = serialize(
     obj,
     Book,
-    SerializerConfig(camelcase, snakecase, pretty_print=True)
+    JSONSerializerConfig(key_serializer=camelcase, pretty_print=True)
 )
 print(text)
 ```
@@ -76,13 +75,12 @@ We can deserialize the data as follows:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import deserialize
+from jetblack_serialization.json import deserialize, JSONSerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, JSONValue()],
-    SerializerConfig(camelcase, snakecase)
+    JSONSerializerConfig(key_deserializer=snakecase)
 )
 ```
 

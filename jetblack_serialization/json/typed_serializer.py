@@ -18,6 +18,7 @@ from .annotations import (
     is_json_annotation,
     get_json_annotation
 )
+from .config import JSONSerializerConfig
 
 
 def _from_value(
@@ -201,7 +202,7 @@ def from_json_value(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig
+        config: JSONSerializerConfig
 ) -> str:
     """Serialize an object to JSON
 

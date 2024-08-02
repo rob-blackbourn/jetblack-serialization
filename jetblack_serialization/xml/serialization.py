@@ -4,12 +4,9 @@ from typing import Any, AnyStr
 
 import jetblack_serialization.typing_inspect_ex as typing_inspect
 
-from ..types import (
-    Annotation,
-)
-from ..config import SerializerConfig
+from ..types import Annotation
 
-
+from .config import XMLSerializerConfig
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
@@ -33,14 +30,14 @@ def _is_typed(annotation: Annotation) -> bool:
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig
+        config: XMLSerializerConfig
 ) -> str:
     """Convert the object to JSON
 
     Args:
         obj (Any): The object to convert
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (XMLSerializerConfig): The serializer configuration
 
     Returns:
         str: The serialized object
@@ -54,14 +51,14 @@ def serialize(
 def deserialize(
         text: AnyStr,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: XMLSerializerConfig,
 ) -> Any:
     """Convert XML to an object
 
     Args:
         text (str): The XML string
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (XMLSerializerConfig): The serializer configuration
 
     Returns:
         Any: The deserialized object.

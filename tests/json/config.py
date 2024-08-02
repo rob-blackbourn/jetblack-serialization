@@ -8,12 +8,12 @@ from typing import List, Tuple, Type
 from stringcase import snakecase, camelcase
 
 from jetblack_serialization.config import (
-    SerializerConfig,
     ValueSerializer,
     ValueDeserializer,
     VALUE_SERIALIZERS,
     VALUE_DESERIALIZERS,
 )
+from jetblack_serialization.json import JSONSerializerConfig
 
 
 class Genre(Enum):
@@ -48,7 +48,7 @@ value_deserializers: List[Tuple[Type, ValueDeserializer]] = [
 value_deserializers += VALUE_DESERIALIZERS
 
 
-CONFIG = SerializerConfig(
+CONFIG = JSONSerializerConfig(
     key_serializer=camelcase,
     key_deserializer=snakecase,
     value_serializers=value_serializers,

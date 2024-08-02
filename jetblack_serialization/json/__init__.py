@@ -1,6 +1,7 @@
 """JSON Serialization"""
 
 from .annotations import JSONValue, JSONProperty
+from .config import JSONSerializerConfig
 from .serialization import (
     serialize,
     deserialize
@@ -16,6 +17,8 @@ from .untyped_deserializer import deserialize_untyped
 __all__ = [
     'JSONValue',
     'JSONProperty',
+
+    'JSONSerializerConfig',
 
     'serialize',
     'deserialize',

@@ -4,7 +4,7 @@ from .annotations import (
     XMLAttribute,
     XMLEntity
 )
-
+from .config import XMLSerializerConfig
 from .serialization import serialize, deserialize
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
@@ -14,6 +14,8 @@ from .untyped_deserializer import deserialize_untyped
 __all__ = [
     'XMLAttribute',
     'XMLEntity',
+
+    'XMLSerializerConfig',
 
     'serialize',
     'deserialize',

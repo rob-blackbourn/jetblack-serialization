@@ -4,17 +4,17 @@ from typing import Any, Type, Union
 
 import yaml
 
-from ..config import SerializerConfig
 from ..json import from_json_value
 from ..types import Annotation
 
+from .config import YAMLSerializerConfig
 from .types import _Loader
 
 
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: SerializerConfig,
+        config: YAMLSerializerConfig,
         *,
         loader: Type[_Loader] = yaml.SafeLoader
 ) -> Any:

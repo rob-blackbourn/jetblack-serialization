@@ -8,9 +8,8 @@ from .. import typing_inspect_ex as typing_inspect
 from ..types import (
     Annotation,
 )
-from ..config import SerializerConfig
 
-
+from .config import YAMLSerializerConfig
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
@@ -35,7 +34,7 @@ def _is_typed(annotation: Annotation) -> bool:
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig,
+        config: YAMLSerializerConfig,
         *,
         dumper: Type[_Dumper] = yaml.SafeDumper
 ) -> str:
@@ -44,7 +43,7 @@ def serialize(
     Args:
         obj (Any): The object to convert
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (YAMLSerializerConfig): The serializer configuration
 
     Returns:
         str: The serialized object
@@ -58,7 +57,7 @@ def serialize(
 def deserialize(
         text: AnyStr,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: YAMLSerializerConfig,
         *,
         loader: Type[_Loader] = yaml.SafeLoader
 ) -> Any:
@@ -67,7 +66,7 @@ def deserialize(
     Args:
         text (AnyStr): The JSON string
         annotation (Annotation): The type annotation
-        config (SerializerConfig): The serializer configuration
+        config (YAMLSerializerConfig): The serializer configuration
 
     Returns:
         Any: The deserialized object.

@@ -7,15 +7,17 @@ from typing import List, Optional, TypedDict, Union
 from stringcase import pascalcase, snakecase
 from typing_extensions import Annotated
 
-from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml import (
     XMLEntity,
     XMLAttribute,
+    XMLSerializerConfig,
     serialize_typed
 )
 
-CONFIG = SerializerConfig(key_serializer=pascalcase,
-                          key_deserializer=snakecase)
+CONFIG = XMLSerializerConfig(
+    key_serializer=pascalcase,
+    key_deserializer=snakecase
+)
 
 
 class Genre(Enum):

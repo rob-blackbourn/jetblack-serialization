@@ -29,6 +29,7 @@ from .annotations import (
     XMLEntity,
     get_xml_annotation
 )
+from .config import XMLSerializerConfig
 
 
 def _is_element_empty(element: _Element, xml_annotation: XMLAnnotation) -> bool:
@@ -271,7 +272,7 @@ def _to_obj(
 def deserialize_typed(
         text: AnyStr,
         annotation: Annotation,
-        config: SerializerConfig
+        config: XMLSerializerConfig
 ) -> Any:
     """Convert XML to an object
 

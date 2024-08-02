@@ -27,6 +27,7 @@ from .annotations import (
     is_json_annotation,
     get_json_annotation
 )
+from .config import JSONSerializerConfig
 
 
 def _to_value(
@@ -228,7 +229,7 @@ def from_json_value(
     """Convert from a json value
 
     Args:
-        config (SerializerConfig): The serializer configuration
+        config (JSONSerializerConfig): The serializer configuration
         json_value (Any): The JSON value
         annotation (Annotation): The type annotation
 
@@ -258,7 +259,7 @@ def from_json_value(
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: SerializerConfig
+        config: JSONSerializerConfig
 ) -> Any:
     """Convert JSON to an object
 

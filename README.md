@@ -53,8 +53,7 @@ This could be serialized to JSON as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import serialize
+from jetblack_serialization.json import serialize, JSONSerializerConfig
 
 obj: Book = {
     'author': 'Chairman Mao',
@@ -71,7 +70,7 @@ obj: Book = {
 text = serialize(
     obj,
     Book,
-    SerializerConfig(camelcase, snakecase, pretty_print=True)
+    JSONSerializerConfig(key_serializer=camelcase, pretty_print=True)
 )
 print(text)
 ```
@@ -100,13 +99,12 @@ We can deserialize the data as follows:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import deserialize
+from jetblack_serialization.json import deserialize, JSONSerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, JSONValue()],
-    SerializerConfig(camelcase, snakecase)
+    JSONSerializerConfig(key_deserializer=snakecase)
 )
 ```
 
@@ -141,8 +139,7 @@ To serialize we need to provide the containing tag `Book`:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.xml import serialize
+from jetblack_serialization.xml import serialize, XMLSerializerConfig
 
 book: Book = {
     'author': 'Chairman Mao',
@@ -160,7 +157,7 @@ book: Book = {
 text = serialize(
     book,
     Annotated[Book, XMLEntity("Book")],
-    SerializerConfig(pascalcase, snakecase)
+    XMLSerializerConfig(key_serializer=pascalcase)
 )
 print(text)
 ```
@@ -200,13 +197,12 @@ We can deserialize the XML as follows:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.xml import deserialize
+from jetblack_serialization.xml import deserialize, XMLSerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, XMLEntity("Book")],
-    SerializerConfig(pascalcase, snakecase)
+    XMLSerializerConfig(key_deserializer=snakecase)
 )
 ```
 
