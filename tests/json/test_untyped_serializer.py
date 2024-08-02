@@ -7,10 +7,10 @@ from stringcase import snakecase, camelcase
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json import serialize_untyped
 
-CONFIG = SerializerConfig(camelcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=camelcase, deserialize_key=snakecase)
 
 
-def test_json_untyped_serialize():
+def test_json_untyped_serialize() -> None:
     """Tests for serialize"""
     dct = {
         'str_arg': 'text',

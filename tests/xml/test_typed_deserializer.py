@@ -14,7 +14,7 @@ from jetblack_serialization.xml import (
     deserialize
 )
 
-CONFIG = SerializerConfig(pascalcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
 
 
 class Genre(Enum):
@@ -62,7 +62,7 @@ class Book(TypedDict, total=False):
     ]
 
 
-def test_xml_deserialize_annotated():
+def test_xml_deserialize_annotated() -> None:
     """Test for from_xml_element"""
 
     text = """
@@ -102,7 +102,7 @@ def test_xml_deserialize_annotated():
     }
 
 
-def test_xml_deserialize_annotated_with_encoding():
+def test_xml_deserialize_annotated_with_encoding() -> None:
     """Test for from_xml_element"""
 
     text = """<?xml version="1.0" encoding="UTF-8"?>

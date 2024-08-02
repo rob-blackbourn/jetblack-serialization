@@ -53,7 +53,7 @@ def func(
     pass
 
 
-def test_is_typed_dict():
+def test_is_typed_dict() -> None:
     signature = inspect.signature(func)
     typed_dict_arg_param = signature.parameters["typed_dict_arg"]
     assert typing_inspect.is_typed_dict_type(typed_dict_arg_param.annotation)
@@ -61,7 +61,7 @@ def test_is_typed_dict():
     assert not typing_inspect.is_typed_dict_type(dict_arg_param.annotation)
 
 
-def test_is_dict():
+def test_is_dict() -> None:
     signature = inspect.signature(func)
     typed_dict_arg_param = signature.parameters["typed_dict_arg"]
     assert not typing_inspect.is_dict_type(typed_dict_arg_param.annotation)
@@ -69,7 +69,7 @@ def test_is_dict():
     assert typing_inspect.is_dict_type(dict_arg_param.annotation)
 
 
-def test_is_list():
+def test_is_list() -> None:
     signature = inspect.signature(func)
     typed_dict_arg_param = signature.parameters["typed_dict_arg"]
     assert not typing_inspect.is_list_type(typed_dict_arg_param.annotation)
@@ -77,7 +77,7 @@ def test_is_list():
     assert typing_inspect.is_list_type(list_arg_param.annotation)
 
 
-def test_get_optional():
+def test_get_optional() -> None:
     signature = inspect.signature(func)
     dict_arg_param = signature.parameters["dict_arg"]
     typed_dict_arg_param = signature.parameters["typed_dict_arg"]
@@ -92,14 +92,18 @@ def test_get_optional():
         optional_typed_dict_arg_param.annotation) is MockDict
 
 
-def run_sample(fun, samples, nonsamples):
+def run_sample(
+        fun: Callable[[Any], bool],
+        samples: List[Any],
+        nonsamples: List[Any]
+) -> None:
     for s in samples:
         assert fun(s)
     for s in nonsamples:
         assert not fun(s)
 
 
-def test_generic():
+def test_generic() -> None:
     T = TypeVar('T')
     samples = [
         Generic,
@@ -123,7 +127,7 @@ def test_generic():
     run_sample(typing_inspect.is_generic_type, samples, nonsamples)
 
 
-def test_callable():
+def test_callable() -> None:
     samples = [
         Callable,
         Callable[..., int],
@@ -145,7 +149,7 @@ def test_callable():
     assert typing_inspect.is_callable_type(MyClass)
 
 
-def test_tuple():
+def test_tuple() -> None:
     samples = [
         Tuple,
         Tuple[str, int],
@@ -165,7 +169,7 @@ def test_tuple():
     assert typing_inspect.is_tuple_type(MyClass)
 
 
-def test_union():
+def test_union() -> None:
     T = TypeVar('T')
     S = TypeVar('S')
     samples = [
@@ -182,7 +186,7 @@ def test_union():
     run_sample(typing_inspect.is_union_type, samples, nonsamples)
 
 
-def test_optional_type():
+def test_optional_type() -> None:
     T = TypeVar('T')
     samples = [
         type(None),                # none type
@@ -217,7 +221,7 @@ def test_optional_type():
     run_sample(typing_inspect.is_optional_type, samples, nonsamples)
 
 
-def test_literal_type():
+def test_literal_type() -> None:
     samples = [
         Literal,
         Literal["v"],
@@ -233,7 +237,7 @@ def test_literal_type():
     run_sample(typing_inspect.is_literal_type, samples, nonsamples)
 
 
-def test_typevar():
+def test_typevar() -> None:
     T = TypeVar('T')
     S_co = TypeVar('S_co', covariant=True)
     samples = [T, S_co]
@@ -241,14 +245,14 @@ def test_typevar():
     run_sample(typing_inspect.is_typevar, samples, nonsamples)
 
 
-def test_classvar():
+def test_classvar() -> None:
     T = TypeVar('T')
     samples = [ClassVar, ClassVar[int], ClassVar[List[T]]]
     nonsamples = [int, 42, Iterable, List[int], type, T]
     run_sample(typing_inspect.is_classvar, samples, nonsamples)
 
 
-def test_origin():
+def test_origin() -> None:
     T = TypeVar('T')
     assert typing_inspect.get_origin(int) is None
     assert typing_inspect.get_origin(ClassVar[int]) is None
@@ -257,7 +261,7 @@ def test_origin():
     assert typing_inspect.get_origin(List[Tuple[T, T]][int]) is list
 
 
-def test_parameters():
+def test_parameters() -> None:
     T = TypeVar('T')
     S_co = TypeVar('S_co', covariant=True)
     U = TypeVar('U')
@@ -274,7 +278,7 @@ def test_parameters():
         Mapping[T, Tuple[S_co, T]]) == (T, S_co)
 
 
-def test_args_evaluated():
+def test_args_evaluated() -> None:
     T = TypeVar('T')
     assert typing_inspect.get_args(
         Union[int, Tuple[T, int]][str],
@@ -303,21 +307,21 @@ def test_args_evaluated():
         Literal[1, 2, 3], evaluate=True) == (1, 2, 3)
 
 
-def test_bound():
+def test_bound() -> None:
     T = TypeVar('T')
     TB = TypeVar('TB', bound=int)
     assert typing_inspect.get_bound(T) == None
     assert typing_inspect.get_bound(TB) == int
 
 
-def test_constraints():
+def test_constraints() -> None:
     T = TypeVar('T')
     TC = TypeVar('TC', int, str)
     assert typing_inspect.get_constraints(T) == ()
     assert typing_inspect.get_constraints(TC) == (int, str)
 
 
-def test_generic_type():
+def test_generic_type() -> None:
     T = TypeVar('T')
 
     class Node(Generic[T]):
@@ -328,7 +332,7 @@ def test_generic_type():
     assert typing_inspect.get_generic_type(1) is int
 
 
-def test_generic_bases():
+def test_generic_bases() -> None:
     class MyClass(List[int], Mapping[str, List[int]]):  # type: ignore
         pass
     assert typing_inspect.get_generic_bases(

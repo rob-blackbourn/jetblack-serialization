@@ -83,7 +83,7 @@ class AnnotatedBook(TypedDict):
     cover: Annotated[Image, JSONProperty('cover')]
 
 
-def test_deserialize_json_annotated():
+def test_deserialize_json_annotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(
@@ -107,7 +107,7 @@ class Book(TypedDict):
     cover: Image
 
 
-def test_deserialize_json_unannotated():
+def test_deserialize_json_unannotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(

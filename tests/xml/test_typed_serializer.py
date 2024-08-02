@@ -14,7 +14,7 @@ from jetblack_serialization.xml import (
     serialize_typed
 )
 
-CONFIG = SerializerConfig(pascalcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
 
 
 class Genre(Enum):

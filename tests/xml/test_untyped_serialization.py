@@ -9,48 +9,45 @@ from stringcase import pascalcase, snakecase
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.xml import serialize_untyped
 
-CONFIG = SerializerConfig(pascalcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
 
 
-def test_xml_untyped_serialization_simple():
-    config = SerializerConfig(pascalcase, snakecase)
+def test_xml_untyped_serialization_simple() -> None:
 
     int_obj = 42
-    int_text = serialize_untyped(int_obj, config)
+    int_text = serialize_untyped(int_obj, CONFIG)
     assert int_text == '<object type="int">42</object>'
 
     str_obj = '42'
-    str_text = serialize_untyped(str_obj, config)
+    str_text = serialize_untyped(str_obj, CONFIG)
     assert str_text == '<object type="str">42</object>'
 
     float_obj = 42.0
-    float_text = serialize_untyped(float_obj, config)
+    float_text = serialize_untyped(float_obj, CONFIG)
     assert float_text == '<object type="float">42.0</object>'
 
     decimal_obj = Decimal('42.0')
-    decimal_text = serialize_untyped(decimal_obj, config)
+    decimal_text = serialize_untyped(decimal_obj, CONFIG)
     assert decimal_text == '<object type="Decimal">42.0</object>'
 
     datetime_obj = datetime(2020, 1, 1, 12, 32, 59, 999000)
-    datetime_text = serialize_untyped(datetime_obj, config)
+    datetime_text = serialize_untyped(datetime_obj, CONFIG)
     assert datetime_text == '<object type="datetime">2020-01-01T12:32:59.999Z</object>'
 
     timedelta_obj = timedelta(
         days=40, hours=3, minutes=15, seconds=35, milliseconds=564)
-    timedelta_text = serialize_untyped(timedelta_obj, config)
+    timedelta_text = serialize_untyped(timedelta_obj, CONFIG)
     assert timedelta_text == '<object type="timedelta">P1M10DT3H15M35S</object>'
 
 
-def test_xml_untyped_serialization_list():
-    config = SerializerConfig(pascalcase, snakecase)
+def test_xml_untyped_serialization_list() -> None:
 
     list_int_obj = [1, 2, 3]
-    list_int_text = serialize_untyped(list_int_obj, config)
+    list_int_text = serialize_untyped(list_int_obj, CONFIG)
     assert list_int_text == '<object type="list"><object type="int">1</object><object type="int">2</object><object type="int">3</object></object>'
 
 
-def test_xml_untyped_serialization_dict():
-    config = SerializerConfig(pascalcase, snakecase)
+def test_xml_untyped_serialization_dict() -> None:
 
     obj = {
         'int': 42,
@@ -61,7 +58,7 @@ def test_xml_untyped_serialization_dict():
             'two': 2
         }
     }
-    text = serialize_untyped(obj, config)
+    text = serialize_untyped(obj, CONFIG)
     assert text == (
         '<object type="dict">'
         '<object type="dict-entry">'

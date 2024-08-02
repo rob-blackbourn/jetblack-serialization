@@ -14,7 +14,7 @@ from jetblack_serialization.xml import (
     deserialize
 )
 
-CONFIG = SerializerConfig(pascalcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=pascalcase, deserialize_key=snakecase)
 
 
 class AnnotatedBook(TypedDict, total=False):
@@ -67,10 +67,9 @@ def test_xml_typed_annotated_roundtrip() -> None:
         'pages': None
     }
     annotation = Annotated[AnnotatedBook, XMLEntity('Book')]
-    config = SerializerConfig(pascalcase, snakecase)
 
-    text = serialize(dct, annotation, config)
-    roundtrip = deserialize(text, annotation, config)
+    text = serialize(dct, annotation, CONFIG)
+    roundtrip = deserialize(text, annotation, CONFIG)
     assert dct == roundtrip
 
 
@@ -100,16 +99,13 @@ def test_xml_unannotated_roundtrip() -> None:
         'pages': None
     }
     annotation = Annotated[UnannotatedBook, XMLEntity('Book')]
-    config = SerializerConfig(pascalcase, snakecase)
 
-    text = serialize(dct, annotation, config)
-    roundtrip = deserialize(text, annotation, config)
+    text = serialize(dct, annotation, CONFIG)
+    roundtrip = deserialize(text, annotation, CONFIG)
     assert dct == roundtrip
 
 
-def test_xml_untyped_roundtrip():
-    config = SerializerConfig(pascalcase, snakecase)
-
+def test_xml_untyped_roundtrip() -> None:
     obj = {
         'int': 42,
         'str': 'a string',
@@ -119,6 +115,6 @@ def test_xml_untyped_roundtrip():
             'two': 2
         }
     }
-    text = serialize(obj, None, config)
-    roundtrip = deserialize(text, None, config)
+    text = serialize(obj, None, CONFIG)
+    roundtrip = deserialize(text, None, CONFIG)
     assert obj == roundtrip

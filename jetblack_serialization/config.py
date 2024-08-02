@@ -52,9 +52,9 @@ class SerializerConfig:
 
     def __init__(
         self,
-        serialize_key: Optional[Callable[[str], str]],
-        deserialize_key: Optional[Callable[[str], str]],
         *,
+        serialize_key: Optional[Callable[[str], str]] = None,
+        deserialize_key: Optional[Callable[[str], str]] = None,
         pretty_print: bool = False,
         value_serializers: ValueSerializers = VALUE_SERIALIZERS,
         value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS

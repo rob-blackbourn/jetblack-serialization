@@ -79,7 +79,7 @@ class AnnotatedBook(TypedDict):
     cover: Annotated[Image, YAMLProperty('cover')]
 
 
-def test_deserialize_yaml_annotated():
+def test_deserialize_yaml_annotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(
@@ -103,7 +103,7 @@ class Book(TypedDict):
     cover: Image
 
 
-def test_deserialize_yaml_unannotated():
+def test_deserialize_yaml_unannotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(

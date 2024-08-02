@@ -7,10 +7,10 @@ from stringcase import snakecase, camelcase
 from jetblack_serialization.config import SerializerConfig
 from jetblack_serialization.json import deserialize_untyped
 
-CONFIG = SerializerConfig(camelcase, snakecase)
+CONFIG = SerializerConfig(serialize_key=camelcase, deserialize_key=snakecase)
 
 
-def test_json_untyped_deserialize():
+def test_json_untyped_deserialize() -> None:
     """Tests for deserialize"""
     text = '{"strArg": "text", "intArg": 42, "floatArg": 3.14, "dateArg": "2019-12-31T23:59:59.00Z", "durationArg": "PT1H7M"}'
     obj = deserialize_untyped(text, CONFIG)
