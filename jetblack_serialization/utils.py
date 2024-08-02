@@ -1,7 +1,5 @@
 """Protocol utilities"""
 
-from datetime import datetime, timedelta
-from decimal import Decimal
 from enum import Enum
 from inspect import isclass
 from typing import Any, Iterable, Sequence, Type, Union

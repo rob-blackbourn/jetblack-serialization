@@ -1,6 +1,8 @@
 """XML configuration"""
 
-from typing import Callable, Optional
+from typing import Callable, Optional, Type, Union
+
+import yaml
 
 from ..config import (
     SerializerConfig,
@@ -9,6 +11,20 @@ from ..config import (
     ValueDeserializers,
     ValueSerializers
 )
+
+
+_Dumper = Union[
+    yaml.BaseDumper,
+    yaml.Dumper,
+    yaml.SafeDumper
+]
+_Loader = Union[
+    yaml.Loader,
+    yaml.BaseLoader,
+    yaml.FullLoader,
+    yaml.SafeLoader,
+    yaml.UnsafeLoader
+]
 
 
 class YAMLSerializerConfig(SerializerConfig):
@@ -20,6 +36,8 @@ class YAMLSerializerConfig(SerializerConfig):
         key_deserializer: Optional[Callable[[str], str]] = None,
         value_serializers: ValueSerializers = VALUE_SERIALIZERS,
         value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS,
+        loader: Optional[Type[_Loader]] = None,
+        dumper: Optional[Type[_Dumper]] = None
     ) -> None:
         super().__init__(
             key_serializer,
@@ -27,3 +45,5 @@ class YAMLSerializerConfig(SerializerConfig):
             value_serializers,
             value_deserializers
         )
+        self.loader = loader or yaml.SafeLoader
+        self.dumper = dumper or yaml.SafeDumper

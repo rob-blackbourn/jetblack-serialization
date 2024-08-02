@@ -1,8 +1,6 @@
 """YAML serialization"""
 
-from typing import Any, AnyStr, Type
-
-import yaml
+from typing import Any, AnyStr
 
 from .. import typing_inspect_ex as typing_inspect
 from ..types import (
@@ -14,7 +12,6 @@ from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
 from .untyped_deserializer import deserialize_untyped
-from .types import _Loader, _Dumper
 
 
 def _is_typed(annotation: Annotation) -> bool:
@@ -34,9 +31,7 @@ def _is_typed(annotation: Annotation) -> bool:
 def serialize(
         obj: Any,
         annotation: Any,
-        config: YAMLSerializerConfig,
-        *,
-        dumper: Type[_Dumper] = yaml.SafeDumper
+        config: YAMLSerializerConfig
 ) -> str:
     """Convert the object to YAML.
 
@@ -49,17 +44,15 @@ def serialize(
         str: The serialized object
     """
     if _is_typed(annotation):
-        return serialize_typed(obj, annotation, config, dumper=dumper)
+        return serialize_typed(obj, annotation, config)
     else:
-        return serialize_untyped(obj, config, dumper=dumper)
+        return serialize_untyped(obj, config)
 
 
 def deserialize(
         text: AnyStr,
         annotation: Annotation,
-        config: YAMLSerializerConfig,
-        *,
-        loader: Type[_Loader] = yaml.SafeLoader
+        config: YAMLSerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 
@@ -74,4 +67,4 @@ def deserialize(
     if _is_typed(annotation):
         return deserialize_typed(text, annotation, config)
     else:
-        return deserialize_untyped(text, config, loader=loader)
+        return deserialize_untyped(text, config)

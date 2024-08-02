@@ -12,6 +12,9 @@ from .untyped_serializer import serialize_untyped
 from .untyped_deserializer import deserialize_untyped
 
 __all__ = [
+    'YAMLProperty',
+    'YAMLValue',
+
     'serialize',
     'deserialize',
 

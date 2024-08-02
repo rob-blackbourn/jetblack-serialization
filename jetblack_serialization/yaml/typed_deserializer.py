@@ -1,6 +1,6 @@
 """Typed YAML deserialization"""
 
-from typing import Any, Type, Union
+from typing import Any, Union
 
 import yaml
 
@@ -8,26 +8,22 @@ from ..json import from_json_value
 from ..types import Annotation
 
 from .config import YAMLSerializerConfig
-from .types import _Loader
 
 
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: YAMLSerializerConfig,
-        *,
-        loader: Type[_Loader] = yaml.SafeLoader
+        config: YAMLSerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 
     Args:
         text (Union[str, bytes, bytearray]): The YAML string
-        annotation (str): The type annotation
-        loader (Type[Loader | BaseLoader | FullLoader | SafeLoader | UnsafeLoader], optional): Optional
-            loader. Defaults to `SafeLoader`.
+        annotation (str): The type annotation.
+        config (YAMLSerializationConfig): The YAML config.
 
     Returns:
         Any: The deserialized object.
     """
-    json_value = yaml.load(text, Loader=loader)
+    json_value = yaml.load(text, Loader=config.loader)
     return from_json_value(config, json_value, annotation)

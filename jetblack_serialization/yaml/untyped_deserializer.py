@@ -1,20 +1,17 @@
 """Untyped YAML deserialization"""
 
-from typing import Any, AnyStr, Type
+from typing import Any, AnyStr
 
 import yaml
 
-from ..config import SerializerConfig
 from ..json.untyped_deserializer import from_untyped_object
 
-from .types import _Loader
+from .config import YAMLSerializerConfig
 
 
 def deserialize_untyped(
         text: AnyStr,
-        config: SerializerConfig,
-        *,
-        loader: Type[_Loader] = yaml.SafeLoader
+        config: YAMLSerializerConfig,
 ) -> Any:
-    obj = yaml.load(text, Loader=loader)
+    obj = yaml.load(text, Loader=config.loader)
     return from_untyped_object(obj, config)

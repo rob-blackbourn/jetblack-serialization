@@ -1,6 +1,6 @@
 """JSON configuration"""
 
-from typing import Any, Callable, Optional, Sequence, Tuple, Type
+from typing import Callable, Optional
 
 from ..config import (
     SerializerConfig,

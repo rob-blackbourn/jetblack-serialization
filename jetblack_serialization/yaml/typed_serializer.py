@@ -1,30 +1,28 @@
 """Typed YAML serialization"""
 
-from typing import Any, Type
+from typing import Any
 
 import yaml
 
-from ..config import SerializerConfig
 from ..types import Annotation
 
 from ..json.annotations import is_json_annotation, get_json_annotation, JSONValue
 from ..json.typed_serializer import from_json_value
 
-from .types import _Dumper
+from .config import YAMLSerializerConfig
 
 
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig,
-        *,
-        dumper: Type[_Dumper] = yaml.SafeDumper
+        config: YAMLSerializerConfig
 ) -> str:
     """Serialize an object to YAML.
 
     Args:
         obj (Any): The object to serialize.
         annotation (Annotation): The objects type annotation.
+        config (YAMLSerializerConfig): The serialization config.
 
     Raises:
         TypeError: If the object cannot be serialized
@@ -45,5 +43,5 @@ def serialize_typed(
     )
     return yaml.dump(
         json_obj,
-        Dumper=dumper
+        Dumper=config.dumper
     )

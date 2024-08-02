@@ -23,7 +23,7 @@ class DefaultValue:
 def is_any_annotation_of_type(annotation: Annotation, tp: Type[Any]) -> bool:
     if not typing_inspect.is_annotated_type(annotation):
         return False
-    for item in typing_inspect.get_metadata(annotation):
+    for item in typing_inspect.get_metadata(annotation) or []:
         if issubclass(type(item), tp):
             return True
     return False
