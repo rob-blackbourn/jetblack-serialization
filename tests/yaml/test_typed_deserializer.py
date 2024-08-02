@@ -5,12 +5,12 @@ from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated
 
+from jetblack_serialization import DefaultValue
 from jetblack_serialization.yaml import (
     YAMLValue,
     YAMLProperty,
     deserialize_typed
 )
-from jetblack_serialization.custom_annotations import DefaultValue
 
 from .config import Genre, Image, CONFIG
 

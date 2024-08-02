@@ -7,7 +7,7 @@ from typing import List, Tuple, Type
 
 from stringcase import snakecase, camelcase
 
-from jetblack_serialization.config import (
+from jetblack_serialization import (
     ValueSerializer,
     ValueDeserializer,
     VALUE_SERIALIZERS,
