@@ -1,4 +1,4 @@
-# Serializing JSON
+# Serializing YAML
 
 Given a typed dictionary:
 
@@ -36,11 +36,11 @@ obj: Book = {
 
 ## Serializing
 
-This could be serialized to JSON as:
+This could be serialized to YAML as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization.json import serialize, SerializerConfig
+from jetblack_serialization.yaml import serialize, SerializerConfig
 
 text = serialize(
     obj,
@@ -52,17 +52,19 @@ print(text)
 
 giving:
 
-```json
-{
-    "bookId": 42,
-    "title": "Little Red Book",
-    "author": "Chairman Mao",
-    "publicationDate": "1973-01-01T21:52:13.00Z",
-    "keywords": ["Revolution", "Communism"],
-    "phrases": ["Revolutionary wars are inevitable in class society", "War is the continuation of politics"],
-    "age": 24,
-    "pages": null
-}
+```yaml
+bookId: 42
+title: Little Red Book
+author: Chairman Mao
+publicationDate: '1973-01-01T21:52:13.00Z'
+keywords:
+- Revolution
+- Communism
+phrases:
+- Revolutionary wars are inevitable in class society
+- War is the continuation of politics
+age: 24
+pages: null
 ```
 
 Note the fields have been camel cased, and the publication date has been turned
@@ -73,18 +75,18 @@ into an ISO 8601 date.
 We can deserialize the data as follows:
 
 ```python
-from stringcase import camelcase, snakecase
-from jetblack_serialization.json import deserialize, SerializerConfig
+from stringcase import snakecase
+from jetblack_serialization.yaml import deserialize, SerializerConfig
 
 dct = deserialize(
     text,
-    Annotated[Book, JSONValue()],
+    Annotated[Book, YAMLValue()],
     SerializerConfig(key_deserializer=snakecase)
 )
 ```
 
 ## Attributes
 
-For JSON, attributes are typically not required. However
-`JSONProperty(tag: str)` and `JSONValue()` are provided for
+For YAML, attributes are typically not required. However
+`YAMLProperty(tag: str)` and `YAMLValue()` are provided for
 completeness.

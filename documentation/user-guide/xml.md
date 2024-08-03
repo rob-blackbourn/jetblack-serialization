@@ -47,12 +47,12 @@ To serialize we need to provide the containing tag `Book`:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialization.xml import serialize, XMLSerializerConfig
+from jetblack_serialization.xml import serialize, SerializerConfig
 
 text = serialize(
     book,
     Annotated[Book, XMLEntity("Book")],
-    XMLSerializerConfig(key_serializer=pascalcase)
+    SerializerConfig(key_serializer=pascalcase)
 )
 print(text)
 ```
@@ -92,11 +92,11 @@ We can deserialize the XML as follows:
 
 ```python
 from stringcase import snakecase
-from jetblack_serialization.xml import deserialize, XMLSerializerConfig
+from jetblack_serialization.xml import deserialize, SerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, XMLEntity("Book")],
-    XMLSerializerConfig(key_deserializer=snakecase)
+    SerializerConfig(key_deserializer=snakecase)
 )
 ```

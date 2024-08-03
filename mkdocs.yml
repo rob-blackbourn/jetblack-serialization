@@ -17,6 +17,7 @@ nav:
     - user-guide/installation.md
     - user-guide/usage.md
     - user-guide/json.md
+    - user-guide/yaml.md
     - user-guide/xml.md
     - user-guide/defaults.md
   - API:

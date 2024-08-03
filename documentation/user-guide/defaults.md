@@ -18,5 +18,5 @@ class Book(TypedDict, total=False):
     keywords: List[str]
     phrases: List[str]
     age: Optional[Union[datetime, int]]
-    pages: Annnotated[Optional[int], DefaultValue(1)]
+    pages: Annotated[Optional[int], DefaultValue(1)]
 ```
