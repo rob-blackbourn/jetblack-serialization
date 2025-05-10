@@ -36,7 +36,7 @@ pip install jetblack-serialization[yaml]
 To install the dependencies for all.
 
 ```bash
-pip install jetblack-serialization[all]
+pip install jetblack-serialization[xml,yaml]
 ```
 
 ## Overview
@@ -311,3 +311,11 @@ dct = deserialize(
 For JSON, attributes are typically not required. However
 `JSONProperty(tag: str)` and `JSONValue()` are provided for
 completeness.
+
+## Contributing
+
+To run the tests with tox and pyenv:
+
+```bash
+VIRTUALENV_DISCOVERY=pyenv tox
+```

@@ -1,41 +1,127 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "jetblack-serialization"
 version = "4.0.0-alpha.0"
 description = "Serialization for JSON and XML using typing"
-repository = "https://github.com/rob-blackbourn/jetblack-serialization"
-authors = ["Rob Blackbourn <rob.blackbourn@gmail.com>"]
-keywords = ['serialization', 'jetblack', 'json', 'xml', 'typing']
-license = "Apache-2.0"
+authors = [
+  { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 readme = "README.md"
-packages = [
-  { include = "jetblack_serialization" }
+keywords = ['serialization', 'JSON', 'XML']
+license = {text = "Apache-2.0"}
+dependencies = [
+    "jetblack-iso8601>=1.0.2,<2",
+    "typing-extensions>=4,<5",
+    "typing-inspect>=0.9,<1"
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
-jetblack-iso8601 = "^1.0.2"
-lxml = { version = "^5.2.2", optional = true }
-pyyaml = { version = "^6.0.1", optional = true }
-typing-extensions = "^4"
-typing-inspect = "^0.9"
+[project.optional-dependencies]
+xml = [
+    "lxml>=5.2.2,<6"
+]
+yaml = [
+    "pyyaml>=6.0.1,<7"
+]
+dev = [
+    "pytest",
+    "coverage",
+    "autopep8",
+    "pylint",
+    "mypy",
+    "tox",
+    "virtualenv-pyenv",
+    "stringcase",
+    "types-pyyaml>=6,<7",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+    "jetblack-markdown",
+    "mike",
+]
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1"
-pylint = "^3"
-pytest = "^8"
-stringcase = "^1.2.0"
-lxml-stubs = "^0.5.1"
-jetblack-markdown = "^1.2.0"
-mkdocs = "^1.6"
-mkdocs-material = "^9.5.30"
-mike = "^2.1.2"
-types-pyyaml = "^6.0.12.20240724"
+[project.urls]
+Homepage = "https://github.com/rob-blackbourn/jetblack-iso8601"
+Issues = "https://github.com/rob-blackbourn/jetblack-iso8601/issues"
 
-[tool.poetry.extras]
-xml = [ "lxml" ]
-yaml = [ "pyyaml" ]
-all = [ "lxml", "pyyaml" ]
+# pytest
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
 
-[build-system]
-requires = ["poetry>=1.6"]
-build-backend = "poetry.masonry.api"
+# mypy
+[tool.mypy]
+files = [ "src/jetblack_iso8601", "tests", "scratch" ]
+
+[[tool.mypy.overrides]]
+module = "pytest"
+ignore_missing_imports = true
+
+# pylint
+[tool.pylint.main]
+py-version = "3.12"
+jobs = 4
+
+[tool.pylint.basic]
+good-names = ["i", "j", "k", "ex", "Run", "_"]
+bad-names = ["foo", "bar", "baz", "toto", "tutu", "tata"]
+
+[tool.pylint."messages control"]
+disable = [
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-symbolic-message-instead",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+    "missing-module-docstring",
+]
+
+[tool.tox]
+requires = [
+    "tox>=4.19",
+    "pytest>=8.3.5"
+]
+env_list = ["3.8", "3.9", "3.10", "3.11", "3.12", "type"]
+
+[tool.tox.env_run_base]
+description = "Run test under {base_python}"
+allowlist_externals = ["pytest"]
+deps = [
+    "jetblack-iso8601>=1.0.2,<2",
+    "typing-extensions>=4,<5",
+    "typing-inspect>=0.9,<1",
+    "pytest>=8,<9",
+    "pyyaml>=6.0.1,<7",
+    "lxml>=5.2.2,<6",
+    "stringcase>=1.2.0,<2",
+] 
+commands = [
+    ["pytest"]
+]
+
+[tool.tox.env.type]
+description = "run type check on code base"
+deps = [
+    "mypy>=1.14.1,<2",
+    "types-pyyaml>=6,<7",
+]
+# commands = [["mypy", "src{/}jetblack_serialization"], ["mypy", "tests"]]
+commands = [
+    ["mypy", "src{/}jetblack_serialization"],
+    # ["mypy", "tests"]
+]
