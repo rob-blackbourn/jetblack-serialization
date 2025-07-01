@@ -10,7 +10,7 @@ from .typing_ex import (
     is_dict,
     is_list,
     is_optional,
-    get_optional_type
+    get_optional_types
 )
 
 BUILTIN_TYPES: Sequence[type] = (
@@ -53,7 +53,7 @@ def is_container_type(annotation: Any) -> bool:
         bool: True if the annotation is represented in JSON as a container.
     """
     if is_optional(annotation):
-        return is_container_type(get_optional_type(annotation))
+        return all(is_container_type(t) for t in get_optional_types(annotation))
     else:
         return (
             is_list(annotation) or

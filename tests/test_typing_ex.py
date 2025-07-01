@@ -80,17 +80,12 @@ def test_is_list() -> None:
 
 def test_get_optional() -> None:
     signature = inspect.signature(func)
-    dict_arg_param = signature.parameters["dict_arg"]
-    typed_dict_arg_param = signature.parameters["typed_dict_arg"]
     optional_dict_arg_param = signature.parameters["optional_dict_arg"]
     optional_typed_dict_arg_param = signature.parameters["optional_typed_dict_arg"]
-    assert typing_ex.get_optional_type(dict_arg_param.annotation) is None
-    assert typing_ex.get_optional_type(
-        typed_dict_arg_param.annotation) is None
-    assert typing_ex.get_optional_type(
-        optional_dict_arg_param.annotation) is Dict[str, Any]
-    assert typing_ex.get_optional_type(
-        optional_typed_dict_arg_param.annotation) is MockDict
+    assert typing_ex.get_optional_types(
+        optional_dict_arg_param.annotation) == (Dict[str, Any],)
+    assert typing_ex.get_optional_types(
+        optional_typed_dict_arg_param.annotation) == (MockDict,)
 
 
 def run_sample(

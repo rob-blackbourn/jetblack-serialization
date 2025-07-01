@@ -5,7 +5,7 @@ from inspect import Signature
 from typing import Any, get_origin
 
 from .types import Annotation
-from .typing_ex import is_annotated, get_metadata
+from .typing_ex import is_annotated, get_annotated_type, get_metadata
 
 
 class SerializationAnnotation(metaclass=ABCMeta):
@@ -31,7 +31,7 @@ def get_all_annotations_of_type[T](
         annotation: Annotation,
         tp: type[T]
 ) -> tuple[Annotation, list[T]]:
-    type_annotation = get_origin(annotation)
+    type_annotation = get_annotated_type(annotation)
     serialization_annotations = [
         serialization_annotation
         for serialization_annotation in get_metadata(annotation) or []

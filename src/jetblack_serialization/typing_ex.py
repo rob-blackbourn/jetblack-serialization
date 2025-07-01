@@ -38,21 +38,22 @@ def is_optional(annotation: type[Any]) -> bool:
     )
 
 
-def get_optional_type(annotation: type[Any]) -> type[Any] | None:
-    # TODO: return a tuple.
-    if not is_optional(annotation):
-        return None
-    contained_type, *_rest = get_args(annotation)
-    return contained_type
+def get_optional_types(annotation: type) -> tuple[type, ...]:
+    assert is_optional(annotation)
+    return tuple(t for t in get_args(annotation) if t is not NoneType)
 
 
 def is_annotated(annotation: type[Any]) -> bool:
     return get_origin(annotation) is Annotated
 
 
+def get_annotated_type(annotation: Annotated) -> type:
+    return annotation.__origin__
+
+
 def get_unannotated(annotation: type[Any]) -> type[Any]:
     while is_annotated(annotation):
-        annotation = _get_origin_not_none(annotation)
+        annotation = get_annotated_type(annotation)
     return annotation
 
 
