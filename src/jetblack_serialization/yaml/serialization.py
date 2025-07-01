@@ -1,10 +1,8 @@
 """YAML serialization"""
 
-from typing import Any, AnyStr
+from typing import Any
 
-from ..types import (
-    Annotation,
-)
+from ..types import Annotation
 from ..utils import is_typed
 
 from .config import SerializerConfig
@@ -36,14 +34,14 @@ def serialize(
 
 
 def deserialize(
-        text: AnyStr,
+        text: str | bytes | bytearray,
         annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 
     Args:
-        text (AnyStr): The JSON string
+        text (str | bytes | bytearray): The JSON string
         annotation (Annotation): The type annotation
         config (YAMLSerializerConfig): The serializer configuration
 

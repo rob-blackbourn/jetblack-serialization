@@ -2,4 +2,4 @@
 
 from typing import Any
 
-Annotation = Any
+type Annotation = Any

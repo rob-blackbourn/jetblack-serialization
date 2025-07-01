@@ -1,6 +1,6 @@
 """XML configuration"""
 
-from typing import Callable, Optional
+from typing import Callable
 
 from ..config import (
     BaseSerializerConfig,
@@ -16,8 +16,8 @@ class SerializerConfig(BaseSerializerConfig):
     def __init__(
         self,
         *,
-        key_serializer: Optional[Callable[[str], str]] = None,
-        key_deserializer: Optional[Callable[[str], str]] = None,
+        key_serializer: Callable[[str], str] | None = None,
+        key_deserializer: Callable[[str], str] | None = None,
         value_serializers: ValueSerializers = VALUE_SERIALIZERS,
         value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS,
         pretty_print: bool = False

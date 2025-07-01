@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Callable, Optional, Sequence, Tuple, Type
+from typing import Any, Callable, Sequence
 
 from jetblack_iso8601 import (
     iso8601_to_datetime,
@@ -30,10 +30,10 @@ def _to_timedelta(text: str) -> timedelta:
     return value
 
 
-ValueSerializer = Callable[[Any], Any]
-ValueDeserializer = Callable[[str], Any]
-ValueSerializers = Sequence[Tuple[Type, ValueSerializer]]
-ValueDeserializers = Sequence[Tuple[Type, ValueDeserializer]]
+type ValueSerializer = Callable[[Any], Any]
+type ValueDeserializer = Callable[[str], Any]
+type ValueSerializers = Sequence[tuple[type, ValueSerializer]]
+type ValueDeserializers = Sequence[tuple[type, ValueDeserializer]]
 
 VALUE_SERIALIZERS: ValueSerializers = (
     (datetime, datetime_to_iso8601),
@@ -52,10 +52,10 @@ class BaseSerializerConfig:
 
     def __init__(
         self,
-        key_serializer: Optional[Callable[[str], str]],
-        key_deserializer: Optional[Callable[[str], str]],
-        value_serializers: Optional[ValueSerializers],
-        value_deserializers: Optional[ValueDeserializers]
+        key_serializer: Callable[[str], str] | None,
+        key_deserializer: Callable[[str], str] | None,
+        value_serializers: ValueSerializers | None,
+        value_deserializers: ValueDeserializers | None
     ) -> None:
         self.serialize_key = key_serializer or _same_name
         self.deserialize_key = key_deserializer or _same_name

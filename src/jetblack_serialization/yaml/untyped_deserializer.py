@@ -1,6 +1,6 @@
 """Untyped YAML deserialization"""
 
-from typing import Any, AnyStr
+from typing import Any
 
 import yaml
 
@@ -10,7 +10,7 @@ from .config import SerializerConfig
 
 
 def deserialize_untyped(
-        text: AnyStr,
+        text: str | bytes | bytearray,
         config: SerializerConfig,
 ) -> Any:
     obj = yaml.load(text, Loader=config.loader)

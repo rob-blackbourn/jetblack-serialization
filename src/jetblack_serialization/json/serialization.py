@@ -1,10 +1,8 @@
 """JSON serialization"""
 
-from typing import Any, Union
+from typing import Any
 
-from ..types import (
-    Annotation,
-)
+from ..types import Annotation
 from ..utils import is_typed
 
 from .config import SerializerConfig
@@ -36,14 +34,14 @@ def serialize(
 
 
 def deserialize(
-        text: Union[str, bytes, bytearray],
+        text: str | bytes | bytearray,
         annotation: Annotation,
         config: SerializerConfig,
 ) -> Any:
     """Convert JSON to an object
 
     Args:
-        text (Union[str, bytes, bytearray]): The JSON string
+        text (str | bytes | bytearray): The JSON string
         annotation (Annotation): The type annotation
         config (JSONSerializerConfig): The serializer configuration
 

@@ -1,7 +1,7 @@
 """Untyped JSON deserialization"""
 
 import json
-from typing import Any, Union
+from typing import Any
 
 from ..config import BaseSerializerConfig
 
@@ -51,13 +51,13 @@ def from_untyped_object(obj: Any, config: BaseSerializerConfig) -> Any:
 
 
 def deserialize_untyped(
-        text: Union[str, bytes, bytearray],
+        text: str | bytes | bytearray,
         config: SerializerConfig
 ) -> Any:
     """Deserialize JSON without type information
 
     Args:
-        text (Union[str, bytes, bytearray]): The JSON string
+        text (str | bytes | bytearray): The JSON string
 
     Returns:
         Any: The deserialized JSON object

@@ -2,12 +2,18 @@
 
 from enum import Enum
 from inspect import isclass
-from typing import Any, Iterable, Sequence, Type, Union
+from typing import Any, Iterable, Sequence, get_args, get_origin, is_typeddict
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
 from .types import Annotation
+from .typing_ex import (
+    is_annotated,
+    is_dict,
+    is_list,
+    is_optional,
+    get_optional_type
+)
 
-BUILTIN_TYPES: Sequence[Type] = (
+BUILTIN_TYPES: Sequence[type] = (
     str,
     bool,
     int,
@@ -16,14 +22,14 @@ BUILTIN_TYPES: Sequence[Type] = (
 
 
 def is_value_type(
-        annotation: Union[Annotation, Type],
-        custom_types: Iterable[Type]
+        annotation: Annotation | type,
+        custom_types: Iterable[type] = ()
 ) -> bool:
     """Return True if the annotation is a value type like an int or a str.
 
     Args:
-        annotation (Union[Any, Type]): The annotation
-        custom_types (Iterable[Type]): Any custom types.
+        annotation (Any | type): The annotation
+        custom_types (Iterable[type]): Any custom types.
 
     Returns:
         bool: True if the annotation is a JSON literal, otherwise False
@@ -46,25 +52,25 @@ def is_container_type(annotation: Any) -> bool:
     Returns:
         bool: True if the annotation is represented in JSON as a container.
     """
-    if typing_inspect.is_optional_type(annotation):
-        return is_container_type(typing_inspect.get_optional_type(annotation))
+    if is_optional(annotation):
+        return is_container_type(get_optional_type(annotation))
     else:
         return (
-            typing_inspect.is_list_type(annotation) or
-            typing_inspect.is_dict_type(annotation) or
-            typing_inspect.is_typed_dict_type(annotation)
+            is_list(annotation) or
+            is_dict(annotation) or
+            is_typeddict(annotation)
         )
 
 
 def is_typed(annotation: Annotation) -> bool:
     return (
-        typing_inspect.is_typed_dict_type(annotation) or
+        is_typeddict(annotation) or
         (
-            typing_inspect.is_list_type(annotation) and
-            is_typed(typing_inspect.get_args(annotation)[0])
+            is_list(annotation) and
+            is_typed(get_args(annotation)[0])
         ) or
         (
-            typing_inspect.is_annotated_type(annotation) and
-            is_typed(typing_inspect.get_origin(annotation))
+            is_annotated(annotation) and
+            is_typed(get_origin(annotation))
         )
     )

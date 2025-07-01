@@ -1,6 +1,6 @@
 """Typed YAML deserialization"""
 
-from typing import Any, Union
+from typing import Any
 
 import yaml
 
@@ -11,14 +11,14 @@ from .config import SerializerConfig
 
 
 def deserialize_typed(
-        text: Union[str, bytes, bytearray],
+        text: str | bytes | bytearray,
         annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
     """Convert YAML to an object.
 
     Args:
-        text (Union[str, bytes, bytearray]): The YAML string
+        text (str | bytes | bytearray): The YAML string
         annotation (str): The type annotation.
         config (YAMLSerializationConfig): The YAML config.
 

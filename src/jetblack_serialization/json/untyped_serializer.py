@@ -1,7 +1,7 @@
 """Untyped JSON serialization"""
 
 import json
-from typing import Any, Type
+from typing import Any
 
 from ..config import BaseSerializerConfig
 
@@ -16,7 +16,7 @@ def _serialize_key_if_str(key: Any, config: BaseSerializerConfig) -> Any:
 
 def _from_value(
         value: Any,
-        type_annotation: Type,
+        type_annotation: type,
         config: BaseSerializerConfig
 ) -> Any:
     serializer = config.value_serializers.get(type_annotation)

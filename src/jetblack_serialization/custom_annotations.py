@@ -2,12 +2,10 @@
 
 from abc import ABCMeta
 from inspect import Signature
-from typing import Any, List, Tuple, Type, TypeVar
+from typing import Any, get_origin
 
-import jetblack_serialization.typing_inspect_ex as typing_inspect
 from .types import Annotation
-
-T = TypeVar('T')
+from .typing_ex import is_annotated, get_metadata
 
 
 class SerializationAnnotation(metaclass=ABCMeta):
@@ -20,23 +18,23 @@ class DefaultValue:
         self.value = value
 
 
-def is_any_annotation_of_type(annotation: Annotation, tp: Type[Any]) -> bool:
-    if not typing_inspect.is_annotated_type(annotation):
+def is_any_annotation_of_type(annotation: Annotation, tp: type[Any]) -> bool:
+    if not is_annotated(annotation):
         return False
-    for item in typing_inspect.get_metadata(annotation) or []:
+    for item in get_metadata(annotation) or []:
         if issubclass(type(item), tp):
             return True
     return False
 
 
-def get_all_annotations_of_type(
+def get_all_annotations_of_type[T](
         annotation: Annotation,
-        tp: Type[T]
-) -> Tuple[Annotation, List[T]]:
-    type_annotation = typing_inspect.get_origin(annotation)
+        tp: type[T]
+) -> tuple[Annotation, list[T]]:
+    type_annotation = get_origin(annotation)
     serialization_annotations = [
         serialization_annotation
-        for serialization_annotation in typing_inspect.get_metadata(annotation) or []
+        for serialization_annotation in get_metadata(annotation) or []
         if issubclass(type(serialization_annotation), tp)
     ]
     return type_annotation, serialization_annotations
@@ -57,15 +55,15 @@ def is_any_serialization_annotation(annotation: Annotation) -> bool:
 
 def get_all_serialization_annotations(
         annotation: Annotation
-) -> Tuple[Annotation, List[SerializationAnnotation]]:
+) -> tuple[Annotation, list[SerializationAnnotation]]:
     """Gets the type T of Annotation[T, SerializationAnnotation]
 
     Args:
         annotation (Any): The annotation
 
     Returns:
-        Tuple[Annotation, List[SerializationAnnotation]]: The type and the
-            serialization annotationa
+        tuple[Annotation, list[SerializationAnnotation]]: The type and the
+            serialization annotation
     """
     return get_all_annotations_of_type(annotation, SerializationAnnotation)
 
@@ -76,7 +74,7 @@ def is_any_default_annotation(annotation: Annotation) -> bool:
 
 def get_default_annotation(
         annotation: Annotation
-) -> Tuple[Annotation, DefaultValue]:
+) -> tuple[Annotation, DefaultValue]:
     typ, annotations = get_all_annotations_of_type(
         annotation, DefaultValue)
     assert len(annotations) == 1, "There can be only one"

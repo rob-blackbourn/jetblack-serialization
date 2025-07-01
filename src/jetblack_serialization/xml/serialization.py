@@ -1,6 +1,6 @@
 """XML serialization"""
 
-from typing import Any, AnyStr
+from typing import Any
 
 from ..types import Annotation
 from ..utils import is_typed
@@ -34,14 +34,14 @@ def serialize(
 
 
 def deserialize(
-        text: AnyStr,
+        text: str | bytes | bytearray,
         annotation: Annotation,
         config: SerializerConfig,
 ) -> Any:
     """Convert XML to an object
 
     Args:
-        text (str): The XML string
+        text (str | bytes | bytearray): The XML string
         annotation (Annotation): The type annotation
         config (XMLSerializerConfig): The serializer configuration
 

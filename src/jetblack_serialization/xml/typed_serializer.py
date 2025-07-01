@@ -3,14 +3,20 @@
 from decimal import Decimal
 from enum import Enum
 from inspect import Parameter
-from typing import Any, Optional, Type, Union
+from typing import Any, Union, get_args, is_typeddict
 
 from lxml import etree
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-from .. import typing_inspect_ex as typing_inspect
 from ..config import BaseSerializerConfig
 from ..types import Annotation
+from ..typing_ex import (
+    is_annotated,
+    is_list,
+    is_optional,
+    is_union,
+    typeddict_keys
+)
 from ..utils import is_value_type
 
 from .annotations import (
@@ -22,13 +28,13 @@ from .annotations import (
 from .config import SerializerConfig
 
 
-def _make_element(parent: Optional[_Element], tag: str) -> _Element:
+def _make_element(parent: _Element | None, tag: str) -> _Element:
     return Element(tag) if parent is None else SubElement(parent, tag)
 
 
 def _from_value(
         value: Any,
-        type_annotation: Type,
+        type_annotation: type,
         config: BaseSerializerConfig
 ) -> str:
     if type_annotation is str:
@@ -55,14 +61,14 @@ def _from_optional(
         obj: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
     if obj is None:
         return _make_element(element, xml_annotation.tag)
 
     # An optional is a union where the last element is the None type.
-    union_types = typing_inspect.get_args(type_annotation)[:-1]
+    union_types = get_args(type_annotation)[:-1]
     if len(union_types) == 1:
         # This was Optional[T]
         return _from_obj(
@@ -86,10 +92,10 @@ def _from_union(
         obj: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
-    for union_type_annotation in typing_inspect.get_args(type_annotation):
+    for union_type_annotation in get_args(type_annotation):
         try:
             return _from_obj(
                 obj,
@@ -108,11 +114,11 @@ def _from_list(
         obj: list,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
-    item_annotation, *_rest = typing_inspect.get_args(type_annotation)
-    if typing_inspect.is_annotated_type(item_annotation):
+    item_annotation, *_rest = get_args(type_annotation)
+    if is_annotated(item_annotation):
         item_type_annotation, item_xml_annotation = get_xml_annotation(
             item_annotation
         )
@@ -145,16 +151,16 @@ def _from_typed_dict(
         obj: dict,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
     dict_element = _make_element(element, xml_annotation.tag)
 
-    typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    typed_dict_keys = typeddict_keys(type_annotation)
     assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
-        if typing_inspect.is_annotated_type(key_annotation):
+        if is_annotated(key_annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
                 key_annotation
             )
@@ -183,7 +189,7 @@ def _from_simple(
         obj: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
     text = _from_value(obj, type_annotation, config)
@@ -202,7 +208,7 @@ def _from_obj(
         obj: Any,
         type_annotation: Annotation,
         xml_annotation: XMLAnnotation,
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> _Element:
     if is_value_type(type_annotation, config.value_serializers.keys()):
@@ -213,7 +219,7 @@ def _from_obj(
             element,
             config
         )
-    elif typing_inspect.is_optional_type(type_annotation):
+    elif is_optional(type_annotation):
         return _from_optional(
             obj,
             type_annotation,
@@ -221,7 +227,7 @@ def _from_obj(
             element,
             config
         )
-    elif typing_inspect.is_list_type(type_annotation):
+    elif is_list(type_annotation):
         return _from_list(
             obj,
             type_annotation,
@@ -229,7 +235,7 @@ def _from_obj(
             element,
             config
         )
-    elif typing_inspect.is_typed_dict_type(type_annotation):
+    elif is_typeddict(type_annotation):
         return _from_typed_dict(
             obj,
             type_annotation,
@@ -237,7 +243,7 @@ def _from_obj(
             element,
             config
         )
-    elif typing_inspect.is_union_type(type_annotation):
+    elif is_union(type_annotation):
         return _from_union(
             obj,
             type_annotation,

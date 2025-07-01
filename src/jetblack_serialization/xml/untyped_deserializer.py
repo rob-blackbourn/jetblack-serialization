@@ -1,7 +1,7 @@
 """Untyped XML deserialization"""
 
 from decimal import Decimal
-from typing import Any, AnyStr, Dict, List, Optional
+from typing import Any
 
 from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
@@ -11,6 +11,7 @@ from ..config import BaseSerializerConfig
 from .config import SerializerConfig
 
 
+# TODO: Remove this?
 def _is_element_empty(element: _Element) -> bool:
     return (
         element.find('*') is None and
@@ -20,7 +21,7 @@ def _is_element_empty(element: _Element) -> bool:
 
 
 def _to_value(
-        text: Optional[str],
+        text: str | None,
         type_name: str,
         config: BaseSerializerConfig
 ) -> Any:
@@ -45,7 +46,7 @@ def _to_value(
 
 
 def _to_simple(
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> Any:
     if element is None:
@@ -67,9 +68,9 @@ def _to_simple(
 
 
 def _to_list(
-        parent: Optional[_Element],
+        parent: _Element | None,
         config: BaseSerializerConfig
-) -> List[Any]:
+) -> list[Any]:
     if parent is None:
         raise ValueError('Received "None" while deserializing a list')
 
@@ -83,9 +84,9 @@ def _to_list(
 
 
 def _to_dict(
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     if element is None:
         raise ValueError('Received "None" while deserializing a TypeDict')
 
@@ -102,7 +103,7 @@ def _to_dict(
 
 
 def _to_obj(
-        element: Optional[_Element],
+        element: _Element | None,
         config: BaseSerializerConfig
 ) -> Any:
 
@@ -116,11 +117,11 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped(text: AnyStr, config: SerializerConfig) -> Any:
+def deserialize_untyped(text: str | bytes | bytearray, config: SerializerConfig) -> Any:
     """Deserialize XML without type information
 
     Args:
-        text (AnyStr): The XML string
+        text (str | bytes | bytearray): The XML string
 
     Returns:
         Any: The deserialized object.

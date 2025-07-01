@@ -4,11 +4,17 @@ from decimal import Decimal
 from enum import Enum
 from inspect import Parameter
 import json
-from typing import Any, Type, Union, cast
+from typing import Any, Type, Union, cast, get_args, is_typeddict
 
-from .. import typing_inspect_ex as typing_inspect
 from ..config import BaseSerializerConfig
 from ..types import Annotation
+from ..typing_ex import (
+    is_annotated,
+    typeddict_keys,
+    is_optional,
+    is_list,
+    is_union
+)
 from ..utils import is_value_type
 
 from .annotations import (
@@ -56,7 +62,7 @@ def _from_optional(
         return None
 
     # An optional is a union where the last element is the None type.
-    union_types = typing_inspect.get_args(type_annotation)[:-1]
+    union_types = get_args(type_annotation)[:-1]
     if len(union_types) == 1:
         # This was Optional[T]
         return from_json_value(
@@ -80,7 +86,7 @@ def _from_union(
         json_annotation: JSONAnnotation,
         config: BaseSerializerConfig
 ) -> Any:
-    for element_type in typing_inspect.get_args(type_annotation):
+    for element_type in get_args(type_annotation):
         try:
             return from_json_value(
                 obj,
@@ -97,8 +103,8 @@ def _from_list(
         type_annotation: Annotation,
         config: BaseSerializerConfig
 ) -> Any:
-    item_annotation, *_rest = typing_inspect.get_args(type_annotation)
-    if typing_inspect.is_annotated_type(item_annotation):
+    item_annotation, *_rest = get_args(type_annotation)
+    if is_annotated(item_annotation):
         item_type_annotation, item_json_annotation = get_json_annotation(
             item_annotation
         )
@@ -124,11 +130,11 @@ def _from_typed_dict(
 ) -> dict:
     json_obj = {}
 
-    typed_dict_keys = typing_inspect.typed_dict_keys(type_annotation)
+    typed_dict_keys = typeddict_keys(type_annotation)
     assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
-        if typing_inspect.is_annotated_type(key_annotation):
+        if is_annotated(key_annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 key_annotation
             )
@@ -169,26 +175,26 @@ def from_json_value(
             type_annotation,
             config
         )
-    elif typing_inspect.is_optional_type(type_annotation):
+    elif is_optional(type_annotation):
         return _from_optional(
             value,
             type_annotation,
             json_annotation,
             config
         )
-    elif typing_inspect.is_list_type(type_annotation):
+    elif is_list(type_annotation):
         return _from_list(
             value,
             type_annotation,
             config
         )
-    elif typing_inspect.is_typed_dict_type(type_annotation):
+    elif is_typeddict(type_annotation):
         return _from_typed_dict(
             value,
             type_annotation,
             config
         )
-    elif typing_inspect.is_union_type(type_annotation):
+    elif is_union(type_annotation):
         return _from_union(
             value,
             type_annotation,

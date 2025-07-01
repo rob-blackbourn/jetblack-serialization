@@ -2,10 +2,7 @@
 
 import inspect
 
-try:
-    from typing import Annotated  # type: ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import Annotated  # type: ignore
+from typing import Annotated
 
 from jetblack_serialization.custom_annotations import (
     SerializationAnnotation,

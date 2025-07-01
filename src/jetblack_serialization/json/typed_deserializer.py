@@ -4,19 +4,25 @@ from decimal import Decimal
 from enum import Enum
 from inspect import Parameter, isclass
 import json
+from types import NoneType
 from typing import (
     Any,
-    Dict,
-    List,
-    Optional,
-    Type,
     Union,
-    cast
+    cast,
+    is_typeddict,
+    get_args
 )
 
-from .. import typing_inspect_ex as typing_inspect
 from ..config import BaseSerializerConfig
 from ..custom_annotations import get_typed_dict_key_default
+from ..typing_ex import (
+    get_unannotated,
+    is_annotated,
+    is_list,
+    is_optional,
+    is_union,
+    typeddict_keys,
+)
 from ..types import Annotation
 from ..utils import is_value_type
 
@@ -32,7 +38,7 @@ from .config import SerializerConfig
 
 def _to_value(
         value: Any,
-        type_annotation: Type,
+        type_annotation: type,
         config: BaseSerializerConfig
 ) -> Any:
     if isinstance(value, type_annotation):
@@ -68,7 +74,7 @@ def _to_optional(
         config: BaseSerializerConfig
 ) -> Any:
     # An optional is a union where the last element is the None type.
-    union_types = typing_inspect.get_args(type_annotation)[:-1]
+    union_types = [t for t in get_args(type_annotation) if t is not NoneType]
     if len(union_types) == 1:
         return None if not obj else _to_any(
             obj,
@@ -90,9 +96,9 @@ def _to_list(
         lst: list,
         list_annotation: Annotation,
         config: BaseSerializerConfig
-) -> List[Any]:
-    item_type_annotation, *_rest = typing_inspect.get_args(list_annotation)
-    if typing_inspect.is_annotated_type(item_type_annotation):
+) -> list[Any]:
+    item_type_annotation, *_rest = get_args(list_annotation)
+    if is_annotated(item_type_annotation):
         item_type_annotation, item_json_annotation = get_json_annotation(
             item_type_annotation
         )
@@ -111,12 +117,12 @@ def _to_list(
 
 
 def _to_union(
-        obj: Optional[Dict[str, Any]],
+        obj: dict[str, Any] | None,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: BaseSerializerConfig
 ) -> Any:
-    for item_type_annotation in typing_inspect.get_args(type_annotation):
+    for item_type_annotation in get_args(type_annotation):
         try:
             return _to_any(
                 obj,
@@ -129,13 +135,13 @@ def _to_union(
 
 
 def _to_dict(
-        obj: Dict[str, Any],
+        obj: dict[str, Any],
         dict_annotation: Annotation,
         config: BaseSerializerConfig
-) -> Dict[str, Any]:
-    json_obj: Dict[str, Any] = {}
+) -> dict[str, Any]:
+    json_obj: dict[str, Any] = {}
 
-    typed_dict_keys = typing_inspect.typed_dict_keys(dict_annotation)
+    typed_dict_keys = typeddict_keys(dict_annotation)
     assert typed_dict_keys is not None
     for key, key_annotation in typed_dict_keys.items():
         default = get_typed_dict_key_default(key_annotation)
@@ -151,9 +157,7 @@ def _to_dict(
                 key
             ) if isinstance(key, str) else key
             json_property = JSONProperty(tag)
-            item_type_annotation = typing_inspect.get_unannotated_type(
-                key_annotation
-            )
+            item_type_annotation = get_unannotated(key_annotation)
 
         if json_property.tag in obj:
             json_obj[key] = _to_any(
@@ -169,7 +173,7 @@ def _to_dict(
                 json_property,
                 config
             )
-        elif typing_inspect.is_optional_type(item_type_annotation):
+        elif is_optional(item_type_annotation):
             json_obj[key] = None
         else:
             raise KeyError(
@@ -191,26 +195,26 @@ def _to_any(
             type_annotation,
             config
         )
-    elif typing_inspect.is_optional_type(type_annotation):
+    elif is_optional(type_annotation):
         return _to_optional(
             json_value,
             type_annotation,
             json_annotation,
             config
         )
-    elif typing_inspect.is_list_type(type_annotation):
+    elif is_list(type_annotation):
         return _to_list(
             json_value,
             type_annotation,
             config
         )
-    elif typing_inspect.is_typed_dict_type(type_annotation):
+    elif is_typeddict(type_annotation):
         return _to_dict(
             json_value,
             type_annotation,
             config
         )
-    elif typing_inspect.is_union_type(type_annotation):
+    elif is_union(type_annotation):
         return _to_union(
             json_value,
             type_annotation,
