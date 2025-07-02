@@ -6,11 +6,12 @@ from typing import Any, Iterable, Sequence, get_args, get_origin, is_typeddict
 
 from .types import Annotation
 from .typing_ex import (
+    get_annotated_type,
+    get_optional_types,
     is_annotated,
     is_dict,
     is_list,
     is_optional,
-    get_optional_types
 )
 
 BUILTIN_TYPES: Sequence[type] = (
@@ -71,6 +72,6 @@ def is_typed(annotation: Annotation) -> bool:
         ) or
         (
             is_annotated(annotation) and
-            is_typed(get_origin(annotation))
+            is_typed(get_annotated_type(annotation))
         )
     )

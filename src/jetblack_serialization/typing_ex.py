@@ -20,13 +20,6 @@ from typing import (
 )
 
 
-def _get_origin_not_none(annotation: type[Any]) -> type[Any]:
-    origin = get_origin(annotation)
-    if origin is None:
-        raise TypeError(f"Annotation {annotation} has no origin.")
-    return origin
-
-
 def is_union(annotation: type[Any]) -> bool:
     return annotation is Union or get_origin(annotation) in (Union, UnionType)
 
@@ -47,7 +40,7 @@ def is_annotated(annotation: type[Any]) -> bool:
     return get_origin(annotation) is Annotated
 
 
-def get_annotated_type(annotation: Annotated) -> type:
+def get_annotated_type(annotation: Annotated[Any, ...]) -> type:
     return annotation.__origin__
 
 
