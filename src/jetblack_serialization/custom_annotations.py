@@ -2,7 +2,7 @@
 
 from abc import ABCMeta
 from inspect import Signature
-from typing import Any, get_origin
+from typing import Any
 
 from .types import Annotation
 from .typing_ex import is_annotated, get_annotated_type, get_metadata

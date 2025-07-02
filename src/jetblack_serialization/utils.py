@@ -2,7 +2,7 @@
 
 from enum import Enum
 from inspect import isclass
-from typing import Any, Iterable, Sequence, get_args, get_origin, is_typeddict
+from typing import Any, Iterable, Sequence, get_args, is_typeddict
 
 from .types import Annotation
 from .typing_ex import (
