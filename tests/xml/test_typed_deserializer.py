@@ -1,6 +1,6 @@
 """Tests for serialization"""
 
-from datetime import datetime
+from datetime import datetime, UTC
 
 from typing_extensions import Annotated
 
@@ -37,7 +37,7 @@ def test_xml_deserialize_annotated() -> None:
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',
@@ -77,7 +77,7 @@ def test_xml_deserialize_annotated_with_encoding() -> None:
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',

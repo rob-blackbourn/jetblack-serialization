@@ -1,6 +1,6 @@
 """Tests for JSON serialization"""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import List, Optional, TypedDict, Union
 
 from typing_extensions import Annotated
@@ -39,7 +39,7 @@ DICT = {
     'author': 'Chairman Mao',
     'book_id': 42,
     'title': 'Little Red Book',
-    'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+    'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
     'keywords': ['Revolution', 'Communism'],
     'phrases': [
         'Revolutionary wars are inevitable in class society',

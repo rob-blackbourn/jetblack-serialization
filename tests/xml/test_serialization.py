@@ -1,6 +1,6 @@
 """Round trip tests for XML serialization"""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from enum import Enum, auto
 from typing import List, Optional, TypedDict, Union
 
@@ -71,7 +71,7 @@ def test_xml_typed_annotated_roundtrip() -> None:
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',
@@ -105,7 +105,7 @@ def test_xml_unannotated_roundtrip() -> None:
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',

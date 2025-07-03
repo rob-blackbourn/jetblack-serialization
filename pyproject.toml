@@ -19,7 +19,7 @@ readme = "README.md"
 keywords = ['serialization', 'JSON', 'XML', 'YAML']
 license = {text = "Apache-2.0"}
 dependencies = [
-    "jetblack-iso8601>=1.0.2,<2",
+    "jetblack-iso8601==2.0.0a1",
 ]
 
 [project.optional-dependencies]

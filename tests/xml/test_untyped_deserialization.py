@@ -1,6 +1,6 @@
 """Round trip tests for XML serialization"""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from decimal import Decimal
 
 from jetblack_serialization.xml import deserialize_untyped
@@ -28,7 +28,7 @@ def test_untyped_xml_serialization_simple() -> None:
 
     datetime_text = '<object type="datetime">2020-01-01T12:32:59.999Z</object>'
     datetime_obj = deserialize_untyped(datetime_text, CONFIG)
-    assert datetime_obj == datetime(2020, 1, 1, 12, 32, 59, 999000)
+    assert datetime_obj == datetime(2020, 1, 1, 12, 32, 59, 999000, UTC)
 
     timedelta_text = '<object type="timedelta">P1M10DT3H15M35S</object>'
     timedelta_obj = deserialize_untyped(timedelta_text, CONFIG)

@@ -1,6 +1,6 @@
 """Tests for the untyped deserializer"""
 
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, UTC
 
 from stringcase import snakecase, camelcase
 
@@ -23,6 +23,6 @@ def test_json_untyped_deserialize() -> None:
         'str_arg': 'text',
         'int_arg': 42,
         'float_arg': 3.14,
-        'date_arg': datetime(2019, 12, 31, 23, 59, 59),
+        'date_arg': datetime(2019, 12, 31, 23, 59, 59, tzinfo=UTC),
         'duration_arg': timedelta(hours=1, minutes=7)
     }
