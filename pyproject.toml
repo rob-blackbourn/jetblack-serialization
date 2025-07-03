@@ -59,10 +59,18 @@ testpaths = [
 
 # mypy
 [tool.mypy]
-files = [ "src/jetblack_serialization", "tests", "scratch" ]
+files = [ "src/jetblack_serialization", "tests" ]
 
 [[tool.mypy.overrides]]
 module = "pytest"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "lxml.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "stringcase"
 ignore_missing_imports = true
 
 # pylint
