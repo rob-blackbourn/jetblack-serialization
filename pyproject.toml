@@ -9,19 +9,17 @@ description = "Serialization for JSON and XML using typing"
 authors = [
   { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 readme = "README.md"
-keywords = ['serialization', 'JSON', 'XML']
+keywords = ['serialization', 'JSON', 'XML', 'YAML']
 license = {text = "Apache-2.0"}
 dependencies = [
     "jetblack-iso8601>=1.0.2,<2",
-    "typing-extensions>=4,<5",
-    "typing-inspect>=0.9,<1"
 ]
 
 [project.optional-dependencies]
@@ -61,7 +59,7 @@ testpaths = [
 
 # mypy
 [tool.mypy]
-files = [ "src/jetblack_iso8601", "tests", "scratch" ]
+files = [ "src/jetblack_serialization", "tests", "scratch" ]
 
 [[tool.mypy.overrides]]
 module = "pytest"
@@ -96,15 +94,13 @@ requires = [
     "tox>=4.19",
     "pytest>=8.3.5"
 ]
-env_list = ["3.8", "3.9", "3.10", "3.11", "3.12", "type"]
+env_list = ["3.12", "3.13", "type"]
 
 [tool.tox.env_run_base]
 description = "Run test under {base_python}"
 allowlist_externals = ["pytest"]
 deps = [
     "jetblack-iso8601>=1.0.2,<2",
-    "typing-extensions>=4,<5",
-    "typing-inspect>=0.9,<1",
     "pytest>=8,<9",
     "pyyaml>=6.0.1,<7",
     "lxml>=5.2.2,<6",
