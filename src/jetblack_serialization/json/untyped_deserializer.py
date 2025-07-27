@@ -62,8 +62,7 @@ def deserialize_untyped(
     Returns:
         Any: The deserialized JSON object
     """
-
-    def _hook(obj: dict) -> dict:
-        return _from_dict(obj, config)
-
-    return json.loads(text, object_hook=_hook)
+    to_object = config.to_object or json.loads
+    obj = to_object(text)
+    obj = from_untyped_object(obj, config)
+    return obj

@@ -46,6 +46,9 @@ VALUE_DESERIALIZERS: ValueDeserializers = (
     (Decimal, Decimal)
 )
 
+type ToObject = Callable[[str | bytes | bytearray], Any]
+type FromObject = Callable[[Any], str]
+
 
 class BaseSerializerConfig:
     """Configuration for serialization"""

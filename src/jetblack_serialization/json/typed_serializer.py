@@ -233,7 +233,5 @@ def serialize_typed(
         json_annotation,
         config
     )
-    return json.dumps(
-        json_obj,
-        indent=2 if config.pretty_print else None
-    )
+    from_object = config.from_object or json.dumps
+    return from_object(json_obj)

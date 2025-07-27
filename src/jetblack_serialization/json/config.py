@@ -7,7 +7,9 @@ from ..config import (
     VALUE_DESERIALIZERS,
     VALUE_SERIALIZERS,
     ValueDeserializers,
-    ValueSerializers
+    ValueSerializers,
+    ToObject,
+    FromObject
 )
 
 
@@ -20,7 +22,8 @@ class SerializerConfig(BaseSerializerConfig):
         key_deserializer: Callable[[str], str] | None = None,
         value_serializers: ValueSerializers = VALUE_SERIALIZERS,
         value_deserializers: ValueDeserializers = VALUE_DESERIALIZERS,
-        pretty_print: bool = False
+        to_object: ToObject | None = None,
+        from_object: FromObject | None = None,
     ) -> None:
         super().__init__(
             key_serializer,
@@ -28,4 +31,5 @@ class SerializerConfig(BaseSerializerConfig):
             value_serializers,
             value_deserializers
         )
-        self.pretty_print = pretty_print
+        self.to_object = to_object
+        self.from_object = from_object

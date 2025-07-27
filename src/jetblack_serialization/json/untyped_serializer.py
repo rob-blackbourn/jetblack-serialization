@@ -50,7 +50,5 @@ def from_untyped_object(obj: Any, config: BaseSerializerConfig) -> Any:
 
 def serialize_untyped(obj: Any, config: SerializerConfig) -> str:
     json_obj = from_untyped_object(obj, config)
-    return json.dumps(
-        json_obj,
-        indent=2 if config.pretty_print else None
-    )
+    from_object = config.from_object or json.dumps
+    return from_object(json_obj)

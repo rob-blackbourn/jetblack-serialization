@@ -274,5 +274,6 @@ def deserialize_typed(
     Returns:
         Any: The deserialized object.
     """
-    json_value = json.loads(text)
+    to_object = config.to_object or json.loads
+    json_value = to_object(text)
     return from_json_value(config, json_value, annotation)
