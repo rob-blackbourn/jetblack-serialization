@@ -11,7 +11,6 @@ from typing import (
     Dict,
     Generic,
     Iterable,
-    List,
     Literal,
     Mapping,
     MutableMapping,
@@ -90,8 +89,8 @@ def test_get_optional() -> None:
 
 def run_sample(
         fun: Callable[[Any], bool],
-        samples: List[Any],
-        nonsamples: List[Any]
+        samples: list[Any],
+        nonsamples: list[Any]
 ) -> None:
     for s in samples:
         assert fun(s)
@@ -102,12 +101,12 @@ def run_sample(
 def test_generic() -> None:
     T = TypeVar('T')
     samples = [
-        ClassVar[List[int]],
+        ClassVar[list[int]],
         Generic,
         Generic[T],
         Iterable[int],
         Mapping,
-        MutableMapping[T, List[int]],
+        MutableMapping[T, list[int]],
         Sequence[Union[str, bytes]]
     ]
     nonsamples = [
@@ -134,7 +133,7 @@ def test_callable() -> None:
         type,
         42,
         [],
-        List[int],
+        list[int],
         Union[callable, Callable[..., int]]
     ]
     run_sample(typing_ex.is_callable, samples, nonsamples)
@@ -151,7 +150,7 @@ def test_tuple() -> None:
     nonsamples = [
         int,
         42,
-        List[int],
+        list[int],
     ]
     run_sample(typing_ex.is_tuple, samples, nonsamples)
 
@@ -234,8 +233,8 @@ def test_typevar() -> None:
 
 def test_classvar() -> None:
     T = TypeVar('T')
-    samples = [ClassVar, ClassVar[int], ClassVar[List[T]]]
-    nonsamples = [int, 42, Iterable, List[int], type, T]
+    samples = [ClassVar, ClassVar[int], ClassVar[list[T]]]
+    nonsamples = [int, 42, Iterable, list[int], type, T]
     run_sample(typing_ex.is_classvar, samples, nonsamples)
 
 
@@ -246,10 +245,10 @@ def test_classvar() -> None:
 #     assert typing_ex.get_parameters(int) == ()
 #     assert typing_ex.get_parameters(Generic) == ()
 #     assert typing_ex.get_parameters(Union) == ()
-#     assert typing_ex.get_parameters(List[int]) == ()
+#     assert typing_ex.get_parameters(list[int]) == ()
 #     assert typing_ex.get_parameters(Generic[T]) == (T,)
 #     assert typing_ex.get_parameters(
-#         Tuple[List[T], List[S_co]]) == (T, S_co)
+#         Tuple[list[T], list[S_co]]) == (T, S_co)
 #     assert typing_ex.get_parameters(
 #         Union[S_co, Tuple[T, T]][int, U]) == (U,)
 #     assert typing_ex.get_parameters(
@@ -311,9 +310,9 @@ def test_classvar() -> None:
 
 
 # def test_generic_bases() -> None:
-#     class MyClass(List[int], Mapping[str, List[int]]):  # type: ignore
+#     class MyClass(list[int], Mapping[str, list[int]]):  # type: ignore
 #         pass
 #     assert typing_inspect.get_generic_bases(
 #         MyClass
-#     ) == (List[int], Mapping[str, List[int]])
+#     ) == (list[int], Mapping[str, list[int]])
 #     assert typing_inspect.get_generic_bases(int) == ()
