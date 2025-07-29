@@ -7,7 +7,7 @@ from typing import Any, Iterable, Union, get_args, is_typeddict
 
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..custom_annotations import get_typed_dict_key_default
 from ..types import Annotation
 from ..typing_ex import (
@@ -268,7 +268,7 @@ def _to_obj(
 def deserialize_typed(
         text: str | bytes | bytearray,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: XMLDecoder | None = None
 ) -> Any:
     """Convert XML to an object
@@ -280,13 +280,17 @@ def deserialize_typed(
     Returns:
         Any: The deserialized object.
     """
-    if decode is None:
-        decode = DECODE_XML
-
     type_annotation, xml_annotation = get_xml_annotation(annotation)
     if not isinstance(xml_annotation, XMLEntity):
         raise TypeError(
-            "Expected the root value to have an XMLEntity annotation")
+            "Expected the root value to have an XMLEntity annotation"
+        )
 
-    element = decode(text)
-    return _to_obj(element, Parameter.empty, type_annotation, xml_annotation, config)
+    element = (decode or DECODE_XML)(text)
+    return _to_obj(
+        element,
+        Parameter.empty,
+        type_annotation,
+        xml_annotation,
+        config or DEFAULT_CONFIG
+    )

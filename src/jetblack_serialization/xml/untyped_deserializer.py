@@ -5,7 +5,7 @@ from typing import Any
 
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 
 from .encoding import XMLDecoder, DECODE_XML
 
@@ -117,7 +117,7 @@ def _to_obj(
 
 def deserialize_untyped(
         text: str | bytes | bytearray,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: XMLDecoder | None = None
 ) -> Any:
     """Deserialize XML without type information
@@ -128,7 +128,5 @@ def deserialize_untyped(
     Returns:
         Any: The deserialized object.
     """
-    if decode is None:
-        decode = DECODE_XML
-    element = decode(text)
-    return _to_obj(element, config)
+    element = (decode or DECODE_XML)(text)
+    return _to_obj(element, config or DEFAULT_CONFIG)

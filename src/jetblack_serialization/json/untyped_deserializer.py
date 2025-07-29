@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 
 from .encoding import JSONDecoder, DECODE_JSON
 
@@ -51,7 +51,7 @@ def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
 
 def deserialize_untyped(
         text: str | bytes | bytearray,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: JSONDecoder | None = None
 ) -> Any:
     """Deserialize JSON without type information
@@ -62,7 +62,5 @@ def deserialize_untyped(
     Returns:
         Any: The deserialized JSON object
     """
-    if decode is None:
-        decode = DECODE_JSON
-    json_obj = decode(text)
-    return from_untyped_object(json_obj, config)
+    json_obj = (decode or DECODE_JSON)(text)
+    return from_untyped_object(json_obj, config or DEFAULT_CONFIG)

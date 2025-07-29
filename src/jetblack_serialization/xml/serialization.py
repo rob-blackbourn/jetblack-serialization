@@ -16,7 +16,7 @@ from .untyped_deserializer import deserialize_untyped
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: XMLEncoder | None = None
 ) -> str:
     """Convert the object to JSON
@@ -38,7 +38,7 @@ def serialize(
 def deserialize(
         text: str | bytes | bytearray,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: XMLDecoder | None = None
 ) -> Any:
     """Convert XML to an object

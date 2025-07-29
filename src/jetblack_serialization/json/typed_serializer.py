@@ -5,7 +5,7 @@ from enum import Enum
 from inspect import Parameter
 from typing import Any, Type, Union, cast, get_args, is_typeddict
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..types import Annotation
 from ..typing_ex import (
     is_annotated,
@@ -207,7 +207,7 @@ def from_json_value(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: JSONEncoder | None = None
 ) -> str:
     """Serialize an object to JSON
@@ -222,9 +222,6 @@ def serialize_typed(
     Returns:
         str: The JSON string
     """
-    if encode is None:
-        encode = ENCODE_JSON
-
     if is_json_annotation(annotation):
         type_annotation, json_annotation = get_json_annotation(annotation)
     else:
@@ -234,6 +231,6 @@ def serialize_typed(
         obj,
         type_annotation,
         json_annotation,
-        config
+        config or DEFAULT_CONFIG
     )
-    return encode(json_obj)
+    return (encode or ENCODE_JSON)(json_obj)

@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 
 from .encoding import JSONEncoder, ENCODE_JSON
 
@@ -49,11 +49,8 @@ def from_untyped_object(obj: Any, config: SerializerConfig) -> Any:
 
 def serialize_untyped(
         obj: Any,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: JSONEncoder | None = None
 ) -> str:
-    if encode is None:
-        encode = ENCODE_JSON
-
-    json_obj = from_untyped_object(obj, config)
-    return encode(json_obj)
+    json_obj = from_untyped_object(obj, config or DEFAULT_CONFIG)
+    return (encode or ENCODE_JSON)(json_obj)

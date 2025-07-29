@@ -65,3 +65,6 @@ class SerializerConfig:
         self.value_deserializers = dict(
             value_deserializers or VALUE_DESERIALIZERS
         )
+
+
+DEFAULT_CONFIG = SerializerConfig()

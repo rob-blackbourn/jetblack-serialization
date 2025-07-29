@@ -12,7 +12,7 @@ from typing import (
     get_args
 )
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..custom_annotations import get_typed_dict_key_default
 from ..typing_ex import (
     get_unannotated,
@@ -262,7 +262,7 @@ def from_json_value(
 def deserialize_typed(
         text: Union[str, bytes, bytearray],
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: JSONDecoder | None = None
 ) -> Any:
     """Convert JSON to an object
@@ -274,7 +274,5 @@ def deserialize_typed(
     Returns:
         Any: The deserialized object.
     """
-    if decode is None:
-        decode = DECODE_JSON
-    json_value = decode(text)
-    return from_json_value(config, json_value, annotation)
+    json_value = (decode or DECODE_JSON)(text)
+    return from_json_value(config or DEFAULT_CONFIG, json_value, annotation)

@@ -7,7 +7,7 @@ from typing import Any, Union, get_args, is_typeddict
 
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..types import Annotation
 from ..typing_ex import (
     is_annotated,
@@ -257,16 +257,19 @@ def _from_obj(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: XMLEncoder | None = None
 ) -> str:
-    if encode is None:
-        encode = ENCODE_XML
-
     type_annotation, xml_annotation = get_xml_annotation(annotation)
     if not isinstance(xml_annotation, XMLEntity):
         raise TypeError(
             "Expected the root value to have an XMLEntity annotation")
 
-    element = _from_obj(obj, type_annotation, xml_annotation, None, config)
-    return encode(element)
+    element = _from_obj(
+        obj,
+        type_annotation,
+        xml_annotation,
+        None,
+        config or DEFAULT_CONFIG
+    )
+    return (encode or ENCODE_XML)(element)

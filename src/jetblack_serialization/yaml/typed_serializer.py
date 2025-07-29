@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..json import JSONValue
 from ..json.annotations import is_json_annotation, get_json_annotation
 from ..json.typed_serializer import from_json_value
@@ -14,7 +14,7 @@ from .encoding import YAMLEncoder, ENCODE_YAML
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: YAMLEncoder | None = None
 ) -> str:
     """Serialize an object to YAML.
@@ -30,9 +30,6 @@ def serialize_typed(
     Returns:
         str: The YAML string.
     """
-    if encode is None:
-        encode = ENCODE_YAML
-
     if is_json_annotation(annotation):
         type_annotation, json_annotation = get_json_annotation(annotation)
     else:
@@ -42,6 +39,6 @@ def serialize_typed(
         obj,
         type_annotation,
         json_annotation,
-        config
+        config or DEFAULT_CONFIG
     )
-    return encode(json_obj)
+    return (encode or ENCODE_YAML)(json_obj)

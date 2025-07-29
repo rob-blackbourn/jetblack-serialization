@@ -5,7 +5,7 @@ from typing import Any
 
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-from ..config import SerializerConfig
+from ..config import SerializerConfig, DEFAULT_CONFIG
 
 from .encoding import XMLEncoder, ENCODE_XML
 
@@ -105,11 +105,8 @@ def _from_obj(
 
 def serialize_untyped(
         obj: Any,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         encode: XMLEncoder | None = None
 ) -> str:
-    if encode is None:
-        encode = ENCODE_XML
-
-    element = _from_obj(obj, None, config)
-    return encode(element)
+    element = _from_obj(obj, None, config or DEFAULT_CONFIG)
+    return (encode or ENCODE_XML)(element)
