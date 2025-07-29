@@ -11,14 +11,14 @@ from .typed_deserializer import deserialize_typed
 from .untyped_serializer import serialize_untyped
 from .untyped_deserializer import deserialize_untyped
 
-from .encoding import JSONEncoder, JSONDecoder, DECODE_JSON, ENCODE_JSON
+from .encoding import JSONEncoder, JSONDecoder
 
 
 def serialize(
         obj: Any,
         annotation: Any,
-        config: SerializerConfig,
-        encode: JSONEncoder | None
+        config: SerializerConfig | None = None,
+        encode: JSONEncoder | None = None
 ) -> str:
     """Convert the object to JSON
 
@@ -39,7 +39,7 @@ def serialize(
 def deserialize(
         text: str | bytes | bytearray,
         annotation: Annotation,
-        config: SerializerConfig,
+        config: SerializerConfig | None = None,
         decode: JSONDecoder | None = None
 ) -> Any:
     """Convert JSON to an object
