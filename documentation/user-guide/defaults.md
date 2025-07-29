@@ -7,7 +7,7 @@ For example:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union, Annotated
+from typing import Optional, TypedDict, Union, Annotated
 from jetblack_serialization import DefaultValue
 
 class Book(TypedDict, total=False):
@@ -15,8 +15,8 @@ class Book(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(1)]
 ```

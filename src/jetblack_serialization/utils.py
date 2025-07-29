@@ -45,7 +45,7 @@ def is_value_type(
 def is_container_type(annotation: Any) -> bool:
     """Return True if this is a JSON container.
 
-    A JSON container can be an object (Like a Dict[str, Any]), or a List.
+    A JSON container can be an object (Like a dict[str, Any]), or a list.
 
     Args:
         annotation (Any): The type annotation.

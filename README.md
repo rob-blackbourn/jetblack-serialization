@@ -45,15 +45,15 @@ Given a typed dictionary:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 class Book(TypedDict, total=False):
     book_id: int
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
@@ -127,15 +127,15 @@ Given a typed dictionary:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 class Book(TypedDict, total=False):
     book_id: int
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
@@ -209,7 +209,7 @@ The XML version of the typed dictionary might look like this:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 from typing_extensions import Annotated
 from jetblack_serialization.xml import XMLEntity, XMLAttribute
 
@@ -218,8 +218,8 @@ class Book(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: Annotated[List[Annotated[str, XMLEntity("Keyword")]], XMLEntity("Keywords")]
-    phrases: List[str]
+    keywords: Annotated[list[Annotated[str, XMLEntity("Keyword")]], XMLEntity("Keywords")]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
