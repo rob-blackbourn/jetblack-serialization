@@ -4,18 +4,12 @@ from datetime import timedelta, datetime, UTC
 
 from stringcase import snakecase, camelcase
 
-from jetblack_serialization import (
-    SerializerConfig,
-    VALUE_SERIALIZERS,
-    VALUE_DESERIALIZERS
-)
+from jetblack_serialization import SerializerConfig
 from jetblack_serialization.json import deserialize_untyped
 
 CONFIG = SerializerConfig(
     key_serializer=camelcase,
     key_deserializer=snakecase,
-    value_serializers=VALUE_SERIALIZERS,
-    value_deserializers=VALUE_DESERIALIZERS
 )
 
 

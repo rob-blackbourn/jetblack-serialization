@@ -59,5 +59,9 @@ class SerializerConfig:
     ) -> None:
         self.serialize_key = key_serializer or _same_name
         self.deserialize_key = key_deserializer or _same_name
-        self.value_serializers = dict(value_serializers or ())
-        self.value_deserializers = dict(value_deserializers or ())
+        self.value_serializers = dict(
+            value_serializers or VALUE_SERIALIZERS
+        )
+        self.value_deserializers = dict(
+            value_deserializers or VALUE_DESERIALIZERS
+        )
