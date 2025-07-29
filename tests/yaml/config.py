@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from enum import Enum, auto
-from typing import Tuple, Type
+from typing import Type
 
 from stringcase import snakecase, camelcase
 
@@ -37,12 +37,12 @@ class Image:
         return self.value
 
 
-value_serializers: list[Tuple[Type, ValueSerializer]] = [
+value_serializers: list[tuple[Type, ValueSerializer]] = [
     (Image, Image.from_image)
 ]
 value_serializers += VALUE_SERIALIZERS
 
-value_deserializers: list[Tuple[Type, ValueDeserializer]] = [
+value_deserializers: list[tuple[Type, ValueDeserializer]] = [
     (Image, Image.to_image)
 ]
 value_deserializers += VALUE_DESERIALIZERS
