@@ -1,6 +1,6 @@
 """XML annotations"""
 
-from typing import Tuple, cast
+from typing import cast
 
 from ..types import Annotation
 from ..custom_annotations import (
@@ -56,14 +56,14 @@ def is_xml_annotation(annotation: Annotation) -> bool:
 
 def get_xml_annotation(
         annotation: Annotation
-) -> Tuple[Annotation, XMLAnnotation]:
+) -> tuple[Annotation, XMLAnnotation]:
     """Gets the type T of Annotation[T, XMLAnnotation]
 
     Args:
         annotation (Any): The annotation
 
     Returns:
-        Tuple[Annotation, XMLAnnotation]: The type and the XML annotation
+        tuple[Annotation, XMLAnnotation]: The type and the XML annotation
     """
     type_annotation, serialization_annotations = get_all_serialization_annotations(
         annotation

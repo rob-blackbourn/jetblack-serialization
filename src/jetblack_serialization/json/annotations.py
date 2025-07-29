@@ -1,6 +1,6 @@
 """JSON annotations"""
 
-from typing import Tuple, cast
+from typing import cast
 
 from ..types import Annotation
 from ..custom_annotations import (
@@ -54,14 +54,14 @@ def is_json_annotation(annotation: Annotation) -> bool:
     return len(json_annotations) == 1
 
 
-def get_json_annotation(annotation: Annotation) -> Tuple[Annotation, JSONAnnotation]:
+def get_json_annotation(annotation: Annotation) -> tuple[Annotation, JSONAnnotation]:
     """Gets the type T of Annotation[T, JSONAnnotation]
 
     Args:
         annotation (Any): The annotation
 
     Returns:
-        Tuple[Annotation, JSONAnnotation]: The type and the JSON annotation
+        tuple[Annotation, JSONAnnotation]: The type and the JSON annotation
     """
     type_annotation, serialization_annotations = get_all_serialization_annotations(
         annotation
