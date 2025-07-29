@@ -2,19 +2,19 @@
 
 from typing import Any
 
-import yaml
-
+from ..config import SerializerConfig
 from ..json.untyped_serializer import from_untyped_object
 
-from .config import SerializerConfig
+from .encoding import YAMLEncoder, ENCODE_YAML
 
 
 def serialize_untyped(
         obj: Any,
         config: SerializerConfig,
+        encode: YAMLEncoder | None = None
 ) -> str:
+    if encode is None:
+        encode = ENCODE_YAML
+
     json_obj = from_untyped_object(obj, config)
-    return yaml.dump(
-        json_obj,
-        Dumper=config.dumper
-    )
+    return encode(json_obj)

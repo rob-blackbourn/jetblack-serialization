@@ -1,9 +1,7 @@
 """Utilities"""
 
-from __future__ import annotations
-
 from enum import Enum, auto
-from typing import List, Tuple, Type
+from typing import List, Self, Tuple, Type
 
 from stringcase import snakecase, camelcase
 
@@ -13,7 +11,7 @@ from jetblack_serialization import (
     VALUE_SERIALIZERS,
     VALUE_DESERIALIZERS,
 )
-from jetblack_serialization.json import SerializerConfig
+from jetblack_serialization import SerializerConfig
 
 
 class Genre(Enum):
@@ -30,8 +28,8 @@ class Image:
         return self.value == other.value
 
     @classmethod
-    def to_image(cls, value: str) -> Image:
-        return Image(value)
+    def to_image(cls, value: str) -> Self:
+        return cls(value)
 
     def from_image(self) -> str:
         return self.value

@@ -4,7 +4,6 @@ from ..json import (
     JSONProperty as YAMLProperty,
     JSONValue as YAMLValue
 )
-from .config import SerializerConfig
 from .serialization import serialize, deserialize
 from .typed_serializer import serialize_typed
 from .typed_deserializer import deserialize_typed
@@ -17,8 +16,6 @@ __all__ = [
 
     'serialize',
     'deserialize',
-
-    'SerializerConfig',
 
     'serialize_typed',
     'deserialize_typed',

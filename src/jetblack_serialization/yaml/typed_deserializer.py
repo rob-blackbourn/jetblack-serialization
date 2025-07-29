@@ -2,28 +2,30 @@
 
 from typing import Any
 
-import yaml
-
+from ..config import SerializerConfig
 from ..json import from_json_value
 from ..types import Annotation
 
-from .config import SerializerConfig
+from .encoding import YAMLDecoder, DECODE_YAML
 
 
 def deserialize_typed(
         text: str | bytes | bytearray,
         annotation: Annotation,
-        config: SerializerConfig
+        config: SerializerConfig,
+        decode: YAMLDecoder | None = None
 ) -> Any:
     """Convert YAML to an object.
 
     Args:
         text (str | bytes | bytearray): The YAML string
         annotation (str): The type annotation.
-        config (YAMLSerializationConfig): The YAML config.
+        config (SerializationConfig): The serializer config.
 
     Returns:
         Any: The deserialized object.
     """
-    json_value = yaml.load(text, Loader=config.loader)
+    if decode is None:
+        decode = DECODE_YAML
+    json_value = decode(text)
     return from_json_value(config, json_value, annotation)

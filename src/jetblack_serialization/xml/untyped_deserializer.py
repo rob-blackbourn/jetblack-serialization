@@ -3,16 +3,14 @@
 from decimal import Decimal
 from typing import Any
 
-from lxml import etree
 from lxml.etree import _Element  # pylint: disable=no-name-in-module
 
-from ..config import BaseSerializerConfig
+from ..config import SerializerConfig
 
-from .config import SerializerConfig
+from .encoding import XMLDecoder, DECODE_XML
 
 
-# TODO: Remove this?
-def _is_element_empty(element: _Element) -> bool:
+def _is_element_empty(element: _Element) -> bool:  # TODO: Remove this?
     return (
         element.find('*') is None and
         element.text is None and
@@ -23,7 +21,7 @@ def _is_element_empty(element: _Element) -> bool:
 def _to_value(
         text: str | None,
         type_name: str,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     if text is None:
         return None
@@ -47,7 +45,7 @@ def _to_value(
 
 def _to_simple(
         element: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     if element is None:
         raise ValueError('Found "None" while deserializing a value')
@@ -69,7 +67,7 @@ def _to_simple(
 
 def _to_list(
         parent: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> list[Any]:
     if parent is None:
         raise ValueError('Received "None" while deserializing a list')
@@ -85,7 +83,7 @@ def _to_list(
 
 def _to_dict(
         element: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> dict[str, Any] | None:
     if element is None:
         raise ValueError('Received "None" while deserializing a TypeDict')
@@ -104,7 +102,7 @@ def _to_dict(
 
 def _to_obj(
         element: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
 
     if element is None:
@@ -117,7 +115,11 @@ def _to_obj(
         return _to_simple(element, config)
 
 
-def deserialize_untyped(text: str | bytes | bytearray, config: SerializerConfig) -> Any:
+def deserialize_untyped(
+        text: str | bytes | bytearray,
+        config: SerializerConfig,
+        decode: XMLDecoder | None = None
+) -> Any:
     """Deserialize XML without type information
 
     Args:
@@ -126,5 +128,7 @@ def deserialize_untyped(text: str | bytes | bytearray, config: SerializerConfig)
     Returns:
         Any: The deserialized object.
     """
-    element = etree.fromstring(text)  # pylint: disable=c-extension-no-member
+    if decode is None:
+        decode = DECODE_XML
+    element = decode(text)
     return _to_obj(element, config)

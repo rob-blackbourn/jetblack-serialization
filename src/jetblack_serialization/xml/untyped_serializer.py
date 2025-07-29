@@ -3,12 +3,11 @@
 from decimal import Decimal
 from typing import Any
 
-from lxml import etree
 from lxml.etree import Element, _Element, SubElement  # pylint: disable=no-name-in-module
 
-from ..config import BaseSerializerConfig
+from ..config import SerializerConfig
 
-from .config import SerializerConfig
+from .encoding import XMLEncoder, ENCODE_XML
 
 
 def _make_object(parent: _Element | None, type_name: str) -> _Element:
@@ -20,7 +19,7 @@ def _make_object(parent: _Element | None, type_name: str) -> _Element:
 
 def _from_value(
         value: Any,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> str:
     if isinstance(value, str):
         return value
@@ -43,7 +42,7 @@ def _from_value(
 def _from_list(
         obj: list,
         parent: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> _Element:
     element = _make_object(parent, 'list')
 
@@ -60,7 +59,7 @@ def _from_list(
 def _from_dict(
         obj: dict,
         parent: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> _Element:
     element = _make_object(parent, 'dict')
 
@@ -83,7 +82,7 @@ def _from_dict(
 def _from_simple(
         obj: Any,
         parent: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> _Element:
     text = _from_value(obj, config)
     child = _make_object(parent, obj.__class__.__name__)
@@ -94,7 +93,7 @@ def _from_simple(
 def _from_obj(
         obj: Any,
         element: _Element | None,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> _Element:
     if isinstance(obj, dict):
         return _from_dict(obj, element, config)
@@ -106,10 +105,11 @@ def _from_obj(
 
 def serialize_untyped(
         obj: Any,
-        config: SerializerConfig
+        config: SerializerConfig,
+        encode: XMLEncoder | None = None
 ) -> str:
+    if encode is None:
+        encode = ENCODE_XML
+
     element = _from_obj(obj, None, config)
-    buf: bytes = etree.tostring(
-        element,
-        pretty_print=config.pretty_print)  # pylint: disable=c-extension-no-member
-    return buf.decode()
+    return encode(element)

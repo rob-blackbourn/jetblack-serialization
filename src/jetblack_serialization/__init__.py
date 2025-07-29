@@ -1,6 +1,7 @@
 """Serialization"""
 
 from .config import (
+    SerializerConfig,
     VALUE_DESERIALIZERS,
     VALUE_SERIALIZERS,
     ValueDeserializer,
@@ -9,6 +10,7 @@ from .config import (
 from .custom_annotations import DefaultValue
 
 __all__ = [
+    'SerializerConfig',
     'VALUE_DESERIALIZERS',
     'VALUE_SERIALIZERS',
     'ValueDeserializer',

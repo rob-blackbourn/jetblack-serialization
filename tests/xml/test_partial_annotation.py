@@ -6,16 +6,22 @@ from typing import List, Optional, TypedDict, Union
 from stringcase import pascalcase, snakecase
 from typing_extensions import Annotated
 
+from jetblack_serialization import (
+    SerializerConfig,
+    VALUE_SERIALIZERS,
+    VALUE_DESERIALIZERS
+)
 from jetblack_serialization.xml import (
     XMLEntity,
     XMLAttribute,
-    SerializerConfig,
     serialize
 )
 
 CONFIG = SerializerConfig(
     key_serializer=pascalcase,
-    key_deserializer=snakecase
+    key_deserializer=snakecase,
+    value_serializers=VALUE_SERIALIZERS,
+    value_deserializers=VALUE_DESERIALIZERS
 )
 
 

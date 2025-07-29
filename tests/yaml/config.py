@@ -12,8 +12,8 @@ from jetblack_serialization import (
     ValueDeserializer,
     VALUE_SERIALIZERS,
     VALUE_DESERIALIZERS,
+    SerializerConfig
 )
-from jetblack_serialization.yaml import SerializerConfig
 
 
 class Genre(Enum):

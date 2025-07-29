@@ -3,10 +3,9 @@
 from decimal import Decimal
 from enum import Enum
 from inspect import Parameter
-import json
 from typing import Any, Type, Union, cast, get_args, is_typeddict
 
-from ..config import BaseSerializerConfig
+from ..config import SerializerConfig
 from ..types import Annotation
 from ..typing_ex import (
     is_annotated,
@@ -24,13 +23,13 @@ from .annotations import (
     is_json_annotation,
     get_json_annotation
 )
-from .config import SerializerConfig
+from .encoding import JSONEncoder, ENCODE_JSON
 
 
 def _from_value(
         value: Any,
         type_annotation: Type,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     if type_annotation is str:
         return value
@@ -56,7 +55,7 @@ def _from_optional(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     if obj is None:
         return None
@@ -84,7 +83,7 @@ def _from_union(
         obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     for element_type in get_args(type_annotation):
         try:
@@ -101,7 +100,7 @@ def _from_union(
 def _from_list(
         lst: list,
         type_annotation: Annotation,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     item_annotation, *_rest = get_args(type_annotation)
     if is_annotated(item_annotation):
@@ -126,7 +125,7 @@ def _from_list(
 def _from_typed_dict(
         dct: dict,
         type_annotation: Annotation,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> dict:
     json_obj = {}
 
@@ -167,7 +166,7 @@ def from_json_value(
         value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
-        config: BaseSerializerConfig
+        config: SerializerConfig
 ) -> Any:
     if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_value(
@@ -208,7 +207,8 @@ def from_json_value(
 def serialize_typed(
         obj: Any,
         annotation: Annotation,
-        config: SerializerConfig
+        config: SerializerConfig,
+        encode: JSONEncoder | None = None
 ) -> str:
     """Serialize an object to JSON
 
@@ -222,6 +222,9 @@ def serialize_typed(
     Returns:
         str: The JSON string
     """
+    if encode is None:
+        encode = ENCODE_JSON
+
     if is_json_annotation(annotation):
         type_annotation, json_annotation = get_json_annotation(annotation)
     else:
@@ -233,5 +236,4 @@ def serialize_typed(
         json_annotation,
         config
     )
-    from_object = config.from_object or json.dumps
-    return from_object(json_obj)
+    return encode(json_obj)

@@ -46,19 +46,16 @@ VALUE_DESERIALIZERS: ValueDeserializers = (
     (Decimal, Decimal)
 )
 
-type ToObject = Callable[[str | bytes | bytearray], Any]
-type FromObject = Callable[[Any], str]
 
-
-class BaseSerializerConfig:
+class SerializerConfig:
     """Configuration for serialization"""
 
     def __init__(
         self,
-        key_serializer: Callable[[str], str] | None,
-        key_deserializer: Callable[[str], str] | None,
-        value_serializers: ValueSerializers | None,
-        value_deserializers: ValueDeserializers | None
+        key_serializer: Callable[[str], str] | None = None,
+        key_deserializer: Callable[[str], str] | None = None,
+        value_serializers: ValueSerializers | None = None,
+        value_deserializers: ValueDeserializers | None = None,
     ) -> None:
         self.serialize_key = key_serializer or _same_name
         self.deserialize_key = key_deserializer or _same_name
