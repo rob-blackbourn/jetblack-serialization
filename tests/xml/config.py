@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from enum import Enum, auto
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
 from typing_extensions import Annotated
@@ -43,11 +43,11 @@ class Book(TypedDict, total=False):
         XMLEntity("PublicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, XMLEntity("Keyword")]],
+        list[Annotated[str, XMLEntity("Keyword")]],
         XMLEntity("Keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, XMLEntity("Phrase")]],
+        list[Annotated[str, XMLEntity("Phrase")]],
         XMLEntity("Phrase")
     ]
     age: Annotated[

@@ -32,7 +32,7 @@ class MockDict(TypedDict):
 
     Args:
         arg_num1 (str): The first arg
-        arg_num2 (List[int]): The second arg
+        arg_num2 (list[int]): The second arg
         arg_num3 (datetime): The third arg
         arg_num4 (Decimal | None, optional): The fourth arg. Defaults to Decimal('1').
         arg_num5 (float | None, optional): The fifth arg. Defaults to None.
@@ -49,7 +49,7 @@ def func(
         typed_dict_arg: MockDict,
         optional_dict_arg: Optional[Dict[str, Any]],
         optional_typed_dict_arg: Optional[MockDict],
-        list_arg: List[str]
+        list_arg: list[str]
 ) -> None:
     pass
 

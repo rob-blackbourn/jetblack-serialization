@@ -1,7 +1,7 @@
 """Tests for YAML serialization"""
 
 from datetime import datetime, timezone
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 from typing_extensions import Annotated
 
@@ -66,11 +66,11 @@ class AnnotatedBook(TypedDict):
         YAMLProperty("publicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, YAMLValue()]],
+        list[Annotated[str, YAMLValue()]],
         YAMLProperty("keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, YAMLValue()]],
+        list[Annotated[str, YAMLValue()]],
         YAMLProperty("phrases")
     ]
     age: Optional[Union[datetime, int]]
@@ -95,8 +95,8 @@ class Book(TypedDict):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
     genre: Genre

@@ -1,7 +1,7 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 from typing_extensions import Annotated
 
@@ -32,11 +32,11 @@ class AnnotatedBook(TypedDict, total=False):
         JSONProperty("publicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("phrases")
     ]
     age: Annotated[
@@ -83,8 +83,8 @@ class UnannotatedBook(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
     genre: Genre
