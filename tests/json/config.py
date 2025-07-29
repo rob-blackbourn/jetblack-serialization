@@ -1,7 +1,7 @@
 """Utilities"""
 
 from enum import Enum, auto
-from typing import List, Self, Tuple, Type
+from typing import Self
 
 from stringcase import snakecase, camelcase
 
@@ -21,6 +21,7 @@ class Genre(Enum):
 
 
 class Image:
+
     def __init__(self, value: str) -> None:
         self.value = value
 
@@ -35,12 +36,12 @@ class Image:
         return self.value
 
 
-value_serializers: List[Tuple[Type, ValueSerializer]] = [
+value_serializers: list[tuple[type, ValueSerializer]] = [
     (Image, Image.from_image)
 ]
 value_serializers += VALUE_SERIALIZERS
 
-value_deserializers: List[Tuple[Type, ValueDeserializer]] = [
+value_deserializers: list[tuple[type, ValueDeserializer]] = [
     (Image, Image.to_image)
 ]
 value_deserializers += VALUE_DESERIALIZERS
