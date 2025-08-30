@@ -4,15 +4,15 @@ Given a typed dictionary:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 
 class Book(TypedDict, total=False):
     book_id: int
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
@@ -34,20 +34,18 @@ obj: Book = {
 }
 ```
 
-
 ## Serializing
 
 This could be serialized to JSON as:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import serialize
+from jetblack_serialization.json import serialize, SerializerConfig
 
 text = serialize(
     obj,
     Book,
-    SerializerConfig(camelcase, snakecase, pretty_print=True)
+    SerializerConfig(key_serializer=camelcase, pretty_print=True)
 )
 print(text)
 ```
@@ -76,13 +74,12 @@ We can deserialize the data as follows:
 
 ```python
 from stringcase import camelcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.json import deserialize
+from jetblack_serialization.json import deserialize, SerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, JSONValue()],
-    SerializerConfig(camelcase, snakecase)
+    SerializerConfig(key_deserializer=snakecase)
 )
 ```
 

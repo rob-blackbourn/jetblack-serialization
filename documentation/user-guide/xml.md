@@ -4,7 +4,7 @@ The XML version of the typed dictionary might look like this:
 
 ```python
 from datetime import datetime
-from typing import List, Optional, TypedDict, Union
+from typing import Optional, TypedDict, Union
 from typing_extensions import Annotated
 from jetblack_serialization.xml import XMLEntity, XMLAttribute
 
@@ -13,8 +13,8 @@ class Book(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: Annotated[List[Annotated[str, XMLEntity("Keyword")]], XMLEntity("Keywords")]
-    phrases: List[str]
+    keywords: Annotated[list[Annotated[str, XMLEntity("Keyword")]], XMLEntity("Keywords")]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
 ```
@@ -47,13 +47,12 @@ To serialize we need to provide the containing tag `Book`:
 
 ```python
 from stringcase import pascalcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.xml import serialize
+from jetblack_serialization.xml import serialize, SerializerConfig
 
 text = serialize(
     book,
     Annotated[Book, XMLEntity("Book")],
-    SerializerConfig(pascalcase, snakecase)
+    SerializerConfig(key_serializer=pascalcase)
 )
 print(text)
 ```
@@ -92,13 +91,12 @@ in-line behaviour.
 We can deserialize the XML as follows:
 
 ```python
-from stringcase import pascalcase, snakecase
-from jetblack_serialization import SerializerConfig
-from jetblack_serialization.xml import deserialize
+from stringcase import snakecase
+from jetblack_serialization.xml import deserialize, SerializerConfig
 
 dct = deserialize(
     text,
     Annotated[Book, XMLEntity("Book")],
-    SerializerConfig(pascalcase, snakecase)
+    SerializerConfig(key_deserializer=snakecase)
 )
 ```

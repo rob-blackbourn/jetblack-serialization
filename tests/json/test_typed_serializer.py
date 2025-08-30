@@ -1,19 +1,14 @@
 """Tests for JSON serialization"""
 
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, TypedDict, Union
 
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
+from typing_extensions import Annotated
 
-from typing_extensions import Annotated  # type: ignore
-
-from jetblack_serialization.json.typed_serializer import serialize_typed
-from jetblack_serialization.json.annotations import (
+from jetblack_serialization.json import (
     JSONValue,
-    JSONProperty
+    JSONProperty,
+    serialize_typed
 )
 
 from .config import Genre, Image, CONFIG
@@ -37,11 +32,11 @@ class AnnotatedBook(TypedDict, total=False):
         JSONProperty("publicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("phrases")
     ]
     age: Annotated[
@@ -88,8 +83,8 @@ class UnannotatedBook(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
     genre: Genre

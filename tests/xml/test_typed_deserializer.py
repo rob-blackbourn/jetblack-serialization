@@ -1,74 +1,15 @@
 """Tests for serialization"""
 
-from datetime import datetime
-from enum import Enum, auto
-from typing import List, Optional, Union
+from datetime import datetime, UTC
 
-from stringcase import pascalcase, snakecase
+from typing_extensions import Annotated
 
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
+from jetblack_serialization.xml import XMLEntity, deserialize
 
-from typing_extensions import Annotated  # type: ignore
-
-from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml.serialization import deserialize
-from jetblack_serialization.xml.annotations import (
-    XMLEntity,
-    XMLAttribute
-)
-
-CONFIG = SerializerConfig(pascalcase, snakecase)
+from .config import CONFIG, Book, Genre
 
 
-class Genre(Enum):
-    POLITICAL = auto()
-    HORROR = auto()
-    ROMANTIC = auto()
-
-
-class Book(TypedDict, total=False):
-    book_id: Annotated[
-        int,
-        XMLAttribute("bookId")
-    ]
-    title: Annotated[
-        str,
-        XMLEntity("Title")
-    ]
-    author: Annotated[
-        str,
-        XMLEntity("Author")
-    ]
-    publication_date: Annotated[
-        datetime,
-        XMLEntity("PublicationDate")
-    ]
-    keywords: Annotated[
-        List[Annotated[str, XMLEntity("Keyword")]],
-        XMLEntity("Keywords")
-    ]
-    phrases: Annotated[
-        List[Annotated[str, XMLEntity("Phrase")]],
-        XMLEntity("Phrase")
-    ]
-    age: Annotated[
-        Optional[Union[datetime, int]],
-        XMLEntity("Age")
-    ]
-    pages: Annotated[
-        Optional[int],
-        XMLAttribute("pages")
-    ]
-    genre: Annotated[
-        Genre,
-        XMLEntity("Genre")
-    ]
-
-
-def test_xml_deserialize_annotated():
+def test_xml_deserialize_annotated() -> None:
     """Test for from_xml_element"""
 
     text = """
@@ -96,7 +37,7 @@ def test_xml_deserialize_annotated():
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',
@@ -108,7 +49,7 @@ def test_xml_deserialize_annotated():
     }
 
 
-def test_xml_deserialize_annotated_with_encoding():
+def test_xml_deserialize_annotated_with_encoding() -> None:
     """Test for from_xml_element"""
 
     text = """<?xml version="1.0" encoding="UTF-8"?>
@@ -136,7 +77,7 @@ def test_xml_deserialize_annotated_with_encoding():
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',

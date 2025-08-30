@@ -1,19 +1,17 @@
 """Utilities"""
 
-from __future__ import annotations
-
 from enum import Enum, auto
-from typing import Any, Callable, Dict, Type, cast
+from typing import Self
 
 from stringcase import snakecase, camelcase
 
-from jetblack_serialization.config import (
-    SerializerConfig,
+from jetblack_serialization import (
     ValueSerializer,
     ValueDeserializer,
     VALUE_SERIALIZERS,
     VALUE_DESERIALIZERS,
 )
+from jetblack_serialization import SerializerConfig
 
 
 class Genre(Enum):
@@ -23,6 +21,7 @@ class Genre(Enum):
 
 
 class Image:
+
     def __init__(self, value: str) -> None:
         self.value = value
 
@@ -30,27 +29,27 @@ class Image:
         return self.value == other.value
 
     @classmethod
-    def to_image(cls, value: str) -> Image:
-        return Image(value)
+    def to_image(cls, value: str) -> Self:
+        return cls(value)
 
     def from_image(self) -> str:
         return self.value
 
 
-value_serializers: Dict[Type, ValueSerializer] = {
-    Image: Image.from_image
-}
-value_serializers.update(VALUE_SERIALIZERS)
+value_serializers: list[tuple[type, ValueSerializer]] = [
+    (Image, Image.from_image)
+]
+value_serializers += VALUE_SERIALIZERS
 
-value_deserializers: Dict[Type, ValueDeserializer] = {
-    Image: Image.to_image
-}
-value_deserializers.update(VALUE_DESERIALIZERS)
+value_deserializers: list[tuple[type, ValueDeserializer]] = [
+    (Image, Image.to_image)
+]
+value_deserializers += VALUE_DESERIALIZERS
 
 
 CONFIG = SerializerConfig(
-    camelcase,
-    snakecase,
+    key_serializer=camelcase,
+    key_deserializer=snakecase,
     value_serializers=value_serializers,
     value_deserializers=value_deserializers
 )

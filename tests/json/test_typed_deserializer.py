@@ -1,20 +1,16 @@
 """Tests for JSON serialization"""
 
-from datetime import datetime
-from typing import List, Optional, Union
+from datetime import datetime, UTC
+from typing import Optional, TypedDict, Union
 
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-from typing_extensions import Annotated  # type: ignore
+from typing_extensions import Annotated
 
-from jetblack_serialization.json.typed_deserializer import deserialize_typed
-from jetblack_serialization.json.annotations import (
+from jetblack_serialization import DefaultValue
+from jetblack_serialization.json import (
     JSONValue,
-    JSONProperty
+    JSONProperty,
+    deserialize_typed
 )
-from jetblack_serialization.custom_annotations import DefaultValue
 
 from .config import Genre, Image, CONFIG
 
@@ -43,7 +39,7 @@ DICT = {
     'author': 'Chairman Mao',
     'book_id': 42,
     'title': 'Little Red Book',
-    'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+    'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
     'keywords': ['Revolution', 'Communism'],
     'phrases': [
         'Revolutionary wars are inevitable in class society',
@@ -74,11 +70,11 @@ class AnnotatedBook(TypedDict):
         JSONProperty("publicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, JSONValue()]],
+        list[Annotated[str, JSONValue()]],
         JSONProperty("phrases")
     ]
     age: Optional[Union[datetime, int]]
@@ -87,7 +83,7 @@ class AnnotatedBook(TypedDict):
     cover: Annotated[Image, JSONProperty('cover')]
 
 
-def test_deserialize_json_annotated():
+def test_deserialize_json_annotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(
@@ -103,15 +99,15 @@ class Book(TypedDict):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Annotated[Optional[int], DefaultValue(None)]
     genre: Genre
     cover: Image
 
 
-def test_deserialize_json_unannotated():
+def test_deserialize_json_unannotated() -> None:
     """Test for deserialize"""
 
     dct = deserialize_typed(

@@ -1,25 +1,30 @@
 """Round trip tests for XML serialization"""
 
-from datetime import datetime
-from typing import List, Optional, Union
+from datetime import datetime, UTC
+from enum import Enum, auto
+from typing import Optional, TypedDict, Union
 
 from stringcase import pascalcase, snakecase
+from typing_extensions import Annotated
 
-try:
-    from typing import TypedDict  # type:ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import TypedDict
-
-from typing_extensions import Annotated  # type: ignore
-
-from jetblack_serialization.config import SerializerConfig
-from jetblack_serialization.xml import serialize, deserialize
-from jetblack_serialization.xml.annotations import (
+from jetblack_serialization import SerializerConfig
+from jetblack_serialization.xml import (
     XMLEntity,
-    XMLAttribute
+    XMLAttribute,
+    serialize,
+    deserialize
 )
 
-CONFIG = SerializerConfig(pascalcase, snakecase)
+CONFIG = SerializerConfig(
+    key_serializer=pascalcase,
+    key_deserializer=snakecase,
+)
+
+
+class Genre(Enum):
+    POLITICAL = auto()
+    HORROR = auto()
+    ROMANTIC = auto()
 
 
 class AnnotatedBook(TypedDict, total=False):
@@ -40,11 +45,11 @@ class AnnotatedBook(TypedDict, total=False):
         XMLEntity("PublicationDate")
     ]
     keywords: Annotated[
-        List[Annotated[str, XMLEntity("Keyword")]],
+        list[Annotated[str, XMLEntity("Keyword")]],
         XMLEntity("Keywords")
     ]
     phrases: Annotated[
-        List[Annotated[str, XMLEntity("Phrase")]],
+        list[Annotated[str, XMLEntity("Phrase")]],
         XMLEntity("Phrase")
     ]
     age: Annotated[
@@ -55,27 +60,31 @@ class AnnotatedBook(TypedDict, total=False):
         Optional[int],
         XMLAttribute("pages")
     ]
+    genre: Annotated[
+        Genre,
+        XMLEntity("Genre")
+    ]
 
 
-def test_xml_typed_annotated_roundtrip():
+def test_xml_typed_annotated_roundtrip() -> None:
     dct: AnnotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
     annotation = Annotated[AnnotatedBook, XMLEntity('Book')]
-    config = SerializerConfig(pascalcase, snakecase)
 
-    text = serialize(dct, annotation, config)
-    roundtrip = deserialize(text, annotation, config)
+    text = serialize(dct, annotation, CONFIG)
+    roundtrip = deserialize(text, annotation, CONFIG)
     assert dct == roundtrip
 
 
@@ -84,37 +93,36 @@ class UnannotatedBook(TypedDict, total=False):
     title: str
     author: str
     publication_date: datetime
-    keywords: List[str]
-    phrases: List[str]
+    keywords: list[str]
+    phrases: list[str]
     age: Optional[Union[datetime, int]]
     pages: Optional[int]
+    genre: Genre
 
 
-def test_xml_unannotated_roundtrip():
+def test_xml_unannotated_roundtrip() -> None:
     dct: UnannotatedBook = {
         'author': 'Chairman Mao',
         'book_id': 42,
         'title': 'Little Red Book',
-        'publication_date': datetime(1973, 1, 1, 21, 52, 13),
+        'publication_date': datetime(1973, 1, 1, 21, 52, 13, tzinfo=UTC),
         'keywords': ['Revolution', 'Communism'],
         'phrases': [
             'Revolutionary wars are inevitable in class society',
             'War is the continuation of politics'
         ],
         'age': 24,
-        'pages': None
+        'pages': None,
+        'genre': Genre.POLITICAL
     }
     annotation = Annotated[UnannotatedBook, XMLEntity('Book')]
-    config = SerializerConfig(pascalcase, snakecase)
 
-    text = serialize(dct, annotation, config)
-    roundtrip = deserialize(text, annotation, config)
+    text = serialize(dct, annotation, CONFIG)
+    roundtrip = deserialize(text, annotation, CONFIG)
     assert dct == roundtrip
 
 
-def test_xml_untyped_roundtrip():
-    config = SerializerConfig(pascalcase, snakecase)
-
+def test_xml_untyped_roundtrip() -> None:
     obj = {
         'int': 42,
         'str': 'a string',
@@ -124,6 +132,6 @@ def test_xml_untyped_roundtrip():
             'two': 2
         }
     }
-    text = serialize(obj, None, config)
-    roundtrip = deserialize(text, None, config)
-    assert obj == roundtrip    
+    text = serialize(obj, None, CONFIG)
+    roundtrip = deserialize(text, None, CONFIG)
+    assert obj == roundtrip

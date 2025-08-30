@@ -2,10 +2,7 @@
 
 import inspect
 
-try:
-    from typing import Annotated  # type: ignore
-except:  # pylint: disable=bare-except
-    from typing_extensions import Annotated  # type: ignore
+from typing import Annotated
 
 from jetblack_serialization.custom_annotations import (
     SerializationAnnotation,
@@ -18,11 +15,11 @@ from jetblack_serialization.custom_annotations import (
 
 
 class FooAnnotation(SerializationAnnotation):
-    """A serialization annotion for Foo"""
+    """A serialization annotation for Foo"""
 
 
 class BarAnnotation(SerializationAnnotation):
-    """A serialization annotion for Bar"""
+    """A serialization annotation for Bar"""
 
 
 def test_serialization_annotations() -> None:
