@@ -2,7 +2,7 @@
 
 from abc import ABCMeta
 from inspect import Signature
-from typing import Any
+from typing import Any, Callable
 
 from .types import Annotation
 from .typing_ex import is_annotated, get_annotated_type, get_metadata
@@ -16,6 +16,12 @@ class DefaultValue:
 
     def __init__(self, value: Any) -> None:
         self.value = value
+
+
+class DefaultFactory[T]:
+
+    def __init__(self, factory: Callable[[], T]) -> None:
+        self.factory = factory
 
 
 def is_any_annotation_of_type(annotation: Annotation, tp: type[Any]) -> bool:
@@ -72,17 +78,36 @@ def is_any_default_annotation(annotation: Annotation) -> bool:
     return is_any_annotation_of_type(annotation, DefaultValue)
 
 
-def get_default_annotation(
-        annotation: Annotation
-) -> tuple[Annotation, DefaultValue]:
-    typ, annotations = get_all_annotations_of_type(
-        annotation, DefaultValue)
+def is_any_default_factory_annotation(annotation: Annotation) -> bool:
+    return is_any_annotation_of_type(annotation, DefaultFactory)
+
+
+def get_annotation_of_type[T](
+        annotation: Annotation,
+        annotation_type: type[T]
+) -> tuple[Annotation, T]:
+    typ, annotations = get_all_annotations_of_type(annotation, annotation_type)
     assert len(annotations) == 1, "There can be only one"
     return typ, annotations[0]
 
 
-def get_typed_dict_key_default(td):
+def get_default_annotation(
+        annotation: Annotation
+) -> tuple[Annotation, DefaultValue]:
+    return get_annotation_of_type(annotation, DefaultValue)
+
+
+def get_default_factory_annotation(
+        annotation: Annotation
+) -> tuple[Annotation, DefaultFactory]:
+    return get_annotation_of_type(annotation, DefaultFactory)
+
+
+def get_typed_dict_key_default(td) -> Any:
     if is_any_default_annotation(td):
-        _, annotation = get_default_annotation(td)
-        return annotation.value
+        _, default = get_default_annotation(td)
+        return default.value
+    elif is_any_default_factory_annotation(td):
+        _, annotation = get_default_factory_annotation(td)
+        return annotation.factory()
     return Signature.empty

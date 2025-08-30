@@ -7,7 +7,7 @@ from .config import (
     ValueDeserializer,
     ValueSerializer
 )
-from .custom_annotations import DefaultValue
+from .custom_annotations import DefaultValue, DefaultFactory
 from .types import Annotation
 
 __all__ = [
@@ -17,5 +17,6 @@ __all__ = [
     'ValueDeserializer',
     'ValueSerializer',
     'DefaultValue',
+    'DefaultFactory',
     'Annotation',
 ]

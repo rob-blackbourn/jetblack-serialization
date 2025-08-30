@@ -133,12 +133,12 @@ def _from_typed_dict(
     assert typed_dict_keys is not None
     for key, info in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
-        if is_annotated(info.annotation):
+        if is_json_annotation(info.annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
                 info.annotation
             )
             if not issubclass(type(item_json_annotation), JSONProperty):
-                raise TypeError("<ust be a property")
+                raise TypeError("must be a property")
             json_property = cast(JSONProperty, item_json_annotation)
         else:
             property_name = config.serialize_key(
