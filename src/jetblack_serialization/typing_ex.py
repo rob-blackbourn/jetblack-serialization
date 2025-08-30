@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from dataclasses import dataclass
 from inspect import isclass
 from types import (
     NoneType,
@@ -11,6 +12,9 @@ from typing import (
     Dict,
     List,
     Literal,
+    Required,
+    NotRequired,
+    Self,
     Tuple,
     TypeVar,
     Union,
@@ -110,9 +114,35 @@ def is_classvar(annotation: type[Any]) -> bool:
     return annotation is ClassVar or origin is ClassVar
 
 
-def typeddict_keys(annotation: type) -> dict[str, type]:
+@dataclass
+class TypedDictFieldInfo:
+    annotation: type
+    is_required: bool
+
+    @classmethod
+    def create(cls, annotation: Any, total: bool) -> Self:
+        if is_generic(annotation) and get_origin(annotation) is NotRequired:
+            annotation = get_args(annotation)[0]
+            is_required = False
+        elif is_generic(annotation) and get_origin(annotation) is Required:
+            annotation = get_args(annotation)[0]
+            is_required = True
+        else:
+            is_required = total
+
+        return cls(
+            annotation=annotation,
+            is_required=is_required
+        )
+
+
+def typeddict_keys(annotation: type) -> dict[str, TypedDictFieldInfo]:
     assert is_typeddict(annotation)
-    return annotation.__annotations__.copy()
+    # return annotation.__annotations__.copy()
+    return {
+        key: TypedDictFieldInfo.create(field_type, annotation.__total__)
+        for key, field_type in annotation.__annotations__.items()
+    }
 
 
 def get_metadata(annotation: type) -> tuple[Any, ...] | None:

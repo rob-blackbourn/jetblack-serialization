@@ -157,15 +157,15 @@ def _from_typed_dict(
 
     typed_dict_keys = typeddict_keys(type_annotation)
     assert typed_dict_keys is not None
-    for key, key_annotation in typed_dict_keys.items():
+    for key, info in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
-        if is_annotated(key_annotation):
+        if is_annotated(info.annotation):
             item_type_annotation, item_xml_annotation = get_xml_annotation(
-                key_annotation
+                info.annotation
             )
         else:
             tag = config.serialize_key(key) if isinstance(key, str) else key
-            item_type_annotation = key_annotation
+            item_type_annotation = info.annotation
             item_xml_annotation = XMLEntity(tag)
 
         value = obj.get(key, default)

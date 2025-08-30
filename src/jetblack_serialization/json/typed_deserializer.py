@@ -142,11 +142,11 @@ def _to_dict(
 
     typed_dict_keys = typeddict_keys(dict_annotation)
     assert typed_dict_keys is not None
-    for key, key_annotation in typed_dict_keys.items():
-        default = get_typed_dict_key_default(key_annotation)
-        if is_json_annotation(key_annotation):
+    for key, info in typed_dict_keys.items():
+        default = get_typed_dict_key_default(info.annotation)
+        if is_json_annotation(info.annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
-                key_annotation
+                info.annotation
             )
             if not issubclass(type(item_json_annotation), JSONProperty):
                 raise TypeError("Must be a property")
@@ -156,7 +156,7 @@ def _to_dict(
                 key
             ) if isinstance(key, str) else key
             json_property = JSONProperty(tag)
-            item_type_annotation = get_unannotated(key_annotation)
+            item_type_annotation = get_unannotated(info.annotation)
 
         if json_property.tag in obj:
             json_obj[key] = _to_any(
@@ -174,7 +174,7 @@ def _to_dict(
             )
         elif is_optional(item_type_annotation):
             json_obj[key] = None
-        else:
+        elif info.is_required:
             raise KeyError(
                 f'Required key "{json_property.tag}" is missing'
             )

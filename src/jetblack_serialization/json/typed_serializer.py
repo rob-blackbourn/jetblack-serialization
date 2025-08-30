@@ -131,11 +131,11 @@ def _from_typed_dict(
 
     typed_dict_keys = typeddict_keys(type_annotation)
     assert typed_dict_keys is not None
-    for key, key_annotation in typed_dict_keys.items():
+    for key, info in typed_dict_keys.items():
         default = getattr(type_annotation, key, Parameter.empty)
-        if is_annotated(key_annotation):
+        if is_annotated(info.annotation):
             item_type_annotation, item_json_annotation = get_json_annotation(
-                key_annotation
+                info.annotation
             )
             if not issubclass(type(item_json_annotation), JSONProperty):
                 raise TypeError("<ust be a property")
@@ -145,7 +145,7 @@ def _from_typed_dict(
                 key
             ) if isinstance(key, str) else key
             json_property = JSONProperty(property_name)
-            item_type_annotation = key_annotation
+            item_type_annotation = info.annotation
 
         value = dct.get(key, default)
         if value is not Parameter.empty:
@@ -155,9 +155,8 @@ def _from_typed_dict(
                 json_property,
                 config
             )
-        else:
-            # TODO: Should we throw here?
-            pass
+        elif info.is_required:
+            raise KeyError(f'Missing required property {key}')
 
     return json_obj
 
