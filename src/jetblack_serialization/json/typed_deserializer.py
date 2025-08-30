@@ -17,6 +17,7 @@ from ..custom_annotations import get_typed_dict_key_default
 from ..typing_ex import (
     get_unannotated,
     is_annotated,
+    is_dict,
     is_list,
     is_optional,
     is_union,
@@ -140,6 +141,47 @@ def _to_dict(
 ) -> dict[str, Any]:
     json_obj: dict[str, Any] = {}
 
+    key_type_annotation, item_type_annotation = get_args(dict_annotation)
+
+    if is_annotated(key_type_annotation):
+        key_type_annotation, key_json_annotation = get_json_annotation(
+            key_type_annotation
+        )
+    else:
+        key_json_annotation = JSONValue()
+
+    if is_annotated(item_type_annotation):
+        item_type_annotation, item_json_annotation = get_json_annotation(
+            item_type_annotation
+        )
+    else:
+        item_json_annotation = JSONValue()
+
+    for json_key, json_item in obj.items():
+        key = _to_any(
+            json_key,
+            key_type_annotation,
+            key_json_annotation,
+            config
+        )
+
+        json_obj[key] = _to_any(
+            json_item,
+            item_type_annotation,
+            item_json_annotation,
+            config
+        )
+
+    return json_obj
+
+
+def _to_typed_dict(
+        obj: dict[str, Any],
+        dict_annotation: Annotation,
+        config: SerializerConfig
+) -> dict[str, Any]:
+    json_obj: dict[str, Any] = {}
+
     typed_dict_keys = typeddict_keys(dict_annotation)
     assert typed_dict_keys is not None
     for key, info in typed_dict_keys.items():
@@ -208,7 +250,7 @@ def _to_any(
             config
         )
     elif is_typeddict(type_annotation):
-        return _to_dict(
+        return _to_typed_dict(
             json_value,
             type_annotation,
             config
@@ -218,6 +260,12 @@ def _to_any(
             json_value,
             type_annotation,
             json_annotation,
+            config
+        )
+    elif is_dict(type_annotation):
+        return _to_dict(
+            json_value,
+            type_annotation,
             config
         )
     else:

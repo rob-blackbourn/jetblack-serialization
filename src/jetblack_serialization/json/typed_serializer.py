@@ -9,10 +9,11 @@ from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..types import Annotation
 from ..typing_ex import (
     is_annotated,
-    typeddict_keys,
-    is_optional,
+    is_dict,
     is_list,
-    is_union
+    is_optional,
+    is_union,
+    typeddict_keys,
 )
 from ..utils import is_value_type
 
@@ -161,6 +162,33 @@ def _from_typed_dict(
     return json_obj
 
 
+def _from_dict(
+        dct: dict,
+        type_annotation: Annotation,
+        config: SerializerConfig
+) -> dict:
+    json_obj = {}
+
+    item_annotation, *_rest = get_args(type_annotation)
+    if is_annotated(item_annotation):
+        item_type_annotation, item_json_annotation = get_json_annotation(
+            item_annotation
+        )
+    else:
+        item_type_annotation = item_annotation
+        item_json_annotation = JSONValue()
+
+    for key, item in dct.items():
+        json_obj[key] = from_json_value(
+            item,
+            item_type_annotation,
+            item_json_annotation,
+            config
+        )
+
+    return json_obj
+
+
 def from_json_value(
         value: Any,
         type_annotation: Annotation,
@@ -197,6 +225,12 @@ def from_json_value(
             value,
             type_annotation,
             json_annotation,
+            config
+        )
+    elif is_dict(type_annotation):
+        return _from_dict(
+            value,
+            type_annotation,
             config
         )
     else:
