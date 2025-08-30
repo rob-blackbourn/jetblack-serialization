@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jetblack-serialization"
-version = "4.0.0"
+version = "4.0.1"
 description = "Serialization for JSON and XML using typing"
 authors = [
   { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
@@ -19,7 +19,7 @@ readme = "README.md"
 keywords = ['serialization', 'JSON', 'XML', 'YAML']
 license = {text = "Apache-2.0"}
 dependencies = [
-    "jetblack-iso8601==2.0.0a1",
+    "jetblack-iso8601==2.0.0",
 ]
 
 [project.optional-dependencies]
