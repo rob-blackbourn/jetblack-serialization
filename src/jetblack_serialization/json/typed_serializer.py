@@ -11,6 +11,7 @@ from ..typing_ex import (
     is_annotated,
     is_dict,
     is_list,
+    is_literal,
     is_optional,
     is_union,
     typeddict_keys,
@@ -189,6 +190,30 @@ def _from_dict(
     return json_obj
 
 
+def _from_literal(
+        value: Any,
+        type_annotation: Annotation,
+        json_annotation: JSONAnnotation,
+        config: SerializerConfig
+) -> Any:
+    literal_values = get_args(type_annotation)
+    literal_types = {type(v) for v in literal_values}
+    for literal_type in literal_types:
+        try:
+            result = from_json_value(
+                value,
+                literal_type,
+                json_annotation,
+                config
+            )
+            if result in literal_values:
+                return result
+        except:  # pylint: disable=bare-except
+            pass
+
+    raise ValueError(f'Value {value} not in Literal{literal_values}')
+
+
 def from_json_value(
         value: Any,
         type_annotation: Annotation,
@@ -231,6 +256,13 @@ def from_json_value(
         return _from_dict(
             value,
             type_annotation,
+            config
+        )
+    elif is_literal(type_annotation):
+        return _from_literal(
+            value,
+            type_annotation,
+            json_annotation,
             config
         )
     else:
