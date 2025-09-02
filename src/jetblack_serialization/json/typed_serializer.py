@@ -10,6 +10,7 @@ from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..types import Annotation
 from ..typing_ex import (
     is_annotated,
+    is_any,
     is_dict,
     is_list,
     is_literal,
@@ -27,6 +28,7 @@ from .annotations import (
     get_json_annotation
 )
 from .encoding import JSONEncoder, ENCODE_JSON
+from .untyped_serializer import from_untyped_object
 
 
 def _from_value(
@@ -298,6 +300,11 @@ def from_json_value(
             python_value,
             type_annotation,
             json_annotation,
+            config
+        )
+    elif is_any(type_annotation):
+        return from_untyped_object(
+            python_value,
             config
         )
     else:

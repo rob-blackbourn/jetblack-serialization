@@ -24,6 +24,10 @@ from typing import (
 )
 
 
+def is_any(annotation: type[Any]) -> bool:
+    return annotation is Any
+
+
 def is_union(annotation: type[Any]) -> bool:
     return annotation is Union or get_origin(annotation) in (Union, UnionType)
 
@@ -138,7 +142,6 @@ class TypedDictFieldInfo:
 
 def typeddict_keys(annotation: type) -> dict[str, TypedDictFieldInfo]:
     assert is_typeddict(annotation)
-    # return annotation.__annotations__.copy()
     return {
         key: TypedDictFieldInfo.create(field_type, annotation.__total__)
         for key, field_type in annotation.__annotations__.items()

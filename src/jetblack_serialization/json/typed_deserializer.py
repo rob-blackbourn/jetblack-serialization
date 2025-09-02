@@ -17,6 +17,7 @@ from ..custom_annotations import get_typed_dict_key_default
 from ..typing_ex import (
     get_unannotated,
     is_annotated,
+    is_any,
     is_dict,
     is_list,
     is_literal,
@@ -35,6 +36,7 @@ from .annotations import (
     get_json_annotation
 )
 from .encoding import JSONDecoder, DECODE_JSON
+from .untyped_deserializer import from_untyped_object
 
 
 def _to_value(
@@ -340,6 +342,8 @@ def _to_any(
             json_annotation,
             config
         )
+    elif is_any(type_annotation):
+        return from_untyped_object(json_value, config)
     else:
         raise TypeError
 
