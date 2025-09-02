@@ -26,4 +26,4 @@ def deserialize_typed(
         Any: The deserialized object.
     """
     json_value = (decode or DECODE_YAML)(text)
-    return from_json_value(config or DEFAULT_CONFIG, json_value, annotation)
+    return from_json_value(json_value, annotation, config or DEFAULT_CONFIG)

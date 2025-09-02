@@ -3,6 +3,7 @@
 from decimal import Decimal
 from enum import Enum
 from inspect import Parameter
+from types import NoneType
 from typing import Any, Type, Union, cast, get_args, is_typeddict
 
 from ..config import SerializerConfig, DEFAULT_CONFIG
@@ -29,60 +30,58 @@ from .encoding import JSONEncoder, ENCODE_JSON
 
 
 def _from_value(
-        value: Any,
+        python_value: Any,
         type_annotation: Type,
         config: SerializerConfig
 ) -> Any:
     if type_annotation is str:
-        return value
+        return python_value
     elif type_annotation is int:
-        return value
+        return python_value
     elif type_annotation is bool:
-        return value
+        return python_value
     elif type_annotation is float:
-        return value
+        return python_value
     elif type_annotation is Decimal:
-        return float(value)
-    elif isinstance(value, Enum):
-        return value.name
+        return float(python_value)
+    elif isinstance(python_value, Enum):
+        return python_value.name
     else:
         serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
-            return serializer(value)
+            return serializer(python_value)
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
 
 def _from_optional(
-        obj: Any,
+        python_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    if obj is None:
+    if python_value is None:
         return None
 
-    # An optional is a union where the last element is the None type.
-    union_types = get_args(type_annotation)[:-1]
+    union_types = [t for t in get_args(type_annotation) if t is not NoneType]
     if len(union_types) == 1:
-        # This was Optional[T]
         return from_json_value(
-            obj,
+            python_value,
             union_types[0],
             json_annotation,
             config
         )
-    else:
-        return _from_union(
-            obj,
-            Union[tuple(union_types)],  # type: ignore
-            json_annotation,
-            config
-        )
+
+    return _from_union(
+        python_value,
+        Union[tuple(union_types)],  # type: ignore
+        json_annotation,
+        config
+    )
 
 
 def _from_union(
-        obj: Any,
+        python_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
@@ -90,7 +89,7 @@ def _from_union(
     for element_type in get_args(type_annotation):
         try:
             return from_json_value(
-                obj,
+                python_value,
                 element_type,
                 json_annotation,
                 config
@@ -98,9 +97,11 @@ def _from_union(
         except:  # pylint: disable=bare-except
             pass
 
+    raise TypeError("Unable to serialize union")
+
 
 def _from_list(
-        lst: list,
+        python_list: list,
         list_annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
@@ -118,7 +119,7 @@ def _from_list(
             json_annotation,
             config
         )
-        for item in lst
+        for item in python_list
     ]
 
 
@@ -167,14 +168,13 @@ def _get_annotated_key(
 
 
 def _from_typed_dict(
-        dct: dict,
+        python_dict: dict,
         dict_annotation: Annotation,
         config: SerializerConfig
 ) -> dict:
     json_obj: dict[str, Any] = {}
 
     typed_dict_keys = typeddict_keys(dict_annotation)
-    assert typed_dict_keys is not None
     for python_key, info in typed_dict_keys.items():
         default = getattr(dict_annotation, python_key, Parameter.empty)
         item_annotation, json_property = _get_annotated_key(
@@ -183,7 +183,7 @@ def _from_typed_dict(
             config
         )
 
-        json_value = dct.get(python_key, default)
+        json_value = python_dict.get(python_key, default)
         if json_value is not Parameter.empty:
             json_obj[json_property.tag] = from_json_value(
                 json_value,
@@ -198,11 +198,11 @@ def _from_typed_dict(
 
 
 def _from_dict(
-        dct: dict,
+        python_dict: dict,
         type_annotation: Annotation,
         config: SerializerConfig
 ) -> dict:
-    json_obj = {}
+    json_obj: dict[str, Any] = {}
 
     item_annotation, *_rest = get_args(type_annotation)
     if is_annotated(item_annotation):
@@ -213,8 +213,9 @@ def _from_dict(
         item_type_annotation = item_annotation
         item_json_annotation = JSONValue()
 
-    for key, item in dct.items():
-        json_obj[key] = from_json_value(
+    for key, item in python_dict.items():
+        tag = _to_tag(key, config)
+        json_obj[tag] = from_json_value(
             item,
             item_type_annotation,
             item_json_annotation,
@@ -225,7 +226,7 @@ def _from_dict(
 
 
 def _from_literal(
-        value: Any,
+        python_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
@@ -235,7 +236,7 @@ def _from_literal(
     for literal_type in literal_types:
         try:
             result = from_json_value(
-                value,
+                python_value,
                 literal_type,
                 json_annotation,
                 config
@@ -245,56 +246,56 @@ def _from_literal(
         except:  # pylint: disable=bare-except
             pass
 
-    raise ValueError(f'Value {value} not in Literal{literal_values}')
+    raise ValueError(f'Value {python_value} not in Literal{literal_values}')
 
 
 def from_json_value(
-        value: Any,
+        python_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
     if is_value_type(type_annotation, config.value_serializers.keys()):
         return _from_value(
-            value,
+            python_value,
             type_annotation,
             config
         )
     elif is_optional(type_annotation):
         return _from_optional(
-            value,
+            python_value,
             type_annotation,
             json_annotation,
             config
         )
     elif is_list(type_annotation):
         return _from_list(
-            value,
+            python_value,
             type_annotation,
             config
         )
     elif is_typeddict(type_annotation):
         return _from_typed_dict(
-            value,
+            python_value,
             type_annotation,
             config
         )
     elif is_union(type_annotation):
         return _from_union(
-            value,
+            python_value,
             type_annotation,
             json_annotation,
             config
         )
     elif is_dict(type_annotation):
         return _from_dict(
-            value,
+            python_value,
             type_annotation,
             config
         )
     elif is_literal(type_annotation):
         return _from_literal(
-            value,
+            python_value,
             type_annotation,
             json_annotation,
             config
@@ -304,7 +305,7 @@ def from_json_value(
 
 
 def serialize_typed(
-        obj: Any,
+        python_obj: Any,
         annotation: Annotation,
         config: SerializerConfig | None = None,
         encode: JSONEncoder | None = None
@@ -312,7 +313,7 @@ def serialize_typed(
     """Serialize an object to JSON
 
     Args:
-        obj (Any): The object to serialize
+        python_obj (Any): The object to serialize
         annotation (Annotation): The objects type annotation
 
     Raises:
@@ -327,7 +328,7 @@ def serialize_typed(
         type_annotation, json_annotation = annotation, JSONValue()
 
     json_obj = from_json_value(
-        obj,
+        python_obj,
         type_annotation,
         json_annotation,
         config or DEFAULT_CONFIG

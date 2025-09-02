@@ -38,43 +38,45 @@ from .encoding import JSONDecoder, DECODE_JSON
 
 
 def _to_value(
-        value: Any,
+        json_value: Any,
         type_annotation: type,
         config: SerializerConfig,
 ) -> Any:
-    if isinstance(value, type_annotation):
-        return value
+    if isinstance(json_value, type_annotation):
+        return json_value
 
-    if isinstance(value, str):
+    if isinstance(json_value, str):
         if type_annotation is str:
-            return value
+            return json_value
         elif type_annotation is int:
-            return int(value)
+            return int(json_value)
         elif type_annotation is bool:
-            return value.lower() == 'true'
+            return json_value.lower() == 'true'
         elif type_annotation is float:
-            return float(value)
+            return float(json_value)
         elif type_annotation is Decimal:
-            return Decimal(value)
+            return Decimal(json_value)
         elif isclass(type_annotation) and issubclass(type_annotation, Enum):
-            return type_annotation[value]
+            return type_annotation[json_value]
         else:
             deserializer = config.value_deserializers.get(type_annotation)
             if deserializer is not None:
-                return deserializer(value)
-    elif isinstance(value, (int, float)) and type_annotation is Decimal:
-        return Decimal(value)
+                return deserializer(json_value)
+    elif isinstance(json_value, (int, float)) and type_annotation is Decimal:
+        return Decimal(json_value)
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
 
 def _to_optional(
-        obj: Any,
+        json_obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    # An optional is a union where the last element is the None type.
+    if json_obj is None:
+        return None
+
     union_types = [t for t in get_args(type_annotation) if t is not NoneType]
     union = (
         union_types[0]
@@ -82,11 +84,11 @@ def _to_optional(
         Union[tuple(union_types)]
     )
 
-    return None if not obj else _to_any(obj, union, json_annotation, config)
+    return _to_any(json_obj, union, json_annotation, config)
 
 
 def _to_list(
-        lst: list,
+        json_list: list,
         list_annotation: Annotation,
         config: SerializerConfig
 ) -> list[Any]:
@@ -103,12 +105,12 @@ def _to_list(
             json_annotation,
             config
         )
-        for item in lst
+        for item in json_list
     ]
 
 
 def _to_union(
-        obj: dict[str, Any] | None,
+        json_obj: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
@@ -117,19 +119,21 @@ def _to_union(
         annotations = get_args(type_annotation)
     else:
         annotations = (
-            json_annotation.type_selector(obj, type_annotation),
+            json_annotation.type_selector(json_obj, type_annotation),
         )
 
     for item_type_annotation in annotations:
         try:
             return _to_any(
-                obj,
+                json_obj,
                 item_type_annotation,
                 json_annotation,
                 config
             )
         except:  # pylint: disable=bare-except
             pass
+
+    raise TypeError("Unable to deserialize union")
 
 
 def _to_dict(
@@ -262,7 +266,7 @@ def _to_typed_dict(
 
 
 def _to_literal(
-        value: Any,
+        json_value: Any,
         type_annotation: Annotation,
         json_annotation: JSONAnnotation,
         config: SerializerConfig
@@ -272,7 +276,7 @@ def _to_literal(
     for literal_type in literal_types:
         try:
             result = _to_any(
-                value,
+                json_value,
                 literal_type,
                 json_annotation,
                 config
@@ -282,7 +286,7 @@ def _to_literal(
         except:  # pylint: disable=bare-except
             pass
 
-    raise ValueError(f'Value {value} not in Literal{literal_values}')
+    raise ValueError(f'Value {json_value} not in Literal{literal_values}')
 
 
 def _to_any(
@@ -341,16 +345,16 @@ def _to_any(
 
 
 def from_json_value(
-        config: SerializerConfig,
         json_value: Any,
         annotation: Annotation,
+        config: SerializerConfig,
 ) -> Any:
     """Convert from a json value
 
     Args:
-        config (SerializerConfig): The serializer configuration
         json_value (Any): The JSON value
         annotation (Annotation): The type annotation
+        config (SerializerConfig): The serializer configuration
 
     Raises:
         TypeError: If the value cannot be deserialized to the type
@@ -391,4 +395,4 @@ def deserialize_typed(
         Any: The deserialized object.
     """
     json_value = (decode or DECODE_JSON)(text)
-    return from_json_value(config or DEFAULT_CONFIG, json_value, annotation)
+    return from_json_value(json_value, annotation, config or DEFAULT_CONFIG)
