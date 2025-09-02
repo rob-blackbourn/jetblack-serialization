@@ -76,21 +76,13 @@ def _to_optional(
 ) -> Any:
     # An optional is a union where the last element is the None type.
     union_types = [t for t in get_args(type_annotation) if t is not NoneType]
-    if len(union_types) == 1:
-        return None if not obj else _to_any(
-            obj,
-            union_types[0],
-            json_annotation,
-            config
-        )
-    else:
-        union = Union[tuple(union_types)]  # type: ignore
-        return _to_any(
-            obj,
-            union,
-            json_annotation,
-            config
-        )
+    union = (
+        union_types[0]
+        if len(union_types) == 1 else
+        Union[tuple(union_types)]
+    )
+
+    return None if not obj else _to_any(obj, union, json_annotation, config)
 
 
 def _to_list(
@@ -141,13 +133,13 @@ def _to_union(
 
 
 def _to_dict(
-        obj: dict[str, Any],
+        json_obj: dict[str, Any],
         dict_annotation: Annotation,
         config: SerializerConfig
 ) -> dict[str, Any]:
-    json_obj: dict[str, Any] = {}
+    python_dict: dict[str, Any] = {}
 
-    key_type_annotation, item_type_annotation = get_args(dict_annotation)
+    key_type_annotation, value_type_annotation = get_args(dict_annotation)
 
     if is_annotated(key_type_annotation):
         key_type_annotation, key_json_annotation = get_json_annotation(
@@ -156,29 +148,29 @@ def _to_dict(
     else:
         key_json_annotation = JSONValue()
 
-    if is_annotated(item_type_annotation):
-        item_type_annotation, item_json_annotation = get_json_annotation(
-            item_type_annotation
+    if is_annotated(value_type_annotation):
+        value_type_annotation, value_json_annotation = get_json_annotation(
+            value_type_annotation
         )
     else:
-        item_json_annotation = JSONValue()
+        value_json_annotation = JSONValue()
 
-    for json_key, json_item in obj.items():
+    for tag, json_value in json_obj.items():
         key = _to_any(
-            json_key,
+            tag,
             key_type_annotation,
             key_json_annotation,
             config
         )
 
-        json_obj[key] = _to_any(
-            json_item,
-            item_type_annotation,
-            item_json_annotation,
+        python_dict[key] = _to_any(
+            json_value,
+            value_type_annotation,
+            value_json_annotation,
             config
         )
 
-    return json_obj
+    return python_dict
 
 
 def _to_tag(python_key: str, config: SerializerConfig) -> str:
