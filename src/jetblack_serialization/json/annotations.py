@@ -1,6 +1,6 @@
 """JSON annotations"""
 
-from typing import cast
+from typing import Any, Callable, cast
 
 from ..types import Annotation
 from ..custom_annotations import (
@@ -9,9 +9,17 @@ from ..custom_annotations import (
     get_all_serialization_annotations
 )
 
+type TypeSelector = Callable[[Any, Annotation], Annotation]
+
 
 class JSONAnnotation(SerializationAnnotation):
     """The base JSON annotation class"""
+
+    def __init__(
+            self,
+            type_selector: TypeSelector | None = None
+    ) -> None:
+        self.type_selector = type_selector
 
 
 class JSONValue(JSONAnnotation):
@@ -24,7 +32,12 @@ class JSONValue(JSONAnnotation):
 class JSONProperty(JSONAnnotation):
     """A JSON property"""
 
-    def __init__(self, tag: str):
+    def __init__(
+            self,
+            tag: str,
+            type_selector: TypeSelector | None = None
+    ) -> None:
+        super().__init__(type_selector)
         self.tag = tag
 
     def __repr__(self) -> str:

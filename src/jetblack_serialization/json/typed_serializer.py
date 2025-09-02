@@ -101,64 +101,98 @@ def _from_union(
 
 def _from_list(
         lst: list,
-        type_annotation: Annotation,
+        list_annotation: Annotation,
         config: SerializerConfig
 ) -> Any:
-    item_annotation, *_rest = get_args(type_annotation)
+    item_annotation, *_rest = get_args(list_annotation)
     if is_annotated(item_annotation):
-        item_type_annotation, item_json_annotation = get_json_annotation(
-            item_annotation
-        )
+        type_annotation, json_annotation = get_json_annotation(item_annotation)
     else:
-        item_type_annotation = item_annotation
-        item_json_annotation = JSONValue()
+        type_annotation = item_annotation
+        json_annotation = JSONValue()
 
     return [
         from_json_value(
             item,
-            item_type_annotation,
-            item_json_annotation,
+            type_annotation,
+            json_annotation,
             config
         )
         for item in lst
     ]
 
 
+def _to_tag(python_key: str, config: SerializerConfig) -> str:
+    return (
+        config.serialize_key(python_key)
+        if isinstance(python_key, str) else
+        python_key
+    )
+
+
+def _get_json_annotated_key(
+        python_key: str,
+        annotation: Annotation,
+        config: SerializerConfig
+) -> tuple[Annotation, JSONProperty]:
+    type_annotation, json_annotation = get_json_annotation(annotation)
+    if isinstance(json_annotation, JSONProperty):
+        json_annotation = cast(JSONProperty, json_annotation)
+    elif isinstance(json_annotation, JSONValue):
+        tag = _to_tag(python_key, config)
+        json_annotation = JSONProperty(tag, json_annotation.type_selector)
+    else:
+        raise TypeError("must be a property")
+
+    return type_annotation, json_annotation
+
+
+def _get_json_unannotated_key(
+        python_key: str,
+        annotation: Annotation,
+        config: SerializerConfig
+) -> tuple[Annotation, JSONProperty]:
+    return annotation, JSONProperty(_to_tag(python_key, config))
+
+
+def _get_annotated_key(
+        python_key: str,
+        annotation: Annotation,
+        config: SerializerConfig
+) -> tuple[Annotation, JSONProperty]:
+    if is_json_annotation(annotation):
+        return _get_json_annotated_key(python_key, annotation, config)
+
+    return _get_json_unannotated_key(python_key, annotation, config)
+
+
 def _from_typed_dict(
         dct: dict,
-        type_annotation: Annotation,
+        dict_annotation: Annotation,
         config: SerializerConfig
 ) -> dict:
-    json_obj = {}
+    json_obj: dict[str, Any] = {}
 
-    typed_dict_keys = typeddict_keys(type_annotation)
+    typed_dict_keys = typeddict_keys(dict_annotation)
     assert typed_dict_keys is not None
-    for key, info in typed_dict_keys.items():
-        default = getattr(type_annotation, key, Parameter.empty)
-        if is_json_annotation(info.annotation):
-            item_type_annotation, item_json_annotation = get_json_annotation(
-                info.annotation
-            )
-            if not issubclass(type(item_json_annotation), JSONProperty):
-                raise TypeError("must be a property")
-            json_property = cast(JSONProperty, item_json_annotation)
-        else:
-            property_name = config.serialize_key(
-                key
-            ) if isinstance(key, str) else key
-            json_property = JSONProperty(property_name)
-            item_type_annotation = info.annotation
+    for python_key, info in typed_dict_keys.items():
+        default = getattr(dict_annotation, python_key, Parameter.empty)
+        item_annotation, json_property = _get_annotated_key(
+            python_key,
+            info.annotation,
+            config
+        )
 
-        value = dct.get(key, default)
-        if value is not Parameter.empty:
+        json_value = dct.get(python_key, default)
+        if json_value is not Parameter.empty:
             json_obj[json_property.tag] = from_json_value(
-                value,
-                item_type_annotation,
+                json_value,
+                item_annotation,
                 json_property,
                 config
             )
         elif info.is_required:
-            raise KeyError(f'Missing required property {key}')
+            raise KeyError(f'Missing required property {python_key}')
 
     return json_obj
 

@@ -98,19 +98,17 @@ def _to_list(
         list_annotation: Annotation,
         config: SerializerConfig
 ) -> list[Any]:
-    item_type_annotation, *_rest = get_args(list_annotation)
-    if is_annotated(item_type_annotation):
-        item_type_annotation, item_json_annotation = get_json_annotation(
-            item_type_annotation
-        )
+    type_annotation, *_rest = get_args(list_annotation)
+    if is_annotated(type_annotation):
+        type_annotation, json_annotation = get_json_annotation(type_annotation)
     else:
-        item_json_annotation = JSONValue()
+        json_annotation = JSONValue()
 
     return [
         _to_any(
             item,
-            item_type_annotation,
-            item_json_annotation,
+            type_annotation,
+            json_annotation,
             config
         )
         for item in lst
@@ -123,7 +121,14 @@ def _to_union(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    for item_type_annotation in get_args(type_annotation):
+    if json_annotation.type_selector is None:
+        annotations = get_args(type_annotation)
+    else:
+        annotations = (
+            json_annotation.type_selector(obj, type_annotation),
+        )
+
+    for item_type_annotation in annotations:
         try:
             return _to_any(
                 obj,
@@ -176,53 +181,92 @@ def _to_dict(
     return json_obj
 
 
+def _to_tag(python_key: str, config: SerializerConfig) -> str:
+    return (
+        config.serialize_key(python_key)
+        if isinstance(python_key, str) else
+        python_key
+    )
+
+
+def _get_json_annotated_key(
+        python_key: str,
+        annotation: JSONAnnotation,
+        config: SerializerConfig
+) -> tuple[type[Any], JSONProperty]:
+    type_annotation, json_annotation = get_json_annotation(annotation)
+
+    if isinstance(json_annotation, JSONProperty):
+        json_property = cast(JSONProperty, json_annotation)
+    elif isinstance(json_annotation, JSONValue):
+        tag = _to_tag(python_key, config)
+        json_property = JSONProperty(tag, json_annotation.type_selector)
+    else:
+        raise TypeError("Must be a property")
+
+    return type_annotation, json_property
+
+
+def _get_json_unannotated_key(
+        python_key: str,
+        annotation: Annotation,
+        config: SerializerConfig
+) -> tuple[type[Any], JSONProperty]:
+    json_property = JSONProperty(_to_tag(python_key, config))
+    type_annotation = get_unannotated(annotation)
+    return type_annotation, json_property
+
+
+def _get_key_annotation(
+        python_key: str,
+        annotation: Annotation,
+        config: SerializerConfig
+) -> tuple[type[Any], JSONProperty]:
+    if is_json_annotation(annotation):
+        return _get_json_annotated_key(python_key, annotation, config)
+
+    return _get_json_unannotated_key(python_key, annotation, config)
+
+
 def _to_typed_dict(
-        obj: dict[str, Any],
+        json_obj: dict[str, Any],
         dict_annotation: Annotation,
         config: SerializerConfig
 ) -> dict[str, Any]:
-    json_obj: dict[str, Any] = {}
+    python_dict: dict[str, Any] = {}
 
     typed_dict_keys = typeddict_keys(dict_annotation)
     assert typed_dict_keys is not None
-    for key, info in typed_dict_keys.items():
+    for python_key, info in typed_dict_keys.items():
         default = get_typed_dict_key_default(info.annotation)
-        if is_json_annotation(info.annotation):
-            item_type_annotation, item_json_annotation = get_json_annotation(
-                info.annotation
-            )
-            if not issubclass(type(item_json_annotation), JSONProperty):
-                raise TypeError("Must be a property")
-            json_property = cast(JSONProperty, item_json_annotation)
-        else:
-            tag = config.serialize_key(
-                key
-            ) if isinstance(key, str) else key
-            json_property = JSONProperty(tag)
-            item_type_annotation = get_unannotated(info.annotation)
+        item_annotation, json_property = _get_key_annotation(
+            python_key,
+            info.annotation,
+            config
+        )
 
-        if json_property.tag in obj:
-            json_obj[key] = _to_any(
-                obj[json_property.tag],
-                item_type_annotation,
+        if json_property.tag in json_obj:
+            python_dict[python_key] = _to_any(
+                json_obj[json_property.tag],
+                item_annotation,
                 json_property,
                 config
             )
         elif default is not Parameter.empty:
-            json_obj[key] = _to_any(
+            python_dict[python_key] = _to_any(
                 default,
-                item_type_annotation,
+                item_annotation,
                 json_property,
                 config
             )
-        elif is_optional(item_type_annotation):
-            json_obj[key] = None
+        elif is_optional(item_annotation):
+            python_dict[python_key] = None
         elif info.is_required:
             raise KeyError(
                 f'Required key "{json_property.tag}" is missing'
             )
 
-    return json_obj
+    return python_dict
 
 
 def _to_literal(
