@@ -19,10 +19,12 @@ from ..typing_ex import (
     is_annotated,
     is_any,
     is_dict,
+    is_forward_ref,
     is_list,
     is_literal,
     is_optional,
     is_union,
+    resolve_forward_ref,
     typeddict_keys,
 )
 from ..types import Annotation
@@ -297,6 +299,9 @@ def _to_any(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
+    if is_forward_ref(type_annotation):
+        type_annotation = resolve_forward_ref(type_annotation)
+
     if is_value_type(type_annotation, config.value_deserializers.keys()):
         return _to_value(
             json_value,

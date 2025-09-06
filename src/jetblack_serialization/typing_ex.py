@@ -10,6 +10,7 @@ from typing import (
     Any,
     ClassVar,
     Dict,
+    ForwardRef,
     List,
     Literal,
     Required,
@@ -125,6 +126,9 @@ class TypedDictFieldInfo:
 
     @classmethod
     def create(cls, annotation: Any, total: bool) -> Self:
+        if is_forward_ref(annotation):
+            annotation = resolve_forward_ref(annotation)
+
         if is_generic(annotation) and get_origin(annotation) is NotRequired:
             annotation = get_args(annotation)[0]
             is_required = False
@@ -142,11 +146,24 @@ class TypedDictFieldInfo:
 
 def typeddict_keys(annotation: type) -> dict[str, TypedDictFieldInfo]:
     assert is_typeddict(annotation)
+    is_total = getattr(annotation, '__total__', True)
     return {
-        key: TypedDictFieldInfo.create(field_type, annotation.__total__)
+        key: TypedDictFieldInfo.create(field_type, is_total)
         for key, field_type in annotation.__annotations__.items()
     }
 
 
 def get_metadata(annotation: type) -> tuple[Any, ...] | None:
     return getattr(annotation, '__metadata__', None)
+
+
+def is_forward_ref(annotation: type[Any]) -> bool:
+    return isinstance(annotation, ForwardRef)
+
+
+def resolve_forward_ref(annotation: ForwardRef) -> Any:
+    return annotation._evaluate(  # pylint: disable=protected-access
+        globals(),
+        locals(),
+        recursive_guard=frozenset()
+    )
