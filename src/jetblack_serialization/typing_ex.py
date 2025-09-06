@@ -25,6 +25,22 @@ from typing import (
 )
 
 
+def is_forward_ref(annotation: type[Any]) -> bool:
+    return isinstance(annotation, ForwardRef)
+
+
+def resolve_forward_ref(annotation: Any) -> Any:
+    return (
+        annotation._evaluate(  # pylint: disable=protected-access
+            globals(),
+            locals(),
+            recursive_guard=frozenset()
+        )
+        if is_forward_ref(annotation) else
+        annotation
+    )
+
+
 def is_any(annotation: type[Any]) -> bool:
     return annotation is Any
 
@@ -42,7 +58,11 @@ def is_optional(annotation: type[Any]) -> bool:
 
 def get_optional_types(annotation: type) -> tuple[type, ...]:
     assert is_optional(annotation)
-    return tuple(t for t in get_args(annotation) if t is not NoneType)
+    return tuple(
+        resolve_forward_ref(t)
+        for t in get_args(annotation)
+        if t is not NoneType
+    )
 
 
 def is_annotated(annotation: type[Any]) -> bool:
@@ -50,13 +70,13 @@ def is_annotated(annotation: type[Any]) -> bool:
 
 
 def get_annotated_type(annotation: Annotated[Any, ...]) -> type:
-    return annotation.__origin__
+    return resolve_forward_ref(annotation.__origin__)
 
 
 def get_unannotated(annotation: type[Any]) -> type[Any]:
     while is_annotated(annotation):
         annotation = get_annotated_type(annotation)
-    return annotation
+    return resolve_forward_ref(annotation)
 
 
 def is_generic(annotation: type[Any]) -> bool:
@@ -126,8 +146,7 @@ class TypedDictFieldInfo:
 
     @classmethod
     def create(cls, annotation: Any, total: bool) -> Self:
-        if is_forward_ref(annotation):
-            annotation = resolve_forward_ref(annotation)
+        annotation = resolve_forward_ref(annotation)
 
         if is_generic(annotation) and get_origin(annotation) is NotRequired:
             annotation = get_args(annotation)[0]
@@ -155,15 +174,3 @@ def typeddict_keys(annotation: type) -> dict[str, TypedDictFieldInfo]:
 
 def get_metadata(annotation: type) -> tuple[Any, ...] | None:
     return getattr(annotation, '__metadata__', None)
-
-
-def is_forward_ref(annotation: type[Any]) -> bool:
-    return isinstance(annotation, ForwardRef)
-
-
-def resolve_forward_ref(annotation: ForwardRef) -> Any:
-    return annotation._evaluate(  # pylint: disable=protected-access
-        globals(),
-        locals(),
-        recursive_guard=frozenset()
-    )
