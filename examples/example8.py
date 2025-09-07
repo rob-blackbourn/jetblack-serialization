@@ -22,6 +22,9 @@ class ShapeRectangle(ShapeBase):
     height: float
 
 
+type Shape = ShapeCircle | ShapeRectangle
+
+
 def select_shape_type(data: Any, _annotation: Annotation) -> Annotation:
     assert isinstance(data, dict)
     match data.get('type'):
@@ -36,7 +39,7 @@ def select_shape_type(data: Any, _annotation: Annotation) -> Annotation:
 class Button(TypedDict):
     title: str
     shape: Annotated[
-        ShapeCircle | ShapeRectangle,
+        Shape,
         JSONValue(type_selector=select_shape_type)
     ]
 
@@ -45,9 +48,9 @@ def main() -> None:
     example: Button = {
         'title': "press",
         'shape': {
-            'radius': 1.0,
             'name': 'henry',
-            'type': 'circle'
+            'type': 'circle',
+            'radius': 1.0,
         }
     }
     text = serialize_typed(example, Button)

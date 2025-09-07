@@ -23,7 +23,7 @@ from ..typing_ex import (
     is_literal,
     is_optional,
     is_union,
-    resolve_forward_ref,
+    resolve_type,
     typeddict_keys,
 )
 from ..types import Annotation
@@ -96,7 +96,7 @@ def _to_list(
         config: SerializerConfig
 ) -> list[Any]:
     type_annotation, *_rest = get_args(list_annotation)
-    type_annotation = resolve_forward_ref(type_annotation)
+    type_annotation = resolve_type(type_annotation)
 
     if is_annotated(type_annotation):
         type_annotation, json_annotation = get_json_annotation(type_annotation)
@@ -150,8 +150,8 @@ def _to_dict(
 
     key_type_annotation, value_type_annotation = get_args(dict_annotation)
 
-    key_type_annotation = resolve_forward_ref(key_type_annotation)
-    value_type_annotation = resolve_forward_ref(value_type_annotation)
+    key_type_annotation = resolve_type(key_type_annotation)
+    value_type_annotation = resolve_type(value_type_annotation)
 
     if is_annotated(key_type_annotation):
         key_type_annotation, key_json_annotation = get_json_annotation(
@@ -303,7 +303,7 @@ def _to_any(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    type_annotation = resolve_forward_ref(type_annotation)
+    type_annotation = resolve_type(type_annotation)
 
     if is_value_type(type_annotation, config.value_deserializers.keys()):
         return _to_value(

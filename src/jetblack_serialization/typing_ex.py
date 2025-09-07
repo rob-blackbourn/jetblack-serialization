@@ -17,12 +17,25 @@ from typing import (
     NotRequired,
     Self,
     Tuple,
+    TypeAliasType,
     TypeVar,
     Union,
     is_typeddict,
     get_args,
     get_origin
 )
+
+
+def is_type_alias(annotation: Any) -> bool:
+    return isinstance(annotation, TypeAliasType)
+
+
+def resolve_type_alias(annotation: Any) -> Any:
+    return (
+        annotation.__value__
+        if is_type_alias(annotation) else
+        annotation
+    )
 
 
 def is_forward_ref(annotation: type[Any]) -> bool:
@@ -39,6 +52,12 @@ def resolve_forward_ref(annotation: Any) -> Any:
         if is_forward_ref(annotation) else
         annotation
     )
+
+
+def resolve_type(annotation: Any) -> Any:
+    annotation = resolve_forward_ref(annotation)
+    annotation = resolve_type_alias(annotation)
+    return annotation
 
 
 def is_any(annotation: type[Any]) -> bool:
@@ -59,7 +78,7 @@ def is_optional(annotation: type[Any]) -> bool:
 def get_optional_types(annotation: type) -> tuple[type, ...]:
     assert is_optional(annotation)
     return tuple(
-        resolve_forward_ref(t)
+        resolve_type(t)
         for t in get_args(annotation)
         if t is not NoneType
     )
@@ -70,13 +89,13 @@ def is_annotated(annotation: type[Any]) -> bool:
 
 
 def get_annotated_type(annotation: Annotated[Any, ...]) -> type:
-    return resolve_forward_ref(annotation.__origin__)
+    return resolve_type(annotation.__origin__)
 
 
 def get_unannotated(annotation: type[Any]) -> type[Any]:
     while is_annotated(annotation):
         annotation = get_annotated_type(annotation)
-    return resolve_forward_ref(annotation)
+    return resolve_type(annotation)
 
 
 def is_generic(annotation: type[Any]) -> bool:
@@ -146,7 +165,7 @@ class TypedDictFieldInfo:
 
     @classmethod
     def create(cls, annotation: Any, total: bool) -> Self:
-        annotation = resolve_forward_ref(annotation)
+        annotation = resolve_type(annotation)
 
         if is_generic(annotation) and get_origin(annotation) is NotRequired:
             annotation = get_args(annotation)[0]
