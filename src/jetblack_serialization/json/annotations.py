@@ -1,6 +1,6 @@
 """JSON annotations"""
 
-from typing import Any, Callable, cast
+from typing import Any, Callable, Literal, cast
 
 from ..types import Annotation
 from ..custom_annotations import (
@@ -9,7 +9,8 @@ from ..custom_annotations import (
     get_all_serialization_annotations
 )
 
-type TypeSelector = Callable[[Any, Annotation], Annotation]
+type Source = Literal['python', 'json']
+type TypeSelector = Callable[[Any, Annotation, Source], Annotation]
 
 
 class JSONAnnotation(SerializationAnnotation):

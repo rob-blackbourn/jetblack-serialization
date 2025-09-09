@@ -92,7 +92,8 @@ def _from_union(
     if json_annotation.type_selector is not None:
         element_type = json_annotation.type_selector(
             python_value,
-            type_annotation
+            type_annotation,
+            'python'
         )
         return from_json_value(
             python_value,

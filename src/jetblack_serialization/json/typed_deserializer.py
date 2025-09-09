@@ -121,7 +121,11 @@ def _to_union(
         config: SerializerConfig
 ) -> Any:
     if json_annotation.type_selector is not None:
-        element_type = json_annotation.type_selector(json_obj, type_annotation)
+        element_type = json_annotation.type_selector(
+            json_obj,
+            type_annotation,
+            'json'
+        )
         return _to_any(
             json_obj,
             element_type,

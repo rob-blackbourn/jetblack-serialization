@@ -7,6 +7,7 @@ from jetblack_serialization.json import (
     serialize_typed,
     deserialize_typed,
     JSONValue,
+    Source
 )
 
 CONFIG = SerializerConfig(
@@ -32,24 +33,26 @@ class ShapeRectangle(ShapeBase):
 type Shape = ShapeCircle | ShapeRectangle
 
 
-def select_shape_type(data: Any, _annotation: Annotation) -> Annotation:
+def select_shape_type(data: Any, _annotation: Annotation, source: Source) -> Annotation:
     assert isinstance(data, dict)
-    match data.get('shape_type'):
+    key = ('shape_type' if source == 'python' else 'shapeType')
+    match data.get(key):
         case 'circle':
             return ShapeCircle
         case 'rectangle':
             return ShapeRectangle
         case _:
-            raise ValueError(f"Unknown shape type: {data.get('type')}")
+            raise ValueError(f"Unknown shape type: {data.get(key)}")
 
 
 def test_union() -> None:
     actual = ShapeCircle(name='henry', shape_type='circle', radius=1.0)
-    text = serialize_typed(actual, ShapeCircle)
+    text = serialize_typed(actual, ShapeCircle, CONFIG)
 
     roundtrip1 = deserialize_typed(
         text,
         ShapeCircle | ShapeRectangle,
+        CONFIG
     )
     assert actual == roundtrip1
 
@@ -58,7 +61,8 @@ def test_union() -> None:
         Annotated[
             ShapeCircle | ShapeRectangle,
             JSONValue(type_selector=select_shape_type)
-        ]
+        ],
+        CONFIG
     )
     assert actual == roundtrip2
 
@@ -80,6 +84,6 @@ def test_nested_union() -> None:
             'radius': 1.0,
         }
     }
-    text = serialize_typed(actual, Button)
-    roundtrip = deserialize_typed(text, Button)
+    text = serialize_typed(actual, Button, CONFIG)
+    roundtrip = deserialize_typed(text, Button, CONFIG)
     assert actual == roundtrip
