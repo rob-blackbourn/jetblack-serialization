@@ -120,14 +120,16 @@ def _to_union(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
-    if json_annotation.type_selector is None:
-        annotations = get_args(type_annotation)
-    else:
-        annotations = (
-            json_annotation.type_selector(json_obj, type_annotation),
+    if json_annotation.type_selector is not None:
+        element_type = json_annotation.type_selector(json_obj, type_annotation)
+        return _to_any(
+            json_obj,
+            element_type,
+            json_annotation,
+            config
         )
 
-    for item_type_annotation in annotations:
+    for item_type_annotation in get_args(type_annotation):
         try:
             return _to_any(
                 json_obj,

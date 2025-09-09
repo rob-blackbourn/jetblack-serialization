@@ -4,7 +4,7 @@ from jetblack_serialization import Annotation
 from jetblack_serialization.json import (
     serialize_typed,
     deserialize_typed,
-    JSONValue
+    JSONValue,
 )
 
 
@@ -34,7 +34,7 @@ def select_shape_type(data: Any, _annotation: Annotation) -> Annotation:
 
 
 def main() -> None:
-    example = ShapeCircle(radius=1.0, name='henry', type='circle')
+    example = ShapeCircle(name='henry', type='circle', radius=1.0)
     text = serialize_typed(example, ShapeCircle)
 
     print(example)

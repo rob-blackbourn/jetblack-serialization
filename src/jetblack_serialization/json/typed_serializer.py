@@ -89,6 +89,18 @@ def _from_union(
         json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> Any:
+    if json_annotation.type_selector is not None:
+        element_type = json_annotation.type_selector(
+            python_value,
+            type_annotation
+        )
+        return from_json_value(
+            python_value,
+            element_type,
+            json_annotation,
+            config
+        )
+
     for element_type in get_args(type_annotation):
         try:
             return from_json_value(
