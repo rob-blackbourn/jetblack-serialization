@@ -7,7 +7,6 @@ from jetblack_serialization.json import (
     serialize_typed,
     deserialize_typed,
     JSONValue,
-    Source
 )
 
 CONFIG = SerializerConfig(
@@ -33,9 +32,9 @@ class ShapeRectangle(ShapeBase):
 type Shape = ShapeCircle | ShapeRectangle
 
 
-def select_shape_type(data: Any, _annotation: Annotation, source: Source) -> Annotation:
+def select_shape_type(data: Any, _annotation: Annotation, is_serializing: bool) -> Annotation:
     assert isinstance(data, dict)
-    key = ('shape_type' if source == 'python' else 'shapeType')
+    key = ('shape_type' if is_serializing else 'shapeType')
     match data.get(key):
         case 'circle':
             return ShapeCircle

@@ -1,6 +1,6 @@
 """JSON Serialization"""
 
-from .annotations import JSONValue, JSONProperty, TypeSelector, Source
+from .annotations import JSONValue, JSONProperty, TypeSelector
 from .serialization import (
     serialize,
     deserialize
@@ -17,7 +17,6 @@ __all__ = [
     'JSONValue',
     'JSONProperty',
     'TypeSelector',
-    'Source',
 
     'serialize',
     'deserialize',
