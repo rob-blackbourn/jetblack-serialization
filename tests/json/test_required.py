@@ -38,3 +38,4 @@ def test_required_opt_out() -> None:
     opt_out_obj: OptOutExample = {'first_arg': 1, 'third_arg': 2.0}
     opn_out_text = serialize_typed(opt_out_obj, OptOutExample, CONFIG)
     opt_out_roundtrip = deserialize_typed(opn_out_text, OptOutExample, CONFIG)
+    assert opt_out_obj == opt_out_roundtrip
