@@ -7,15 +7,8 @@ class Example(TypedDict):
     scheme: Literal['http', 'https', 'ws', 'wss']
 
 
-def main() -> None:
-    example = Example(scheme='http')
-    text = serialize_typed(example, Example)
+def test_literal() -> None:
+    original = Example(scheme='http')
+    text = serialize_typed(original, Example)
     roundtrip = deserialize_typed(text, Example)
-    print(example)
-    print(roundtrip)
-
-    print("here")
-
-
-if __name__ == "__main__":
-    main()
+    assert original == roundtrip

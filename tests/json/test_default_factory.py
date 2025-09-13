@@ -11,15 +11,9 @@ class Example(TypedDict, total=False):
     c: Annotated[datetime, DefaultFactory(datetime.now)]
 
 
-def main() -> None:
-    example = Example(a=1)
-    text = serialize_typed(example, Example)
+def test_default_factory() -> None:
+    original = Example(a=1)
+    text = serialize_typed(original, Example)
     roundtrip = deserialize_typed(text, Example)
-    print(example)
-    print(roundtrip)
-
-    print("here")
-
-
-if __name__ == "__main__":
-    main()
+    assert 'c' not in original
+    assert 'c' in roundtrip and isinstance(roundtrip['c'], datetime)

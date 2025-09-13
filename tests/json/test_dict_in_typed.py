@@ -11,15 +11,8 @@ class Example(TypedDict, total=False):
     a: dict[str, Foo]
 
 
-def main() -> None:
-    example = Example(a={'one': {'x': 1}, 'two': {'x': 2}})
-    text = serialize_typed(example, Example)
+def test_dict_in_typed() -> None:
+    original = Example(a={'one': {'x': 1}, 'two': {'x': 2}})
+    text = serialize_typed(original, Example)
     roundtrip = deserialize_typed(text, Example)
-    print(example)
-    print(roundtrip)
-
-    print("here")
-
-
-if __name__ == "__main__":
-    main()
+    assert original == roundtrip
