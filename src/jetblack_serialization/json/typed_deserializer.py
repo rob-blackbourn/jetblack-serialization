@@ -32,6 +32,7 @@ from ..utils import is_value_type
 from .annotations import (
     JSONAnnotation,
     JSONValue,
+    JSONObject,
     JSONProperty,
     is_json_annotation,
     get_json_annotation
@@ -150,9 +151,16 @@ def _to_union(
 def _to_dict(
         json_obj: dict[str, Any],
         dict_annotation: Annotation,
+        json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> dict[str, Any]:
     python_dict: dict[str, Any] = {}
+
+    is_serializable_keys = (
+        True
+        if not isinstance(json_annotation, (JSONObject, JSONProperty))
+        else json_annotation.is_serializable_keys
+    )
 
     key_type_annotation, value_type_annotation = get_args(dict_annotation)
 
@@ -174,12 +182,9 @@ def _to_dict(
         value_json_annotation = JSONValue()
 
     for tag, json_value in json_obj.items():
-        key = _to_any(
-            tag,
-            key_type_annotation,
-            key_json_annotation,
-            config
-        )
+        key = _to_any(tag, key_type_annotation, key_json_annotation, config)
+        if is_serializable_keys and isinstance(key, str):
+            key = config.deserialize_key(key)
 
         python_dict[key] = _to_any(
             json_value,
@@ -208,9 +213,23 @@ def _get_json_annotated_key(
 
     if isinstance(json_annotation, JSONProperty):
         json_property = cast(JSONProperty, json_annotation)
+    elif isinstance(json_annotation, JSONObject):
+        tag = (
+            _to_tag(python_key, config)
+            if json_annotation.is_serializable_keys else
+            python_key
+        )
+        json_property = JSONProperty(
+            tag,
+            is_serializable_keys=json_annotation.is_serializable_keys,
+            type_selector=json_annotation.type_selector
+        )
     elif isinstance(json_annotation, JSONValue):
         tag = _to_tag(python_key, config)
-        json_property = JSONProperty(tag, json_annotation.type_selector)
+        json_property = JSONProperty(
+            tag,
+            type_selector=json_annotation.type_selector
+        )
     else:
         raise TypeError("Must be a property")
 
@@ -347,6 +366,7 @@ def _to_any(
         return _to_dict(
             json_value,
             type_annotation,
+            json_annotation,
             config
         )
     elif is_literal(type_annotation):

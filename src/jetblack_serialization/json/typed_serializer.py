@@ -24,6 +24,7 @@ from ..utils import is_value_type
 from .annotations import (
     JSONAnnotation,
     JSONValue,
+    JSONObject,
     JSONProperty,
     is_json_annotation,
     get_json_annotation
@@ -155,9 +156,23 @@ def _get_json_annotated_key(
     type_annotation, json_annotation = get_json_annotation(annotation)
     if isinstance(json_annotation, JSONProperty):
         json_annotation = cast(JSONProperty, json_annotation)
+    elif isinstance(json_annotation, JSONObject):
+        tag = (
+            _to_tag(python_key, config)
+            if json_annotation.is_serializable_keys else
+            python_key
+        )
+        json_annotation = JSONProperty(
+            tag,
+            is_serializable_keys=json_annotation.is_serializable_keys,
+            type_selector=json_annotation.type_selector
+        )
     elif isinstance(json_annotation, JSONValue):
         tag = _to_tag(python_key, config)
-        json_annotation = JSONProperty(tag, json_annotation.type_selector)
+        json_annotation = JSONProperty(
+            tag,
+            type_selector=json_annotation.type_selector
+        )
     else:
         raise TypeError("must be a property")
 
@@ -169,7 +184,8 @@ def _get_json_unannotated_key(
         annotation: Annotation,
         config: SerializerConfig
 ) -> tuple[Annotation, JSONProperty]:
-    return annotation, JSONProperty(_to_tag(python_key, config))
+    tag = _to_tag(python_key, config)
+    return annotation, JSONProperty(tag)
 
 
 def _get_annotated_key(
@@ -215,27 +231,51 @@ def _from_typed_dict(
 
 def _from_dict(
         python_dict: dict,
-        type_annotation: Annotation,
+        dict_annotation: Annotation,
+        json_annotation: JSONAnnotation,
         config: SerializerConfig
 ) -> dict:
     json_obj: dict[str, Any] = {}
 
-    item_annotation, *_rest = get_args(type_annotation)
-    item_annotation = resolve_type(item_annotation)
-    if is_annotated(item_annotation):
-        item_type_annotation, item_json_annotation = get_json_annotation(
-            item_annotation
+    is_serializable_keys = (
+        True
+        if not isinstance(json_annotation, (JSONObject, JSONProperty))
+        else json_annotation.is_serializable_keys
+    )
+
+    key_type_annotation, value_type_annotation = get_args(dict_annotation)
+
+    key_type_annotation = resolve_type(key_type_annotation)
+    value_type_annotation = resolve_type(value_type_annotation)
+
+    if is_annotated(key_type_annotation):
+        key_type_annotation, key_json_annotation = get_json_annotation(
+            key_type_annotation
         )
     else:
-        item_type_annotation = item_annotation
-        item_json_annotation = JSONValue()
+        key_json_annotation = JSONValue()
+
+    if is_annotated(value_type_annotation):
+        value_type_annotation, value_json_annotation = get_json_annotation(
+            value_type_annotation
+        )
+    else:
+        value_json_annotation = JSONValue()
 
     for key, item in python_dict.items():
-        tag = _to_tag(key, config)
+        tag = from_json_value(
+            key,
+            key_type_annotation,
+            key_json_annotation,
+            config
+        )
+        if is_serializable_keys and isinstance(tag, str):
+            tag = config.serialize_key(tag)
+
         json_obj[tag] = from_json_value(
             item,
-            item_type_annotation,
-            item_json_annotation,
+            value_type_annotation,
+            value_json_annotation,
             config
         )
 
@@ -310,6 +350,7 @@ def from_json_value(
         return _from_dict(
             python_value,
             type_annotation,
+            json_annotation,
             config
         )
     elif is_literal(type_annotation):

@@ -30,16 +30,34 @@ class JSONValue(JSONAnnotation):
         return 'JSONValue()'
 
 
+class JSONObject(JSONAnnotation):
+    """A JSON property"""
+
+    def __init__(
+            self,
+            is_serializable_keys: bool = True,
+            type_selector: TypeSelector | None = None
+    ) -> None:
+        super().__init__(type_selector)
+        self.is_serializable_keys = is_serializable_keys
+
+    def __repr__(self) -> str:
+        return f'JSONObject({self.is_serializable_keys})'
+
+
 class JSONProperty(JSONAnnotation):
     """A JSON property"""
 
     def __init__(
             self,
             tag: str,
+            *,
+            is_serializable_keys: bool = True,
             type_selector: TypeSelector | None = None
     ) -> None:
         super().__init__(type_selector)
         self.tag = tag
+        self.is_serializable_keys = is_serializable_keys
 
     def __repr__(self) -> str:
         return f'JSONProperty(tag="{self.tag}")'
