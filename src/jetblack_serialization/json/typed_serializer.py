@@ -269,7 +269,7 @@ def _from_dict(
             key_json_annotation,
             config
         )
-        if is_serializable_keys and isinstance(tag, str):
+        if is_serializable_keys and isinstance(key, str):
             tag = config.serialize_key(tag)
 
         json_obj[tag] = from_json_value(

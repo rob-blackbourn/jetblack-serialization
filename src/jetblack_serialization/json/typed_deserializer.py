@@ -183,7 +183,7 @@ def _to_dict(
 
     for tag, json_value in json_obj.items():
         key = _to_any(tag, key_type_annotation, key_json_annotation, config)
-        if is_serializable_keys and isinstance(key, str):
+        if is_serializable_keys and isinstance(tag, str):
             key = config.deserialize_key(key)
 
         python_dict[key] = _to_any(
