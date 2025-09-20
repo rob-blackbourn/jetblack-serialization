@@ -23,6 +23,7 @@ nav:
     - user-guide/configuration.md
   - API:
     - jetblack_serialization.json: api/jetblack_serialization.json.md
+    - jetblack_serialization.json: api/jetblack_serialization.yaml.md
     - jetblack_serialization.xml: api/jetblack_serialization.xml.md
   
 markdown_extensions:
