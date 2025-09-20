@@ -1,8 +1,9 @@
 """Serializer Config"""
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from typing import Any, Callable, Sequence
+from zoneinfo import ZoneInfo
 
 from jetblack_iso8601 import (
     iso8601_to_datetime,
@@ -38,12 +39,18 @@ type ValueDeserializers = Sequence[tuple[type, ValueDeserializer]]
 VALUE_SERIALIZERS: ValueSerializers = (
     (datetime, datetime_to_iso8601),
     (timedelta, timedelta_to_iso8601),
-    (Decimal, float)
+    (Decimal, float),
+    (date, lambda d: d.isoformat()),
+    (time, lambda t: t.isoformat()),
+    (ZoneInfo, lambda z: z.key),
 )
 VALUE_DESERIALIZERS: ValueDeserializers = (
     (datetime, _to_datetime),
     (timedelta, _to_timedelta),
-    (Decimal, Decimal)
+    (Decimal, Decimal),
+    (date, date.fromisoformat),
+    (time, time.fromisoformat),
+    (ZoneInfo, ZoneInfo)
 )
 
 

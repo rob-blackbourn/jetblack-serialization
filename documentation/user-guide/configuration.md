@@ -90,3 +90,50 @@ assert text == '{"distance": 1234.5, "timestamp": "2024-06-01T12:00:00.00+01:00"
 roundtrip1 = deserialize_typed(text, ValueExample)
 assert orig == roundtrip1
 ```
+
+Custom value serialization is supported. The following example uses the 
+standard library package `urllib.parse` to handle URL serialization.
+
+```python
+from typing import TypedDict
+import urllib.parse
+
+from jetblack_serialization import (
+    SerializerConfig,
+    ValueDeserializers,
+    ValueSerializers,
+    VALUE_DESERIALIZERS,
+    VALUE_SERIALIZERS
+)
+from jetblack_serialization.json import (
+    serialize_typed,
+    deserialize_typed,
+)
+
+class CustomValueExample(TypedDict):
+    url: urllib.parse.ParseResult
+
+
+value_serializers: ValueSerializers = (
+    *VALUE_SERIALIZERS,
+    (urllib.parse.ParseResult, lambda d: d.geturl()),
+)
+value_deserializers: ValueDeserializers = (
+    *VALUE_DESERIALIZERS,
+    (urllib.parse.ParseResult, urllib.parse.urlparse),
+)
+
+config = SerializerConfig(
+    value_serializers=value_serializers,
+    value_deserializers=value_deserializers,
+)
+orig: CustomValueExample = {
+    'url': urllib.parse.urlparse('https://example.com/path?query=1'),
+}
+
+text = serialize_typed(orig, CustomValueExample, config)
+assert text == '{"url": "https://example.com/path?query=1"}'
+
+roundtrip1 = deserialize_typed(text, CustomValueExample, config)
+assert orig == roundtrip1
+```
