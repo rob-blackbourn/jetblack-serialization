@@ -693,6 +693,9 @@ snake-case. There are a number of packages that do this; the example below uses
 <p>For values, serializers are provided for:</p>
 <ul>
 <li>Decimal - serializes to a float.</li>
+<li>date - serializes to ISO8601.</li>
+<li>time - serializes to ISO8601.</li>
+<li>ZoneInfo - serializes to IANA timezone.</li>
 <li>datetime - serializes to ISO8601.</li>
 <li>timedelta - serializes to a duration.</li>
 </ul>
@@ -725,6 +728,51 @@ snake-case. There are a number of packages that do this; the example below uses
 <span class="k">assert</span> <span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;{&quot;distance&quot;: 1234.5, &quot;timestamp&quot;: &quot;2024-06-01T12:00:00.00+01:00&quot;, &quot;delay&quot;: &quot;PT1H30M&quot;}&#39;</span>
 
 <span class="n">roundtrip1</span> <span class="o">=</span> <span class="n">deserialize_typed</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">ValueExample</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">orig</span> <span class="o">==</span> <span class="n">roundtrip1</span>
+</code></pre></div>
+
+<p>Custom value serialization is supported. The following example uses the 
+standard library package <code>urllib.parse</code> to handle URL serialization.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">jetblack_serialization</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SerializerConfig</span><span class="p">,</span>
+    <span class="n">ValueDeserializers</span><span class="p">,</span>
+    <span class="n">ValueSerializers</span><span class="p">,</span>
+    <span class="n">VALUE_DESERIALIZERS</span><span class="p">,</span>
+    <span class="n">VALUE_SERIALIZERS</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jetblack_serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">serialize_typed</span><span class="p">,</span>
+    <span class="n">deserialize_typed</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomValueExample</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">url</span><span class="p">:</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">ParseResult</span>
+
+
+<span class="n">value_serializers</span><span class="p">:</span> <span class="n">ValueSerializers</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="o">*</span><span class="n">VALUE_SERIALIZERS</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">ParseResult</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">geturl</span><span class="p">()),</span>
+<span class="p">)</span>
+<span class="n">value_deserializers</span><span class="p">:</span> <span class="n">ValueDeserializers</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="o">*</span><span class="n">VALUE_DESERIALIZERS</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">ParseResult</span><span class="p">,</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SerializerConfig</span><span class="p">(</span>
+    <span class="n">value_serializers</span><span class="o">=</span><span class="n">value_serializers</span><span class="p">,</span>
+    <span class="n">value_deserializers</span><span class="o">=</span><span class="n">value_deserializers</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">orig</span><span class="p">:</span> <span class="n">CustomValueExample</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="s1">&#39;https://example.com/path?query=1&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">serialize_typed</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">CustomValueExample</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;{&quot;url&quot;: &quot;https://example.com/path?query=1&quot;}&#39;</span>
+
+<span class="n">roundtrip1</span> <span class="o">=</span> <span class="n">deserialize_typed</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">CustomValueExample</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">orig</span> <span class="o">==</span> <span class="n">roundtrip1</span>
 </code></pre></div>
 
