@@ -57,3 +57,36 @@ For values, serializers are provided for:
 * Decimal - serializes to a float.
 * datetime - serializes to ISO8601.
 * timedelta - serializes to a duration.
+
+```python
+from datetime import datetime, timedelta
+from decimal import Decimal
+from typing import TypedDict
+from zoneinfo import ZoneInfo
+
+from jetblack_serialization.json import (
+    serialize_typed,
+    deserialize_typed,
+)
+
+
+class ValueExample(TypedDict):
+    distance: Decimal
+    timestamp: datetime
+    delay: timedelta
+
+
+london = ZoneInfo('Europe/London')
+
+orig: ValueExample = {
+    'distance': Decimal('1234.5'),
+    'timestamp': datetime(2024, 6, 1, 12, 0, 0, tzinfo=london),
+    'delay': timedelta(hours=1, minutes=30),
+}
+
+text = serialize_typed(orig, ValueExample)
+assert text == '{"distance": 1234.5, "timestamp": "2024-06-01T12:00:00.00+01:00", "delay": "PT1H30M"}'
+
+roundtrip1 = deserialize_typed(text, ValueExample)
+assert orig == roundtrip1
+```

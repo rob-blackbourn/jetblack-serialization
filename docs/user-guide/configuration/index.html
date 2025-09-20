@@ -11,6 +11,10 @@
       
       
       
+        <link rel="prev" href="../defaults/">
+      
+      
+        <link rel="next" href="../../api/jetblack_serialization.json/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -201,18 +205,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -228,7 +234,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             User Guide
@@ -368,6 +374,89 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Values
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -584,6 +673,37 @@ snake-case. There are a number of packages that do this; the example below uses
 <li>datetime - serializes to ISO8601.</li>
 <li>timedelta - serializes to a duration.</li>
 </ul>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zoneinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZoneInfo</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">jetblack_serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">serialize_typed</span><span class="p">,</span>
+    <span class="n">deserialize_typed</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ValueExample</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">distance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">delay</span><span class="p">:</span> <span class="n">timedelta</span>
+
+
+<span class="n">london</span> <span class="o">=</span> <span class="n">ZoneInfo</span><span class="p">(</span><span class="s1">&#39;Europe/London&#39;</span><span class="p">)</span>
+
+<span class="n">orig</span><span class="p">:</span> <span class="n">ValueExample</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;distance&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1234.5&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">london</span><span class="p">),</span>
+    <span class="s1">&#39;delay&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">serialize_typed</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">ValueExample</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;{&quot;distance&quot;: 1234.5, &quot;timestamp&quot;: &quot;2024-06-01T12:00:00.00+01:00&quot;, &quot;delay&quot;: &quot;PT1H30M&quot;}&#39;</span>
+
+<span class="n">roundtrip1</span> <span class="o">=</span> <span class="n">deserialize_typed</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">ValueExample</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">orig</span> <span class="o">==</span> <span class="n">roundtrip1</span>
+</code></pre></div>
 
 
 
