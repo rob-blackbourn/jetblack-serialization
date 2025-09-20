@@ -1,0 +1,1437 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Serialization for JSON and XML using typing">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>jetblack_serialization - jetblack-serialization</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jetblack_serialization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="jetblack-serialization" class="md-header__button md-logo" aria-label="jetblack-serialization" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            jetblack-serialization
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              jetblack_serialization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rob-blackbourn/jetblack-serialization" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rob-blackbourn/jetblack-serialization
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="jetblack-serialization" class="md-nav__button md-logo" aria-label="jetblack-serialization" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    jetblack-serialization
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rob-blackbourn/jetblack-serialization" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rob-blackbourn/jetblack-serialization
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    jetblack-serialization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Serializing JSON
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Serializing YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/xml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Serializing XML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/defaults/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Defaults
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetblack_serialization.json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    jetblack_serialization.json
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jetblack_serialization.xml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    jetblack_serialization.xml
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-jetblack_serializationyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      module jetblack_serialization.yaml
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module jetblack_serialization.yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamldeserialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.deserialize
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.deserialize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamldeserialize_typed" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.deserialize_typed
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.deserialize_typed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamldeserialize_untyped" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.deserialize_untyped
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.deserialize_untyped">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamlserialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.serialize
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.serialize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamlserialize_typed" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.serialize_typed
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.serialize_typed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-jetblack_serializationyamlserialize_untyped" class="md-nav__link">
+    <span class="md-ellipsis">
+      function jetblack_serialization.yaml.serialize_untyped
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="function jetblack_serialization.yaml.serialize_untyped">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-jsonobjectjsonannotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      class JSONObject(JSONAnnotation)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class JSONObject(JSONAnnotation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-jsonpropertyjsonannotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      class JSONProperty(JSONAnnotation)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class JSONProperty(JSONAnnotation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-jsonvaluejsonannotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      class JSONValue(JSONAnnotation)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class JSONValue(JSONAnnotation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="jetblack_serialization">jetblack_serialization<a class="headerlink" href="#jetblack_serialization" title="Permanent link">&para;</a></h1>
+<div class="autodoc-module">
+<h3 class="autodoc-title" id="module-jetblack_serializationyaml">
+      <span class="autodoc-title-type">module </span><span class="autodoc-title-name">jetblack_serialization.yaml</span>
+  <a class="headerlink" href="#module-jetblack_serializationyaml" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>YAML Serialization</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+<div class="autodoc-attributes">
+
+</div>
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamldeserialize">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">deserialize</span>
+<a class="headerlink" href="#function-jetblack_serializationyamldeserialize" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_1">Summary<a class="headerlink" href="#summary_1" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>Convert YAML to an object.</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">deserialize</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">Any</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The JSON string</p>
+</div>
+</div>
+<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The type annotation</p>
+</div>
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The serializer configuration</p>
+</div>
+</div>
+<var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The deserialized object.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamldeserialize_typed">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">deserialize_typed</span>
+<a class="headerlink" href="#function-jetblack_serializationyamldeserialize_typed" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_2">Summary<a class="headerlink" href="#summary_2" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>Convert YAML to an object.</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">deserialize_typed</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializationConfig</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">Any</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The YAML string</p>
+</div>
+</div>
+<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The type annotation.</p>
+</div>
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializationConfig</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The serializer config.</p>
+</div>
+</div>
+<var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The deserialized object.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamldeserialize_untyped">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">deserialize_untyped</span>
+<a class="headerlink" href="#function-jetblack_serializationyamldeserialize_untyped" title="Permanent link">&para;</a></h3>
+<br />
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">deserialize_untyped</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">jetblack_serialization.config.SerializerConfig | None</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">Any</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">text</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str | bytes | bytearray</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">jetblack_serialization.config.SerializerConfig | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">decode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLDecoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">: </span>
+
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamlserialize">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">serialize</span>
+<a class="headerlink" href="#function-jetblack_serializationyamlserialize" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_3">Summary<a class="headerlink" href="#summary_3" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>Convert the object to YAML.</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">serialize</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">str</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The object to convert</p>
+</div>
+</div>
+<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The type annotation</p>
+</div>
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">SerializerConfig</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The serializer configuration</p>
+</div>
+</div>
+<var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">str</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The serialized object</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamlserialize_typed">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">serialize_typed</span>
+<a class="headerlink" href="#function-jetblack_serializationyamlserialize_typed" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_4">Summary<a class="headerlink" href="#summary_4" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>Serialize an object to YAML.</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">serialize_typed</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLSerializerConfig</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">str</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The object to serialize.</p>
+</div>
+</div>
+<var class="autodoc-varname">annotation</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Annotation</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The objects type annotation.</p>
+</div>
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLSerializerConfig</span>
+      <div class="autodoc-vardesc">
+<div>
+<p>The serialization config.</p>
+</div>
+</div>
+<var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">str</span><span class="autodoc-punctuation">: </span>
+<span class="autodoc-summary">The YAML string.</span>
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-callable">
+<h3 class="autodoc-title" id="function-jetblack_serializationyamlserialize_untyped">
+  <span class="autodoc-title-type">function </span><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><span class="autodoc-title-name">serialize_untyped</span>
+<a class="headerlink" href="#function-jetblack_serializationyamlserialize_untyped" title="Permanent link">&para;</a></h3>
+<br />
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.yaml</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">serialize_untyped</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">jetblack_serialization.config.SerializerConfig | None</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">str</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">obj</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">Any</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">config</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">jetblack_serialization.config.SerializerConfig | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">encode</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">YAMLEncoder | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-returns">
+<h4 class="autodoc-title" id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h4>
+<span class="autodoc-vartype">str</span><span class="autodoc-punctuation">: </span>
+
+</div>
+<div class="autodoc-raises">
+
+</div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-class">
+<h3 class="autodoc-title" id="class-jsonobjectjsonannotation">
+  <span class="autodoc-title-type">class </span><span class="autodoc-title-name">JSONObject</span><span class="autodoc-punctuation">(</span><span class="autodoc-type">JSONAnnotation</span><span class="autodoc-punctuation">)</span>
+<a class="headerlink" href="#class-jsonobjectjsonannotation" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_5">Summary<a class="headerlink" href="#summary_5" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>A JSON property</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json.annotations</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">JSONObject</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">is_serializable_keys</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">None</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">is_serializable_keys</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-attributes">
+
+</div>
+<div class="autodoc-properties">
+
+</div>
+<div class="autodoc-classmethods"></div>
+<div class="autodoc-methods"></div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-class">
+<h3 class="autodoc-title" id="class-jsonpropertyjsonannotation">
+  <span class="autodoc-title-type">class </span><span class="autodoc-title-name">JSONProperty</span><span class="autodoc-punctuation">(</span><span class="autodoc-type">JSONAnnotation</span><span class="autodoc-punctuation">)</span>
+<a class="headerlink" href="#class-jsonpropertyjsonannotation" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_6">Summary<a class="headerlink" href="#summary_6" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>A JSON property</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json.annotations</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">JSONProperty</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">tag</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">*</var><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">is_serializable_keys</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation">,</span></div>
+<div class="autodoc-argument">
+          <var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">None</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">tag</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">str</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">is_serializable_keys</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">bool</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+<var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-attributes">
+
+</div>
+<div class="autodoc-properties">
+
+</div>
+<div class="autodoc-classmethods"></div>
+<div class="autodoc-methods"></div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+<div class="autodoc-class">
+<h3 class="autodoc-title" id="class-jsonvaluejsonannotation">
+  <span class="autodoc-title-type">class </span><span class="autodoc-title-name">JSONValue</span><span class="autodoc-punctuation">(</span><span class="autodoc-type">JSONAnnotation</span><span class="autodoc-punctuation">)</span>
+<a class="headerlink" href="#class-jsonvaluejsonannotation" title="Permanent link">&para;</a></h3>
+<h4 class="autodoc-title" id="summary_7">Summary<a class="headerlink" href="#summary_7" title="Permanent link">&para;</a></h4>
+<div class="autodoc-description">
+<div>
+<p>A JSON property</p>
+</div>
+</div>
+<div class="autodoc-description">
+
+</div>
+<div class="autodoc-signature"><span class="autodoc-qualifier">jetblack_serialization.json.annotations</span><span class="autodoc-punctuation">.</span><var class="autodoc-varname">JSONValue</var><span class="autodoc-punctuation">(</span><div class="autodoc-arglist">
+<div class="autodoc-argument">
+          <var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span></div>
+</div>
+<span class="autodoc-punctuation">)</span><span class="autodoc-punctuation"> -&gt; </span><span class="autodoc-vartype">None</span></div>
+<br />
+<div class="autodoc-parameters">
+<h4 class="autodoc-title" id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">&para;</a></h4>
+<var class="autodoc-varname">type_selector</var><span class="autodoc-punctuation">: </span><span class="autodoc-vartype">TypeSelector | None</span><span class="autodoc-punctuation"> (optional)</span>
+      <div class="autodoc-vardesc">
+</div>
+</div>
+<div class="autodoc-attributes">
+
+</div>
+<div class="autodoc-properties">
+
+</div>
+<div class="autodoc-classmethods"></div>
+<div class="autodoc-methods"></div>
+<div class="autodoc-examples">
+
+</div>
+</div>
+<hr />
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
