@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "jetblack-serialization"
 version = "4.0.12"
-description = "Serialization for JSON and XML using typing"
+description = "Serialization for JSON, YAML and XML using typing"
 authors = [
   { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
 ]
