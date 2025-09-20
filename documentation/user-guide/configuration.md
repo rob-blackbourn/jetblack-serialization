@@ -55,6 +55,9 @@ assert orig == roundtrip1
 For values, serializers are provided for:
 
 * Decimal - serializes to a float.
+* date - serializes to ISO8601.
+* time - serializes to ISO8601.
+* ZoneInfo - serializes to IANA timezone.
 * datetime - serializes to ISO8601.
 * timedelta - serializes to a duration.
 
