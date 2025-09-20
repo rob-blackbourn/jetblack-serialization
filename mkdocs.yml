@@ -20,6 +20,7 @@ nav:
     - user-guide/yaml.md
     - user-guide/xml.md
     - user-guide/defaults.md
+    - user-guide/configuration.md
   - API:
     - jetblack_serialization.json: api/jetblack_serialization.json.md
     - jetblack_serialization.xml: api/jetblack_serialization.xml.md

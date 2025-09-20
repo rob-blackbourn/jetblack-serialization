@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../json/">
       
       
-        <link rel="next" href="../usage/">
+        <link rel="next" href="../xml/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Installation - jetblack-serialization</title>
+        <title>Serializing YAML - jetblack-serialization</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#serializing-yaml" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Serializing YAML
             
           </span>
         </div>
@@ -245,30 +245,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Installation
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -279,33 +259,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -361,10 +314,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../yaml/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Serializing YAML
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -375,6 +350,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#serializing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serializing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deserializing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deserializing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -541,6 +563,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -549,9 +573,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#serializing" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation
+      Serializing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deserializing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deserializing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
     </span>
   </a>
   
@@ -573,27 +615,83 @@
 
 
 
-  <h1>Installation</h1>
+<h1 id="serializing-yaml">Serializing YAML<a class="headerlink" href="#serializing-yaml" title="Permanent link">&para;</a></h1>
+<p>Given a typed dictionary:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span>
 
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>This is a Python 3.12+ package.</p>
-<p>The package can be installed with pip.</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>jetblack-serialization
+<span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">publication_date</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">phrases</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+    <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
-<p>By default, the dependencies for YAML and XML are not installed.</p>
-<p>To install the dependencies for XML
-(<a href="https://lxml.de/"><code>lxml</code></a>).</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>jetblack-serialization<span class="o">[</span>xml<span class="o">]</span>
+<p>Create some data:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">obj</span><span class="p">:</span> <span class="n">Book</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Chairman Mao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;book_id&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Little Red Book&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;publication_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1973</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span>
+    <span class="s1">&#39;keywords&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Revolution&#39;</span><span class="p">,</span> <span class="s1">&#39;Communism&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;phrases&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;Revolutionary wars are inevitable in class society&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;War is the continuation of politics&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>To install the dependencies for YAML (<a href="https://github.com/yaml/pyyaml"><code>PyYAML</code></a>).</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>jetblack-serialization<span class="o">[</span>yaml<span class="o">]</span>
+<h2 id="serializing">Serializing<a class="headerlink" href="#serializing" title="Permanent link">&para;</a></h2>
+<p>This could be serialized to YAML as:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stringcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">camelcase</span><span class="p">,</span> <span class="n">snakecase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jetblack_serialization.yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">serialize</span><span class="p">,</span> <span class="n">SerializerConfig</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">serialize</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span>
+    <span class="n">Book</span><span class="p">,</span>
+    <span class="n">SerializerConfig</span><span class="p">(</span><span class="n">key_serializer</span><span class="o">=</span><span class="n">camelcase</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 
-<p>To install the dependencies for all.</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>jetblack-serialization<span class="o">[</span>all<span class="o">]</span>
+<p>giving:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">bookId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Little Red Book</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chairman Mao</span>
+<span class="nt">publicationDate</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1973-01-01T21:52:13.00Z&#39;</span>
+<span class="nt">keywords</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Revolution</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Communism</span>
+<span class="nt">phrases</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Revolutionary wars are inevitable in class society</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">War is the continuation of politics</span>
+<span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="nt">pages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 </code></pre></div>
+
+<p>Note the fields have been camel cased, and the publication date has been turned
+into an ISO 8601 date.</p>
+<h2 id="deserializing">Deserializing<a class="headerlink" href="#deserializing" title="Permanent link">&para;</a></h2>
+<p>We can deserialize the data as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stringcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">snakecase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jetblack_serialization.yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">deserialize</span><span class="p">,</span> <span class="n">SerializerConfig</span>
+
+<span class="n">dct</span> <span class="o">=</span> <span class="n">deserialize</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">Annotated</span><span class="p">[</span><span class="n">Book</span><span class="p">,</span> <span class="n">YAMLValue</span><span class="p">()],</span>
+    <span class="n">SerializerConfig</span><span class="p">(</span><span class="n">key_deserializer</span><span class="o">=</span><span class="n">snakecase</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
+<p>For YAML, attributes are typically not required. However
+<code>YAMLProperty</code>, <code>YAMLObject</code> and <code>YAMLValue</code> which are simply
+synonyms of the JSON attributes.</p>
 
 
 
