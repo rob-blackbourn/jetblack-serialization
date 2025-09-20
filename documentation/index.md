@@ -1,8 +1,7 @@
 # jetblack-serialization
 
-Serialization for JSON, YAML and XML in Python using typing annotations.
+Serialization of built in types for JSON, YAML and XML in Python using typing annotations.
 
 ## Status
 
-It has been tested with Python 3.8 used the `typing_extensions`
-package for `Annotated`.
+It has been tested with Python 3.12.

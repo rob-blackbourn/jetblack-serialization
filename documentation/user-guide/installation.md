@@ -1,6 +1,6 @@
 ## Installation
 
-This is a Python 3.8+ package.
+This is a Python 3.12+ package.
 
 The package can be installed with pip.
 

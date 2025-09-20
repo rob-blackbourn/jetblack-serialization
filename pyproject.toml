@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jetblack-serialization"
-version = "4.0.11"
+version = "4.0.12"
 description = "Serialization for JSON and XML using typing"
 authors = [
   { name="Rob Blackbourn", email="rob.blackbourn@gmail.com" },
@@ -124,7 +124,6 @@ deps = [
     "mypy>=1.14.1,<2",
     "types-pyyaml>=6,<7",
 ]
-# commands = [["mypy", "src{/}jetblack_serialization"], ["mypy", "tests"]]
 commands = [
     ["mypy", "src{/}jetblack_serialization"],
     # ["mypy", "tests"]

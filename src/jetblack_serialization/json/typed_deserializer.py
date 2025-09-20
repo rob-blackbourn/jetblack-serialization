@@ -125,7 +125,8 @@ def _to_union(
         element_type = json_annotation.type_selector(
             json_obj,
             type_annotation,
-            False
+            False,
+            config
         )
         return _to_any(
             json_obj,

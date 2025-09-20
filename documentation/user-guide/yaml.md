@@ -88,5 +88,5 @@ dct = deserialize(
 ## Attributes
 
 For YAML, attributes are typically not required. However
-`YAMLProperty(tag: str)` and `YAMLValue()` are provided for
-completeness.
+`YAMLProperty`, `YAMLObject` and `YAMLValue` which are simply
+synonyms of the JSON attributes.

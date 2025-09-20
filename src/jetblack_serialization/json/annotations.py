@@ -2,15 +2,19 @@
 
 from typing import Any, Callable, cast
 
-from ..types import Annotation
+from ..config import SerializerConfig
 from ..custom_annotations import (
     SerializationAnnotation,
     is_any_serialization_annotation,
     get_all_serialization_annotations
 )
+from ..types import Annotation
 
-# selector(data: Any, annotation: Annotation, is_serializing: bool) -> Annotation
-type TypeSelector = Callable[[Any, Annotation, bool], Annotation]
+# selector(data: Any, annotation: Annotation, is_serializing: bool, config: SerializerConfig) -> Annotation
+type TypeSelector = Callable[
+    [Any, Annotation, bool, SerializerConfig],
+    Annotation
+]
 
 
 class JSONAnnotation(SerializationAnnotation):

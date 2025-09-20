@@ -32,16 +32,22 @@ class ShapeRectangle(ShapeBase):
 type Shape = ShapeCircle | ShapeRectangle
 
 
-def select_shape_type(data: Any, _annotation: Annotation, is_serializing: bool) -> Annotation:
+def select_shape_type(
+        data: Any,
+        type_annotation: Annotation,
+        is_serializing: bool,
+        config: SerializerConfig
+) -> Annotation:
     assert isinstance(data, dict)
-    key = ('shape_type' if is_serializing else 'shapeType')
-    match data.get(key):
+    key = 'shape_type'
+    tag = key if is_serializing else config.serialize_key(key)
+    match data.get(tag):
         case 'circle':
             return ShapeCircle
         case 'rectangle':
             return ShapeRectangle
         case _:
-            raise ValueError(f"Unknown shape type: {data.get(key)}")
+            raise ValueError(f"Unknown shape type: {data.get(tag)}")
 
 
 def test_union() -> None:

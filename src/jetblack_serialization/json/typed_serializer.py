@@ -94,7 +94,8 @@ def _from_union(
         element_type = json_annotation.type_selector(
             python_value,
             type_annotation,
-            True
+            True,
+            config
         )
         return from_json_value(
             python_value,

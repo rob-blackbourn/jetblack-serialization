@@ -2,7 +2,8 @@
 
 from ..json import (
     JSONProperty as YAMLProperty,
-    JSONValue as YAMLValue
+    JSONValue as YAMLValue,
+    JSONObject as YAMLObject,
 )
 from .serialization import serialize, deserialize
 from .typed_serializer import serialize_typed
@@ -13,6 +14,7 @@ from .untyped_deserializer import deserialize_untyped
 __all__ = [
     'YAMLProperty',
     'YAMLValue',
+    'YAMLObject',
 
     'serialize',
     'deserialize',

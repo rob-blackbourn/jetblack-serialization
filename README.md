@@ -1,6 +1,6 @@
 # jetblack-serialization
 
-Serialization for JSON, YAML and XML in Python using type annotations
+Serialization of built in types for JSON, YAML and XML in Python using type annotations
 (read the [docs](https://rob-blackbourn.github.io/jetblack-serialization/)).
 
 ## Installation
@@ -304,7 +304,7 @@ dct = deserialize(
 ## Attributes
 
 For JSON, attributes are typically not required. However
-`JSONProperty(tag: str)` and `JSONValue()` are provided for
+`JSONProperty(tag`, `JSONObject` and `JSONValue` are provided for
 completeness.
 
 ## Contributing
