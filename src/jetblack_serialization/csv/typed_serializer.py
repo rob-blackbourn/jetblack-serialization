@@ -16,6 +16,7 @@ from ..typing_ex import (
     is_literal,
     is_optional,
     is_union,
+    get_optional_type,
     resolve_type,
     typeddict_keys,
 )
@@ -26,23 +27,21 @@ def _from_value(
         python_value: Any,
         type_annotation: Type,
         config: SerializerConfig
-) -> Any:
+) -> str:
     if type_annotation is str:
         return python_value
     elif type_annotation is int:
-        return python_value
+        return str(python_value)
     elif type_annotation is bool:
-        return python_value
+        return 'true' if python_value else 'false'
     elif type_annotation is float:
-        return python_value
-    elif type_annotation is Decimal:
-        return float(python_value)
+        return str(python_value)
     elif isinstance(python_value, Enum):
         return python_value.name
     else:
         serializer = config.value_serializers.get(type_annotation)
         if serializer is not None:
-            return serializer(python_value)
+            return str(serializer(python_value))
 
     raise TypeError(f'Unhandled type {type_annotation}')
 
@@ -51,9 +50,9 @@ def _from_optional(
         python_value: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> Any:
+) -> str:
     if python_value is None:
-        return None
+        return ''
 
     union_types = [t for t in get_args(type_annotation) if t is not NoneType]
     assert len(union_types) == 1, "union types are not supported"
@@ -65,63 +64,23 @@ def _from_optional(
     )
 
 
-def _from_list(
-        python_list: list,
-        list_annotation: Annotation,
-        config: SerializerConfig
-) -> Any:
-    type_annotation, *_rest = get_args(list_annotation)
-    type_annotation = resolve_type(type_annotation)
-
-    return [
-        from_csv_value(
-            item,
-            type_annotation,
-            config
-        )
-        for item in python_list
-    ]
-
-
-def _to_csv_key(python_key: str, config: SerializerConfig) -> str:
-    return (
-        config.serialize_key(python_key)
-        if isinstance(python_key, str) else
-        python_key
-    )
-
-
-def _get_csv_key(
-        python_key: str,
-        annotation: Annotation,
-        config: SerializerConfig
-) -> tuple[Annotation, str]:
-    tag = _to_csv_key(python_key, config)
-    return annotation, tag
-
-
 def _from_typed_dict(
         python_dict: dict,
         dict_annotation: Annotation,
         config: SerializerConfig
-) -> list[Any]:
+) -> str:
     row = list[Any]()
 
     typed_dict_keys = typeddict_keys(dict_annotation)
     for python_key, info in typed_dict_keys.items():
         default = getattr(dict_annotation, python_key, Parameter.empty)
-        item_annotation, csv_key = _get_csv_key(
-            python_key,
-            info.annotation,
-            config
-        )
 
         csv_value = python_dict.get(python_key, default)
         if csv_value is not Parameter.empty:
             row.append(
                 from_csv_value(
                     csv_value,
-                    item_annotation,
+                    info.annotation,
                     config
                 )
             )
@@ -130,14 +89,14 @@ def _from_typed_dict(
         else:
             raise KeyError(f'Missing required property {python_key}')
 
-    return row
+    return ",".join(row)
 
 
 def _from_literal(
         python_value: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> Any:
+) -> str:
     literal_values = get_args(type_annotation)
     literal_types = {type(v) for v in literal_values}
     for literal_type in literal_types:
@@ -148,7 +107,7 @@ def _from_literal(
                 config
             )
             if result in literal_values:
-                return result
+                return str(result)
         except:  # pylint: disable=bare-except
             pass
 
@@ -159,7 +118,7 @@ def from_csv_value(
         python_value: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> Any:
+) -> str:
     type_annotation = resolve_type(type_annotation)
 
     if is_value_type(type_annotation, config.value_serializers.keys()):
@@ -174,29 +133,110 @@ def from_csv_value(
             type_annotation,
             config
         )
-    elif is_list(type_annotation):
-        return _from_list(
-            python_value,
-            type_annotation,
-            config
-        )
     elif is_typeddict(type_annotation):
         return _from_typed_dict(
             python_value,
             type_annotation,
             config
         )
-    elif is_union(type_annotation):
-        raise ValueError("union types are not supported")
-    elif is_dict(type_annotation):
-        raise ValueError("untyped dicts are not supported")
     elif is_literal(type_annotation):
         return _from_literal(
             python_value,
             type_annotation,
             config
         )
+    elif is_list(type_annotation):
+        raise ValueError("lists are not supported")
+    elif is_union(type_annotation):
+        raise ValueError("union types are not supported")
+    elif is_dict(type_annotation):
+        raise ValueError("untyped dicts are not supported")
     elif is_any(type_annotation):
         raise ValueError("The Any type is not supported")
     else:
         raise TypeError('Unhandled type')
+
+
+def _serialize_header(
+        prefix: str,
+        typed_dict_annotation: Annotation,
+        config: SerializerConfig
+) -> str:
+    typed_dict_keys = typeddict_keys(typed_dict_annotation)
+    headers = list[str]()
+    for python_key, info in typed_dict_keys.items():
+        key_annotation = resolve_type(info.annotation)
+
+        if is_optional(key_annotation):
+            key_annotation = get_optional_type(key_annotation)
+
+        csv_key = prefix + python_key
+
+        if is_value_type(key_annotation):
+            headers.append(csv_key)
+        elif is_typeddict(key_annotation):
+            headers.append(
+                _serialize_header(
+                    csv_key + ".",
+                    info.annotation,
+                    config
+                )
+            )
+        else:
+            raise ValueError("Unsupported type for header")
+
+    return ",".join(headers)
+
+
+def serialize_header(
+        type_annotation: Annotation,
+        config: SerializerConfig
+) -> str:
+    type_annotation = resolve_type(type_annotation)
+
+    if is_optional(type_annotation):
+        type_annotation = get_optional_type(type_annotation)
+
+    assert is_typeddict(type_annotation), "header must be a typed dictionary"
+
+    return _serialize_header('', type_annotation, config)
+
+
+def serialize_data(
+        python_list: Any,
+        type_annotation: Annotation,
+        config: SerializerConfig
+) -> str:
+
+    return "\n".join(
+        from_csv_value(
+            item,
+            type_annotation,
+            config
+        )
+        for item in python_list
+    )
+
+
+def serialize_typed(
+        python_obj: Any,
+        annotation: Annotation,
+        config: SerializerConfig | None = None,
+) -> str:
+    list_annotation = resolve_type(annotation)
+    if not is_list(list_annotation):
+        raise ValueError("list required")
+
+    type_annotations = get_args(list_annotation)
+    if len(type_annotations) != 1:
+        raise ValueError("expected a single list type")
+
+    type_annotation = type_annotations[0]
+
+    if config is None:
+        config = DEFAULT_CONFIG
+
+    header = serialize_header(type_annotation, config)
+    data = serialize_data(python_obj, type_annotation, config)
+    text = header + "\n" + data
+    return text
