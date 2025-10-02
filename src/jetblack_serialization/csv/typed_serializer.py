@@ -50,7 +50,7 @@ def _from_optional(
         python_value: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> str:
+) -> str | list[str]:
     if python_value is None:
         return ''
 
@@ -68,8 +68,8 @@ def _from_typed_dict(
         python_dict: dict,
         dict_annotation: Annotation,
         config: SerializerConfig
-) -> str:
-    row = list[Any]()
+) -> list[str]:
+    row = list[str]()
 
     typed_dict_keys = typeddict_keys(dict_annotation)
     for python_key, info in typed_dict_keys.items():
@@ -77,19 +77,21 @@ def _from_typed_dict(
 
         csv_value = python_dict.get(python_key, default)
         if csv_value is not Parameter.empty:
-            row.append(
-                from_csv_value(
-                    csv_value,
-                    info.annotation,
-                    config
-                )
+            value = from_csv_value(
+                csv_value,
+                info.annotation,
+                config
             )
+            if isinstance(value, list):
+                row.extend(value)
+            else:
+                row.append(value)
         elif not info.is_required:
-            row.append(None)
+            row.append('')
         else:
             raise KeyError(f'Missing required property {python_key}')
 
-    return ",".join(row)
+    return row
 
 
 def _from_literal(
@@ -118,7 +120,7 @@ def from_csv_value(
         python_value: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> str:
+) -> str | list[str]:
     type_annotation = resolve_type(type_annotation)
 
     if is_value_type(type_annotation, config.value_serializers.keys()):
@@ -161,9 +163,10 @@ def _serialize_header(
         prefix: str,
         typed_dict_annotation: Annotation,
         config: SerializerConfig
-) -> str:
-    typed_dict_keys = typeddict_keys(typed_dict_annotation)
+) -> list[str]:
     headers = list[str]()
+
+    typed_dict_keys = typeddict_keys(typed_dict_annotation)
     for python_key, info in typed_dict_keys.items():
         key_annotation = resolve_type(info.annotation)
 
@@ -175,7 +178,7 @@ def _serialize_header(
         if is_value_type(key_annotation):
             headers.append(csv_key)
         elif is_typeddict(key_annotation):
-            headers.append(
+            headers.extend(
                 _serialize_header(
                     csv_key + ".",
                     info.annotation,
@@ -185,13 +188,13 @@ def _serialize_header(
         else:
             raise ValueError("Unsupported type for header")
 
-    return ",".join(headers)
+    return headers
 
 
 def serialize_header(
         type_annotation: Annotation,
         config: SerializerConfig
-) -> str:
+) -> list[str]:
     type_annotation = resolve_type(type_annotation)
 
     if is_optional(type_annotation):
@@ -206,16 +209,19 @@ def serialize_data(
         python_list: Any,
         type_annotation: Annotation,
         config: SerializerConfig
-) -> str:
+) -> list[list[str]]:
+    values = list[list[str]]()
 
-    return "\n".join(
-        from_csv_value(
-            item,
+    for python_obj in python_list:
+        value = from_csv_value(
+            python_obj,
             type_annotation,
             config
         )
-        for item in python_list
-    )
+        assert isinstance(value, list), "expected a list"
+        values.append(value)
+
+    return values
 
 
 def serialize_typed(
@@ -238,5 +244,8 @@ def serialize_typed(
 
     header = serialize_header(type_annotation, config)
     data = serialize_data(python_obj, type_annotation, config)
-    text = header + "\n" + data
-    return text
+    rows = [header] + data
+    return "\n".join(
+        ",".join(row)
+        for row in rows
+    )
