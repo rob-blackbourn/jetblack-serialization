@@ -1,15 +1,13 @@
 """Typed JSON serialization"""
 
-from decimal import Decimal
 from enum import Enum
 from inspect import Parameter
 from types import NoneType
-from typing import Any, Type, Union, cast, get_args, is_typeddict
+from typing import Any, Type, get_args, is_typeddict
 
 from ..config import SerializerConfig, DEFAULT_CONFIG
 from ..types import Annotation
 from ..typing_ex import (
-    is_annotated,
     is_any,
     is_dict,
     is_list,
