@@ -22,6 +22,8 @@ from ..typing_ex import (
 )
 from ..utils import is_value_type
 
+from .encoding import ENCODE_CSV, CSVEncoder
+
 
 def _from_value(
         python_value: Any,
@@ -228,6 +230,7 @@ def serialize_typed(
         python_obj: Any,
         annotation: Annotation,
         config: SerializerConfig | None = None,
+        encode: CSVEncoder | None = None
 ) -> str:
     list_annotation = resolve_type(annotation)
     if not is_list(list_annotation):
@@ -241,11 +244,10 @@ def serialize_typed(
 
     if config is None:
         config = DEFAULT_CONFIG
+    if encode is None:
+        encode = ENCODE_CSV
 
     header = serialize_header(type_annotation, config)
     data = serialize_data(python_obj, type_annotation, config)
     rows = [header] + data
-    return "\n".join(
-        ",".join(row)
-        for row in rows
-    )
+    return ENCODE_CSV(rows)
