@@ -75,6 +75,19 @@ def is_optional(annotation: type[Any]) -> bool:
     )
 
 
+def get_optional_type(annotation: type) -> Any:
+    assert is_optional(annotation)
+    optional_types = tuple(
+        t
+        for t in get_args(annotation)
+        if t is not NoneType
+    )
+    assert len(optional_types) == 1, "only one type expected"
+    optional_type = optional_types[0]
+    optional_type = resolve_type(optional_type)
+    return optional_type
+
+
 def get_optional_types(annotation: type) -> tuple[type, ...]:
     assert is_optional(annotation)
     return tuple(
